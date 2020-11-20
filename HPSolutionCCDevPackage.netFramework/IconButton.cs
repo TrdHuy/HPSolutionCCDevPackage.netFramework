@@ -22,7 +22,7 @@ namespace HPSolutionCCDevPackage.netFramework
             DependencyProperty.Register("IBCornerRadius",
                 typeof(CornerRadius),
                 typeof(IconButton),
-                new FrameworkPropertyMetadata(default(CornerRadius),
+                new FrameworkPropertyMetadata(defaultIBCornerRadius,
                                         FrameworkPropertyMetadataOptions.AffectsMeasure |
                                         FrameworkPropertyMetadataOptions.AffectsRender), null);
 
@@ -40,7 +40,7 @@ namespace HPSolutionCCDevPackage.netFramework
                         typeof(Orientation),
                         typeof(IconButton),
                         new FrameworkPropertyMetadata(
-                                Orientation.Horizontal,
+                                defaultIBContentOrientation,
                                 FrameworkPropertyMetadataOptions.AffectsMeasure,
                                 null),
                         null);
@@ -59,7 +59,7 @@ namespace HPSolutionCCDevPackage.netFramework
                         typeof(ImageSource),
                         typeof(IconButton),
                         new FrameworkPropertyMetadata(
-                                null,
+                                defaultIconSource,
                                 FrameworkPropertyMetadataOptions.AffectsMeasure |
                                 FrameworkPropertyMetadataOptions.AffectsRender,
                                 null,
@@ -80,7 +80,7 @@ namespace HPSolutionCCDevPackage.netFramework
                         typeof(double),
                         typeof(IconButton),
                         new FrameworkPropertyMetadata(
-                                30d,
+                                defaultIconHeight,
                                 FrameworkPropertyMetadataOptions.AffectsMeasure,
                                 null),
                         null);
@@ -99,7 +99,7 @@ namespace HPSolutionCCDevPackage.netFramework
                         typeof(double),
                         typeof(IconButton),
                         new FrameworkPropertyMetadata(
-                                30d,
+                                defaultIconWidth,
                                 FrameworkPropertyMetadataOptions.AffectsMeasure,
                                 null),
                         null);
@@ -118,7 +118,7 @@ namespace HPSolutionCCDevPackage.netFramework
                         typeof(double),
                         typeof(IconButton),
                         new FrameworkPropertyMetadata(
-                                0d,
+                                defaultIconTextGapWidth,
                                 FrameworkPropertyMetadataOptions.AffectsMeasure,
                                 null),
                         null);
@@ -137,7 +137,7 @@ namespace HPSolutionCCDevPackage.netFramework
                        typeof(HorizontalAlignment),
                        typeof(IconButton),
                        new FrameworkPropertyMetadata(
-                               HorizontalAlignment.Center,
+                               defaultIBTextHorizontalAlignment,
                                FrameworkPropertyMetadataOptions.AffectsMeasure,
                                null),
                        null);
@@ -148,7 +148,7 @@ namespace HPSolutionCCDevPackage.netFramework
                         typeof(VerticalAlignment),
                         typeof(IconButton),
                         new FrameworkPropertyMetadata(
-                                VerticalAlignment.Center,
+                                defaultIBTextVerticalAlignment,
                                 FrameworkPropertyMetadataOptions.AffectsMeasure,
                                 null),
                         null);
@@ -173,7 +173,7 @@ namespace HPSolutionCCDevPackage.netFramework
                         typeof(string),
                         typeof(IconButton),
                         new FrameworkPropertyMetadata(
-                                "",
+                                defaultTextContent,
                                 FrameworkPropertyMetadataOptions.AffectsMeasure,
                                 null),
                         null);
@@ -194,7 +194,7 @@ namespace HPSolutionCCDevPackage.netFramework
                         typeof(Brush),
                         typeof(IconButton),
                         new FrameworkPropertyMetadata(
-                                new SolidColorBrush(Color.FromArgb(80, 26, 195, 237)),
+                                defaultMouseOverEffectBackground,
                                 FrameworkPropertyMetadataOptions.AffectsMeasure,
                                 null),
                         null);
@@ -213,7 +213,7 @@ namespace HPSolutionCCDevPackage.netFramework
                        typeof(Brush),
                        typeof(IconButton),
                        new FrameworkPropertyMetadata(
-                               new SolidColorBrush(Color.FromArgb(40, 26, 195, 237)),
+                               defaultMousePressedEffectBackground,
                                FrameworkPropertyMetadataOptions.AffectsMeasure,
                                null),
                        null);
@@ -232,7 +232,7 @@ namespace HPSolutionCCDevPackage.netFramework
                        typeof(bool),
                        typeof(IconButton),
                        new FrameworkPropertyMetadata(
-                               default(bool),
+                               defaultIsUsingDropShadowEffect,
                                FrameworkPropertyMetadataOptions.AffectsMeasure,
                                null),
                        null);
@@ -247,6 +247,19 @@ namespace HPSolutionCCDevPackage.netFramework
         #endregion
 
         #region Private properties
+
+        private static CornerRadius defaultIBCornerRadius = default(CornerRadius);
+        private static Orientation defaultIBContentOrientation = Orientation.Horizontal;
+        private static ImageSource defaultIconSource = null;
+        private static double defaultIconHeight = 0d;
+        private static double defaultIconWidth = 0d;
+        private static double defaultIconTextGapWidth = 0d;
+        private static HorizontalAlignment defaultIBTextHorizontalAlignment = HorizontalAlignment.Center;
+        private static VerticalAlignment defaultIBTextVerticalAlignment = VerticalAlignment.Center;
+        private static string defaultTextContent = default(string);
+        private static Brush defaultMouseOverEffectBackground = new SolidColorBrush(Color.FromArgb(80, 26, 195, 237));
+        private static Brush defaultMousePressedEffectBackground = new SolidColorBrush(Color.FromArgb(40, 26, 195, 237));
+        private static bool defaultIsUsingDropShadowEffect = default(bool);
 
         #endregion
 
