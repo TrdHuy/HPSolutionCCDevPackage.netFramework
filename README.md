@@ -1,0 +1,2 @@
+# HPSolutionCCDevPackage.netFramework
+ 

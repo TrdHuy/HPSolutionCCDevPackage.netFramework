@@ -1,0 +1,147 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:HPSolutionCCDevPackage.netFramework"
+    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <system:Double x:Key="default_icon_button_corner_radius">0</system:Double>
+    <system:Double x:Key="default_icon_button_icon_height">30</system:Double>
+    <system:Double x:Key="default_icon_button_icon_width">30</system:Double>
+    <system:Double x:Key="default_icon_button_icon_text_gap_width">0</system:Double>
+
+    <Thickness x:Key="default_icon_button_border_thickness">1</Thickness>
+
+    <SolidColorBrush x:Key="default_bg_icon_button" Color="#FFDDDDDD" />
+    <SolidColorBrush x:Key="default_border_brush_icon_button" Color="#FF707070" />
+    <SolidColorBrush x:Key="default_mouse_over_brush_icon_button" Color="#4C5073CF" />
+    <SolidColorBrush x:Key="default_mouse_pressed_brush_icon_button" Color="#195073CF" />
+
+    <Style TargetType="{x:Type local:IconButton}">
+        <Setter Property="Background" Value="{StaticResource default_bg_icon_button}"/>
+        <Setter Property="BorderThickness" Value="{StaticResource default_icon_button_border_thickness}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource default_border_brush_icon_button}"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:IconButton">
+                    <Border
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        x:Name="MainBorderContainer"
+                        Padding="{TemplateBinding Padding}"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="{Binding IBCornerRadius,
+                        FallbackValue={StaticResource default_icon_button_corner_radius}}"
+                        DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, 
+                        AncestorType={x:Type local:IconButton}}}">
+
+                        <Border.OpacityMask>
+                            <VisualBrush>
+                                <VisualBrush.Visual>
+                                    <Grid Width="{Binding ElementName=MainBorderContainer, Path=ActualWidth}" Height="{Binding ElementName=MainBorderContainer, Path=ActualHeight}">
+                                        <Border Background="Black" CornerRadius="{Binding IBCornerRadius,
+                                            FallbackValue={StaticResource default_icon_button_corner_radius}}" />
+                                    </Grid>
+                                </VisualBrush.Visual>
+                            </VisualBrush>
+                        </Border.OpacityMask>
+
+                        <Grid>
+
+                            <StackPanel
+                                x:Name="SPanelContainer"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Orientation="{Binding IBContentOrientation}">
+
+                                <Image
+                                    x:Name="ImageContent"
+                                    Width="{Binding IconWidth, 
+                                FallbackValue={StaticResource default_icon_button_icon_width}}"
+                                    Height="{Binding IconHeight, 
+                                FallbackValue={StaticResource default_icon_button_icon_height}}"
+                                    Source="{Binding IconSource}" />
+
+                                <Grid x:Name="GapView" Width="{Binding IconTextGapWidth, 
+                                FallbackValue={StaticResource default_icon_button_icon_text_gap_width}}" />
+
+                                <TextBlock
+                                    x:Name="TextContent"
+                                    HorizontalAlignment="{Binding IBTextHorizontalAlignment}"
+                                    VerticalAlignment="{Binding IBTextVerticalAlignment}"
+                                    FontFamily="{TemplateBinding FontFamily}"
+                                    FontSize="{TemplateBinding FontSize}"
+                                    FontStretch="{TemplateBinding FontStretch}"
+                                    FontStyle="{TemplateBinding FontStyle}"
+                                    FontWeight="{TemplateBinding FontWeight}"
+                                    Foreground="{TemplateBinding Foreground}"
+                                    Text="{Binding TextContent}" />
+                            </StackPanel>
+
+                            <Grid x:Name="MouseOverEffectPanel" IsHitTestVisible="False" />
+                        </Grid>
+
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="MouseOverEffectPanel" 
+                                    Property="Background" 
+                                    Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:IconButton}},
+                                Path=MouseOverEffectBackgroud, FallbackValue={StaticResource default_mouse_over_brush_icon_button}}" />
+                        </Trigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions >
+                                <Condition Property="IsPressed" Value="True"/>
+                                <Condition Property="IsUsingDropShadowEffect" Value="False"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="MouseOverEffectPanel" 
+                                    Property="Background" 
+                                    Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:IconButton}},
+                                Path=MousePressedEffectBackgroud, FallbackValue={StaticResource default_mouse_pressed_brush_icon_button}}" />
+                        </MultiTrigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions >
+                                <Condition Property="IsPressed" Value="False"/>
+                                <Condition Property="IsUsingDropShadowEffect" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="MainBorderContainer" Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect
+                                        Color="Black"
+                                        BlurRadius="4"
+                                        Direction="330"
+                                        Opacity="0.5"
+                                        ShadowDepth="4" />
+                                </Setter.Value>
+                            </Setter>
+                        </MultiTrigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions >
+                                <Condition Property="IsPressed" Value="True"/>
+                                <Condition Property="IsUsingDropShadowEffect" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="MainBorderContainer" Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect
+                                        Color="Black"
+                                        BlurRadius="4"
+                                        Direction="0"
+                                        Opacity="0.5"
+                                        ShadowDepth="1" />
+                                </Setter.Value>
+                            </Setter>
+                        </MultiTrigger>
+
+                    </ControlTemplate.Triggers>
+
+                </ControlTemplate>
+
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>
