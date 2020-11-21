@@ -244,7 +244,95 @@ namespace HPSolutionCCDevPackage.netFramework
         }
         #endregion
 
+        #region IsBusy
+        public static readonly DependencyProperty IsBusyProperty =
+           DependencyProperty.Register(
+                       "IsBusy",
+                       typeof(bool),
+                       typeof(IconButton),
+                       new FrameworkPropertyMetadata(
+                               defaultIsBusy,
+                               FrameworkPropertyMetadataOptions.AffectsMeasure,
+                               new PropertyChangedCallback(BusyChangedCallback)),
+                       null);
+
+        public bool IsBusy
+        {
+            get { return (bool)GetValue(IsBusyProperty); }
+            set { SetValue(IsBusyProperty, value); }
+        }
+
+        public static readonly RoutedEvent IsBusyChangedEvent =
+            EventManager.RegisterRoutedEvent("IsBusyChanged", RoutingStrategy.Direct,
+                          typeof(IsBusyChangedEventHandler), typeof(IconButton));
+
+        public event IsBusyChangedEventHandler IsBusyChanged
+        {
+            add { AddHandler(IsBusyChangedEvent, value); }
+            remove { RemoveHandler(IsBusyChangedEvent, value); }
+        }
+
+        private static void BusyChangedCallback(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        {
+            IconButton ctl = (IconButton)obj;
+            bool newValue = (bool)args.NewValue;
+
+            // Call UpdateStates because the Value might have caused the
+            // control to change ValueStates.
+            ctl.UpdateStates(true);
+
+            // Call OnValueChanged to raise the ValueChanged event.
+            ctl.OnBusyChanged(
+                new IsBusyChangedEventArgs(IconButton.IsBusyChangedEvent,
+                    newValue));
+        }
+
+        protected virtual void OnBusyChanged(IsBusyChangedEventArgs e)
+        {
+            RaiseEvent(e);
+        }
         #endregion
+
+        #region ProgressSpinnerSize
+        public static readonly DependencyProperty ProgressSpinnerSizeProperty =
+                DependencyProperty.Register(
+                        "ProgressSpinnerSize",
+                        typeof(double),
+                        typeof(IconButton),
+                        new FrameworkPropertyMetadata(
+                                defaultProgressSpinnerSize,
+                                FrameworkPropertyMetadataOptions.AffectsMeasure,
+                                null),
+                        null);
+
+        public double ProgressSpinnerSize
+        {
+            get { return (double)GetValue(ProgressSpinnerSizeProperty); }
+            set { SetValue(ProgressSpinnerSizeProperty, value); }
+        }
+        #endregion
+
+        #region ProgressSpinnerBackground
+        public static readonly DependencyProperty ProgressSpinnerBackgroundProperty =
+            DependencyProperty.Register(
+                "ProgressSpinnerBackground",
+                typeof(Brush),
+                typeof(IconButton),
+                new FrameworkPropertyMetadata(
+                        defaultProgressSpinnerBackground,
+                        FrameworkPropertyMetadataOptions.AffectsMeasure,
+                        null),
+                null);
+
+        public Brush ProgressSpinnerBackground
+        {
+            get { return (Brush)GetValue(ProgressSpinnerBackgroundProperty); }
+            set { SetValue(ProgressSpinnerBackgroundProperty, value); }
+        }
+        #endregion
+
+        #endregion
+
 
         #region Private properties
 
@@ -260,8 +348,54 @@ namespace HPSolutionCCDevPackage.netFramework
         private static Brush defaultMouseOverEffectBackground = new SolidColorBrush(Color.FromArgb(80, 26, 195, 237));
         private static Brush defaultMousePressedEffectBackground = new SolidColorBrush(Color.FromArgb(40, 26, 195, 237));
         private static bool defaultIsUsingDropShadowEffect = default(bool);
+        private static bool defaultIsBusy = default(bool);
+        private static double defaultProgressSpinnerSize = 20d;
+        private static Brush defaultProgressSpinnerBackground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
 
         #endregion
 
+        #region Override fields
+        protected override void OnClick()
+        {
+            if (IsBusy)
+            {
+                return;
+            }
+            base.OnClick();
+        }
+        #endregion
+
+
+        private void UpdateStates(bool useTransitions)
+        {
+
+            if (IsBusy)
+            {
+                VisualStateManager.GoToState(this, "Busy", useTransitions);
+            }
+            else
+            {
+                VisualStateManager.GoToState(this, "UnBusy", useTransitions);
+            }
+        }
+
+    }
+
+    public delegate void IsBusyChangedEventHandler(object sender, IsBusyChangedEventArgs e);
+
+    public class IsBusyChangedEventArgs : RoutedEventArgs
+    {
+        private bool _value;
+
+        public IsBusyChangedEventArgs(RoutedEvent id, bool val)
+        {
+            _value = val;
+            RoutedEvent = id;
+        }
+
+        public bool Value
+        {
+            get { return _value; }
+        }
     }
 }
