@@ -73,6 +73,27 @@ namespace HPSolutionCCDevPackage.netFramework
         }
         #endregion
 
+        #region IconStretch
+        public static readonly DependencyProperty IconStretchProperty =
+                DependencyProperty.Register(
+                        "IconStretch",
+                        typeof(Stretch),
+                        typeof(IconButton),
+                        new FrameworkPropertyMetadata(
+                                defaultIconStretch,
+                                FrameworkPropertyMetadataOptions.AffectsMeasure |
+                                FrameworkPropertyMetadataOptions.AffectsRender,
+                                null,
+                                null),
+                        null);
+
+        public Stretch IconStretch
+        {
+            get { return (Stretch)GetValue(IconStretchProperty); }
+            set { SetValue(IconStretchProperty, value); }
+        }
+        #endregion
+
         #region IconHeight
         public static readonly DependencyProperty IconHeightProperty =
                 DependencyProperty.Register(
@@ -344,14 +365,15 @@ namespace HPSolutionCCDevPackage.netFramework
         private static double defaultIconTextGapWidth = 0d;
         private static HorizontalAlignment defaultIBTextHorizontalAlignment = HorizontalAlignment.Center;
         private static VerticalAlignment defaultIBTextVerticalAlignment = VerticalAlignment.Center;
-        private static string defaultTextContent = default(string);
+        private static string defaultTextContent = null;
         private static Brush defaultMouseOverEffectBackground = new SolidColorBrush(Color.FromArgb(80, 26, 195, 237));
         private static Brush defaultMousePressedEffectBackground = new SolidColorBrush(Color.FromArgb(40, 26, 195, 237));
         private static bool defaultIsUsingDropShadowEffect = default(bool);
         private static bool defaultIsBusy = default(bool);
         private static double defaultProgressSpinnerSize = 20d;
         private static Brush defaultProgressSpinnerBackground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-
+        private static Stretch defaultIconStretch = Stretch.None;
+        
         #endregion
 
         #region Override fields

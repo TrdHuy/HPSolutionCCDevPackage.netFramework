@@ -1,10 +1,10 @@
-﻿<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:HPSolutionCCDevPackage.netFramework"
-    xmlns:system="clr-namespace:System;assembly=mscorlib">
-    
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:HPSolutionCCDevPackage.netFramework"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
     <FontFamily x:Key="FontAwesome">/HPSolutionCCDevPackage.netFramework;component/Resources/#FontAwesome</FontFamily>
+    <FontFamily x:Key="Fredoka">/HPSolutionCCDevPackage.netFramework;component/Resources/#Fredoka One</FontFamily>
 
     <system:Double x:Key="regular_font_size">20</system:Double>
 
@@ -15,18 +15,37 @@
 
     <Thickness x:Key="default_icon_button_border_thickness">1</Thickness>
 
-    <SolidColorBrush x:Key="default_bg_icon_button" Color="#FFDDDDDD" />
-    <SolidColorBrush x:Key="default_border_brush_icon_button" Color="#FF707070" />
-    <SolidColorBrush x:Key="default_mouse_over_brush_icon_button" Color="#4C5073CF" />
-    <SolidColorBrush x:Key="default_mouse_pressed_brush_icon_button" Color="#195073CF" />
+    <SolidColorBrush x:Key="default_bg_icon_button"
+                     Color="#FFDDDDDD" />
+    <SolidColorBrush x:Key="default_border_brush_icon_button"
+                     Color="#FF707070" />
+    <SolidColorBrush x:Key="default_mouse_over_brush_icon_button"
+                     Color="#4C5073CF" />
+    <SolidColorBrush x:Key="default_mouse_pressed_brush_icon_button"
+                     Color="#195073CF" />
 
-    <Style TargetType="{x:Type TextBlock}" x:Key="SpinningText">
-        <Setter Property="HorizontalAlignment" Value="Center"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="FontSize" Value="{StaticResource regular_font_size}"/>
-        <Setter Property="FontFamily" Value="{StaticResource FontAwesome}" />
-        <Setter Property="Text" Value="&#xf110;" />
-        <Setter Property="RenderTransformOrigin" Value="0.5, 0.5" />
+    <Style x:Key="BaseStyle"
+           TargetType="{x:Type Control}">
+        <Setter Property="FontFamily"
+                Value="{DynamicResource FontAwesome}" />
+        <Setter Property="FontSize"
+                Value="{StaticResource regular_font_size}" />
+    </Style>
+
+    <Style TargetType="{x:Type TextBlock}"
+           x:Key="SpinningText">
+        <Setter Property="HorizontalAlignment"
+                Value="Center" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="FontSize"
+                Value="{StaticResource regular_font_size}" />
+        <Setter Property="FontFamily"
+                Value="{StaticResource FontAwesome}" />
+        <Setter Property="Text"
+                Value="&#xf110;" />
+        <Setter Property="RenderTransformOrigin"
+                Value="0.5, 0.5" />
         <Setter Property="RenderTransform">
             <Setter.Value>
                 <RotateTransform></RotateTransform>
@@ -35,19 +54,20 @@
 
         <Style.Resources>
             <Storyboard x:Key="Spin">
-                <DoubleAnimation
-                    Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
-                    From="0"
-                    To="360"
-                    Duration="0:0:2"
-                    RepeatBehavior="Forever" />
+                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
+                                 From="0"
+                                 To="360"
+                                 Duration="0:0:2"
+                                 RepeatBehavior="Forever" />
             </Storyboard>
         </Style.Resources>
 
         <Style.Triggers>
-            <DataTrigger Binding="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=IsVisible}" Value="True">
+            <DataTrigger Binding="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=IsVisible}"
+                         Value="True">
                 <DataTrigger.EnterActions>
-                    <BeginStoryboard Name="SpinStoryboard" Storyboard="{StaticResource Spin}" />
+                    <BeginStoryboard Name="SpinStoryboard"
+                                     Storyboard="{StaticResource Spin}" />
                 </DataTrigger.EnterActions>
                 <DataTrigger.ExitActions>
                     <RemoveStoryboard BeginStoryboardName="SpinStoryboard" />
@@ -58,23 +78,25 @@
     </Style>
 
     <Style TargetType="{x:Type local:IconButton}">
-        <Setter Property="Background" Value="{StaticResource default_bg_icon_button}"/>
-        <Setter Property="BorderThickness" Value="{StaticResource default_icon_button_border_thickness}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource default_border_brush_icon_button}"/>
+        <Setter Property="Background"
+                Value="{StaticResource default_bg_icon_button}" />
+        <Setter Property="BorderThickness"
+                Value="{StaticResource default_icon_button_border_thickness}" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource default_border_brush_icon_button}" />
 
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:IconButton">
 
-                    <Border
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        x:Name="MainBorderContainer"
-                        Padding="{TemplateBinding Padding}"
-                        Background="{TemplateBinding Background}"
-                        CornerRadius="{Binding IBCornerRadius,
+                    <Border BorderThickness="{TemplateBinding BorderThickness}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            x:Name="MainBorderContainer"
+                            Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{Binding IBCornerRadius,
                         FallbackValue={StaticResource default_icon_button_corner_radius}}"
-                        DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, 
+                            DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, 
                         AncestorType={x:Type local:IconButton}}}">
 
                         <VisualStateManager.VisualStateGroups>
@@ -83,26 +105,30 @@
 
                                 <VisualState Name="Busy">
                                     <Storyboard>
-                                        <DoubleAnimation 
-                                            Storyboard.TargetName="ProgressSpinner"
-                                            Storyboard.TargetProperty="Opacity"
-                                            From="0.0" To="1.0" Duration="0:0:1"/>
-                                        <DoubleAnimation 
-                                            Storyboard.TargetName="SPanelContainer"
-                                            Storyboard.TargetProperty="Opacity"
-                                            From="1.0" To="0.0" Duration="0:0:1"/>
+                                        <DoubleAnimation Storyboard.TargetName="ProgressSpinner"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         From="0.0"
+                                                         To="1.0"
+                                                         Duration="0:0:1" />
+                                        <DoubleAnimation Storyboard.TargetName="SPanelContainer"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         From="1.0"
+                                                         To="0.0"
+                                                         Duration="0:0:1" />
                                     </Storyboard>
                                 </VisualState>
 
-                                <VisualState Name="UnBusy"/>
+                                <VisualState Name="UnBusy" />
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
 
                         <Border.OpacityMask>
                             <VisualBrush>
                                 <VisualBrush.Visual>
-                                    <Grid Width="{Binding ElementName=MainBorderContainer, Path=ActualWidth}" Height="{Binding ElementName=MainBorderContainer, Path=ActualHeight}">
-                                        <Border Background="Black" CornerRadius="{Binding IBCornerRadius,
+                                    <Grid Width="{Binding ElementName=MainBorderContainer, Path=ActualWidth}"
+                                          Height="{Binding ElementName=MainBorderContainer, Path=ActualHeight}">
+                                        <Border Background="Black"
+                                                CornerRadius="{Binding IBCornerRadius,
                                             FallbackValue={StaticResource default_icon_button_corner_radius}}" />
                                     </Grid>
                                 </VisualBrush.Visual>
@@ -111,98 +137,111 @@
 
                         <Grid>
 
-                            <TextBlock 
-                                Opacity="0.0"
-                                x:Name="ProgressSpinner"
-                                Foreground="{Binding ProgressSpinnerBackground}"
-                                FontSize="{Binding ProgressSpinnerSize}"
-                                Style="{StaticResource SpinningText}">
+                            <TextBlock Opacity="0.0"
+                                       x:Name="ProgressSpinner"
+                                       Foreground="{Binding ProgressSpinnerBackground}"
+                                       FontSize="{Binding ProgressSpinnerSize}"
+                                       Style="{StaticResource SpinningText}">
                             </TextBlock>
 
-                            <StackPanel
-                                Opacity="1.0"
-                                x:Name="SPanelContainer"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Orientation="{Binding IBContentOrientation}">
-                                <Image
-                                    x:Name="ImageContent"
-                                    Width="{Binding IconWidth, 
+                            <StackPanel Opacity="1.0"
+                                        x:Name="SPanelContainer"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Orientation="{Binding IBContentOrientation}">
+                                <Image x:Name="ImageContent"
+                                       Width="{Binding IconWidth, 
                                 FallbackValue={StaticResource default_icon_button_icon_width}}"
-                                    Height="{Binding IconHeight, 
+                                       Height="{Binding IconHeight, 
                                 FallbackValue={StaticResource default_icon_button_icon_height}}"
-                                    Source="{Binding IconSource}" />
+                                       Source="{Binding IconSource}"
+                                       Stretch="{Binding IconStretch}" />
 
-                                <Grid x:Name="GapView" Width="{Binding IconTextGapWidth, 
+                                <Grid x:Name="GapView"
+                                      Width="{Binding IconTextGapWidth, 
                                 FallbackValue={StaticResource default_icon_button_icon_text_gap_width}}" />
 
-                                <TextBlock
-                                    x:Name="TextContent"
-                                    HorizontalAlignment="{Binding IBTextHorizontalAlignment}"
-                                    VerticalAlignment="{Binding IBTextVerticalAlignment}"
-                                    FontFamily="{TemplateBinding FontFamily}"
-                                    FontSize="{TemplateBinding FontSize}"
-                                    FontStretch="{TemplateBinding FontStretch}"
-                                    FontStyle="{TemplateBinding FontStyle}"
-                                    FontWeight="{TemplateBinding FontWeight}"
-                                    Foreground="{TemplateBinding Foreground}"
-                                    Text="{Binding TextContent}" />
+                                <TextBlock x:Name="TextContent"
+                                           HorizontalAlignment="{Binding IBTextHorizontalAlignment}"
+                                           VerticalAlignment="{Binding IBTextVerticalAlignment}"
+                                           FontFamily="{TemplateBinding FontFamily}"
+                                           FontSize="{TemplateBinding FontSize}"
+                                           FontStretch="{TemplateBinding FontStretch}"
+                                           FontStyle="{TemplateBinding FontStyle}"
+                                           FontWeight="{TemplateBinding FontWeight}"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           Text="{Binding TextContent}" />
                             </StackPanel>
 
-                            <Grid x:Name="MouseOverEffectPanel" IsHitTestVisible="False" />
+                            <Grid x:Name="MouseOverEffectPanel"
+                                  IsHitTestVisible="False" />
                         </Grid>
 
                     </Border>
 
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="MouseOverEffectPanel" 
-                                    Property="Background" 
+                        <Trigger Property="TextContent"
+                                 Value="{x:Null}">
+                            <Setter TargetName="TextContent"
+                                    Property="Visibility"
+                                    Value="Collapsed" />
+                        </Trigger>
+
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter TargetName="MouseOverEffectPanel"
+                                    Property="Background"
                                     Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:IconButton}},
                                 Path=MouseOverEffectBackgroud, FallbackValue={StaticResource default_mouse_over_brush_icon_button}}" />
                         </Trigger>
 
                         <MultiTrigger>
-                            <MultiTrigger.Conditions >
-                                <Condition Property="IsPressed" Value="True"/>
-                                <Condition Property="IsUsingDropShadowEffect" Value="False"/>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsPressed"
+                                           Value="True" />
+                                <Condition Property="IsUsingDropShadowEffect"
+                                           Value="False" />
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="MouseOverEffectPanel" 
-                                    Property="Background" 
+                            <Setter TargetName="MouseOverEffectPanel"
+                                    Property="Background"
                                     Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:IconButton}},
                                 Path=MousePressedEffectBackgroud, FallbackValue={StaticResource default_mouse_pressed_brush_icon_button}}" />
                         </MultiTrigger>
 
                         <MultiTrigger>
-                            <MultiTrigger.Conditions >
-                                <Condition Property="IsPressed" Value="False"/>
-                                <Condition Property="IsUsingDropShadowEffect" Value="True"/>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsPressed"
+                                           Value="False" />
+                                <Condition Property="IsUsingDropShadowEffect"
+                                           Value="True" />
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="MainBorderContainer" Property="Effect">
+                            <Setter TargetName="MainBorderContainer"
+                                    Property="Effect">
                                 <Setter.Value>
-                                    <DropShadowEffect
-                                        Color="Black"
-                                        BlurRadius="4"
-                                        Direction="330"
-                                        Opacity="0.5"
-                                        ShadowDepth="4" />
+                                    <DropShadowEffect Color="Black"
+                                                      BlurRadius="4"
+                                                      Direction="330"
+                                                      Opacity="0.5"
+                                                      ShadowDepth="4" />
                                 </Setter.Value>
                             </Setter>
                         </MultiTrigger>
 
                         <MultiTrigger>
-                            <MultiTrigger.Conditions >
-                                <Condition Property="IsPressed" Value="True"/>
-                                <Condition Property="IsUsingDropShadowEffect" Value="True"/>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsPressed"
+                                           Value="True" />
+                                <Condition Property="IsUsingDropShadowEffect"
+                                           Value="True" />
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="MainBorderContainer" Property="Effect">
+                            <Setter TargetName="MainBorderContainer"
+                                    Property="Effect">
                                 <Setter.Value>
-                                    <DropShadowEffect
-                                        Color="Black"
-                                        BlurRadius="4"
-                                        Direction="0"
-                                        Opacity="0.5"
-                                        ShadowDepth="1" />
+                                    <DropShadowEffect Color="Black"
+                                                      BlurRadius="4"
+                                                      Direction="0"
+                                                      Opacity="0.5"
+                                                      ShadowDepth="1" />
                                 </Setter.Value>
                             </Setter>
                         </MultiTrigger>
@@ -211,5 +250,125 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+    <Style TargetType="{x:Type local:AlyphNameTextBox}">
+        <Setter Property="FirstNameForeground"
+                Value="Black" />
+        <Setter Property="LastNameForeground"
+                Value="Green" />
+        <Setter Property="LineSpace"
+                Value="20" />
+        <Setter Property="StrokeThickess"
+                Value="2" />
+        <Setter Property="FontWeight"
+                Value="Bold" />
+        <Setter Property="FontSize"
+                Value="20" />
+        <Setter Property="TitleFontFamily"
+                Value="{StaticResource FontAwesome}" />
+        <Setter Property="TitleFontSize"
+                Value="20" />
+        <Setter Property="TitleFontWeight"
+                Value="Bold" />
+        <Setter Property="FontSize"
+                Value="30" />
+        <Setter Property="FontFamily"
+                Value="{StaticResource FontAwesome}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Border DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, 
+                        AncestorType={x:Type local:AlyphNameTextBox}}}"
+                            Width="{TemplateBinding Width}"
+                            Height="{TemplateBinding Height}">
+                        <Grid>
+                            <Canvas x:Name="MainCanvas">
+
+                                <Line x:Name="LeftLine"
+                                      X1="0"
+                                      Y1="0"
+                                      X2="0"
+                                      Y2="{Binding Height}"
+                                      Stroke="{Binding LastNameForeground}"
+                                      StrokeThickness="{Binding StrokeThickess}"></Line>
+                                <Line x:Name="RightLine"
+                                      X1="{Binding Width}"
+                                      Y1="0"
+                                      X2="{Binding Width}"
+                                      Y2="{Binding Height}"
+                                      Stroke="{Binding FirstNameForeground}"
+                                      StrokeThickness="{Binding StrokeThickess}"></Line>
+
+                                <Line x:Name="LeftBottomLine"
+                                      Stroke="{Binding LastNameForeground}"
+                                      StrokeThickness="{Binding StrokeThickess}"></Line>
+
+                                <Line x:Name="RightBottomLine"
+                                      Stroke="{Binding FirstNameForeground}"
+                                      StrokeThickness="{Binding StrokeThickess}"></Line>
+
+                                <Line x:Name="LeftTopLine"
+                                      Stroke="{Binding LastNameForeground}"
+                                      StrokeThickness="{Binding StrokeThickess}"></Line>
+
+                                <Line x:Name="RightTopLine"
+                                      Stroke="{Binding FirstNameForeground}"
+                                      StrokeThickness="{Binding StrokeThickess}"></Line>
+
+                                <StackPanel x:Name="TextContainer"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            Orientation="Vertical">
+                                    <StackPanel x:Name="NameContainer"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center"
+                                                Orientation="Horizontal">
+                                        <StackPanel Orientation="Horizontal"
+                                                    x:Name="TempMeasurePanel">
+                                            <TextBlock Foreground="{Binding FirstNameForeground}"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       FontSize="{TemplateBinding FontSize}"
+                                                       FontWeight="{TemplateBinding FontWeight}"
+                                                       Text="{Binding FirstName}"
+                                                       x:Name="FirstNameTextBlock">
+                                            </TextBlock>
+                                            <TextBlock HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       FontSize="{TemplateBinding FontSize}"
+                                                       Text=" "
+                                                       FontWeight="{TemplateBinding FontWeight}">
+
+                                            </TextBlock>
+                                        </StackPanel>
+
+                                        <TextBlock Foreground="{Binding LastNameForeground}"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="{TemplateBinding FontSize}"
+                                                   FontWeight="{TemplateBinding FontWeight}"
+                                                   Text="{Binding LastName}"
+                                                   x:Name="LastNameTextBlock">
+                                        </TextBlock>
+                                    </StackPanel>
+
+                                    <TextBlock HorizontalAlignment="Center"
+                                               FontSize="{Binding TitleFontSize}"
+                                               FontWeight="{Binding TitleFontWeight}"
+                                               FontFamily="{Binding TitleFontFamily}"
+                                               VerticalAlignment="Center"
+                                               x:Name="TitleTextBlock"
+                                               Text="{Binding Title}"></TextBlock>
+                                </StackPanel>
+
+                            </Canvas>
+
+                        </Grid>
+                    </Border>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>
