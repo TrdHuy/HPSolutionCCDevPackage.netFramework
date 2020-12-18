@@ -144,16 +144,39 @@
                                        Style="{StaticResource SpinningText}">
                             </TextBlock>
 
+                            <Grid 
+                                Visibility="Collapsed"
+                                x:Name="ImageContentOnlyGrid">
+
+                                <Image x:Name="ImageContentOnly_NoResize"
+                                       Visibility="Collapsed"
+                                       HorizontalAlignment="{Binding HorizontalContentAlignment}"
+                                       VerticalAlignment="{Binding VerticalContentAlignment}"
+                                       Source="{Binding IconSource}"
+                                       Stretch="{Binding IconStretch}" />
+
+                                <Image x:Name="ImageContentOnly_CanResize"
+                                       Visibility="Visible"
+                                       HorizontalAlignment="{Binding HorizontalContentAlignment}"
+                                       VerticalAlignment="{Binding VerticalContentAlignment}"
+                                       Width="{Binding IconWidth}"
+                                       Height="{Binding IconHeight}"
+                                       Source="{Binding IconSource}"
+                                       Stretch="{Binding IconStretch}" />
+                            </Grid>
+                            
+                            
                             <StackPanel Opacity="1.0"
+                                        Visibility="Visible"
                                         x:Name="SPanelContainer"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="{Binding HorizontalContentAlignment}"
+                                        VerticalAlignment="{Binding VerticalContentAlignment}"
                                         Orientation="{Binding IBContentOrientation}">
                                 <Image x:Name="ImageContent"
-                                       Width="{Binding IconWidth, 
-                                FallbackValue={StaticResource default_icon_button_icon_width}}"
-                                       Height="{Binding IconHeight, 
-                                FallbackValue={StaticResource default_icon_button_icon_height}}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Width="{Binding IconWidth}"
+                                       Height="{Binding IconHeight}"
                                        Source="{Binding IconSource}"
                                        Stretch="{Binding IconStretch}" />
 
@@ -182,10 +205,30 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="TextContent"
                                  Value="{x:Null}">
-                            <Setter TargetName="TextContent"
+                            <Setter TargetName="SPanelContainer"
                                     Property="Visibility"
                                     Value="Collapsed" />
+                            <Setter TargetName="ImageContentOnlyGrid"
+                                    Property="Visibility"
+                                    Value="Visible" />
                         </Trigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="TextContent"
+                                           Value="{x:Null}" />
+                                <Condition Property="IconWidth"
+                                           Value="0" />
+                                <Condition Property="IconHeight"
+                                           Value="0" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="ImageContentOnly_CanResize"
+                                    Property="Visibility"
+                                    Value="Collapsed" />
+                            <Setter TargetName="ImageContentOnly_NoResize"
+                                    Property="Visibility"
+                                    Value="Visible" />
+                        </MultiTrigger>
 
                         <Trigger Property="IsMouseOver"
                                  Value="True">

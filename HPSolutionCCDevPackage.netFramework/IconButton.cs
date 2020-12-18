@@ -122,7 +122,7 @@ namespace HPSolutionCCDevPackage.netFramework
                         new FrameworkPropertyMetadata(
                                 defaultIconWidth,
                                 FrameworkPropertyMetadataOptions.AffectsMeasure,
-                                null),
+                                new PropertyChangedCallback(OnTransformDirty)),
                         null);
 
         public double IconWidth
@@ -130,6 +130,15 @@ namespace HPSolutionCCDevPackage.netFramework
             get { return (double)GetValue(IconWidthProperty); }
             set { SetValue(IconWidthProperty, value); }
         }
+
+
+        private static void OnTransformDirty(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            // Callback for MinWidth, MaxWidth, Width, MinHeight, MaxHeight, Height, and RenderTransformOffset
+            //fe.AreTransformsClean = false;
+            IconButton m = (IconButton)d;
+        }
+
         #endregion
 
         #region IconTextGapWidth
@@ -362,7 +371,7 @@ namespace HPSolutionCCDevPackage.netFramework
         private static ImageSource defaultIconSource = null;
         private static double defaultIconHeight = 0d;
         private static double defaultIconWidth = 0d;
-        private static double defaultIconTextGapWidth = 0d;
+        private static double defaultIconTextGapWidth = Double.NaN;
         private static HorizontalAlignment defaultIBTextHorizontalAlignment = HorizontalAlignment.Center;
         private static VerticalAlignment defaultIBTextVerticalAlignment = VerticalAlignment.Center;
         private static string defaultTextContent = null;
