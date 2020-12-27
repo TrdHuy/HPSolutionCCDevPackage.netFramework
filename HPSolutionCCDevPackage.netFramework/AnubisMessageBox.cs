@@ -455,10 +455,58 @@ namespace HPSolutionCCDevPackage.netFramework
         private static Brush defaultTitleBarBackground = new SolidColorBrush(Color.FromArgb(40, 26, 195, 237));
         private static double defaultTitleBarHeight = 42d;
         private static object defaulCustomMessageContent = null;
-        private static Style defaultYesButtonStyle = new Style { TargetType = typeof(IconButton) };
-        private static Style defaultNoButtonStyle = new Style { TargetType = typeof(IconButton) };
-        private static Style defaultCancleButtonStyle = new Style { TargetType = typeof(IconButton) };
-        private static Style defaultOKButtonStyle = new Style { TargetType = typeof(IconButton)};
+        private static Style defaultYesButtonStyle
+        {
+            get
+            {
+                Style yesButStyle = new Style();
+                yesButStyle.TargetType = typeof(IconButton);
+                yesButStyle.Setters.Add(new Setter(IconButton.TextContentProperty, "Yes"));
+                yesButStyle.Setters.Add(new Setter(IconButton.IsUsingDropShadowEffectProperty, true));
+                yesButStyle.Setters.Add(new Setter(IconButton.VerticalContentAlignmentProperty, VerticalAlignment.Center));
+                yesButStyle.Setters.Add(new Setter(IconButton.HorizontalContentAlignmentProperty, HorizontalAlignment.Center));
+                return yesButStyle;
+            }
+        }
+        private static Style defaultNoButtonStyle
+        {
+            get
+            {
+                Style noButStyle = new Style();
+                noButStyle.TargetType = typeof(IconButton);
+                noButStyle.Setters.Add(new Setter(IconButton.TextContentProperty, "No"));
+                noButStyle.Setters.Add(new Setter(IconButton.IsUsingDropShadowEffectProperty, true));
+                noButStyle.Setters.Add(new Setter(IconButton.VerticalContentAlignmentProperty, VerticalAlignment.Center));
+                noButStyle.Setters.Add(new Setter(IconButton.HorizontalContentAlignmentProperty, HorizontalAlignment.Center));
+                return noButStyle;
+            }
+        }
+        private static Style defaultCancleButtonStyle
+        {
+            get
+            {
+                Style cancleButStyle = new Style();
+                cancleButStyle.TargetType = typeof(IconButton);
+                cancleButStyle.Setters.Add(new Setter(IconButton.TextContentProperty, "Cancle"));
+                cancleButStyle.Setters.Add(new Setter(IconButton.IsUsingDropShadowEffectProperty, true));
+                cancleButStyle.Setters.Add(new Setter(IconButton.VerticalContentAlignmentProperty, VerticalAlignment.Center));
+                cancleButStyle.Setters.Add(new Setter(IconButton.HorizontalContentAlignmentProperty, HorizontalAlignment.Center));
+                return cancleButStyle;
+            }
+        }
+        private static Style defaultOKButtonStyle
+        {
+            get
+            {
+                Style okButStyle = new Style();
+                okButStyle.TargetType = typeof(IconButton);
+                okButStyle.Setters.Add(new Setter(IconButton.TextContentProperty, "OK"));
+                okButStyle.Setters.Add(new Setter(IconButton.IsUsingDropShadowEffectProperty, true));
+                okButStyle.Setters.Add(new Setter(IconButton.VerticalContentAlignmentProperty, VerticalAlignment.Center));
+                okButStyle.Setters.Add(new Setter(IconButton.HorizontalContentAlignmentProperty, HorizontalAlignment.Center));
+                return okButStyle;
+            }
+        }
         private static AnubisMessageBoxType defaultAnubisMesType = AnubisMessageBoxType.Default;
         private static AnubisMessgaeResult defaultAnubisMesResult = AnubisMessgaeResult.ResultNon;
         private static string defaultAnubisMessage = "";

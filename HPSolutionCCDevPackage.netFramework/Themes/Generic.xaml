@@ -27,7 +27,7 @@
     <system:String x:Key="FontAwesomeRestoreWindowIcon">&#xf2d2;</system:String>
     <system:String x:Key="FontAwesomePreviousPageIcon">&#xf0a8;</system:String>
     <system:String x:Key="FontAwesomeNextPageIcon">&#xf0a9;</system:String>
-    
+
     <!--Dimens area-->
     <system:Double x:Key="regular_font_size">20</system:Double>
     <system:Double x:Key="default_title_bar_height_dashboard_window">30</system:Double>
@@ -176,9 +176,8 @@
                                        Style="{StaticResource SpinningText}">
                             </TextBlock>
 
-                            <Grid 
-                                Visibility="Collapsed"
-                                x:Name="ImageContentOnlyGrid">
+                            <Grid Visibility="Collapsed"
+                                  x:Name="ImageContentOnlyGrid">
 
                                 <Image x:Name="ImageContentOnly_NoResize"
                                        Visibility="Collapsed"
@@ -196,8 +195,8 @@
                                        Source="{Binding IconSource}"
                                        Stretch="{Binding IconStretch}" />
                             </Grid>
-                            
-                            
+
+
                             <StackPanel Opacity="1.0"
                                         Visibility="Visible"
                                         x:Name="SPanelContainer"
@@ -627,7 +626,7 @@
                                                    Margin="20"
                                                    Width="50"
                                                    Height="50"
-                                                   Stretch="Uniform"/>
+                                                   Stretch="Uniform" />
 
                                             <TextBox Grid.Column="1"
                                                      x:Name="DefaultContentTextBox"
@@ -649,49 +648,33 @@
                                             <UniformGrid x:Name="YesNoCancleButtonField"
                                                          Columns="3">
                                                 <local:IconButton Margin="5"
-                                                                MaxHeight="30"
-                                                                MaxWidth="90"
-                                                                IsUsingDropShadowEffect="True"
-                                                                Visibility="Collapsed"
-                                                                Grid.Column="0"
-                                                                Style="{Binding YesButtonStyle}"
-                                                                x:Name="YesButton"
-                                                                TextContent="Yes"
-                                                                VerticalContentAlignment="Center"
-                                                                HorizontalContentAlignment="Center" />
+                                                                  MaxHeight="30"
+                                                                  MaxWidth="90"
+                                                                  Visibility="Collapsed"
+                                                                  Grid.Column="0"
+                                                                  Style="{Binding YesButtonStyle}"
+                                                                  x:Name="YesButton" />
                                                 <local:IconButton Margin="5"
-                                                                MaxWidth="90"
-                                                                MaxHeight="30"
-                                                                IsUsingDropShadowEffect="True"
-                                                                Visibility="Collapsed"
-                                                                Grid.Column="1"
-                                                                Style="{Binding NoButtonStyle}"
-                                                                x:Name="NoButton"
-                                                                TextContent="No"
-                                                                VerticalContentAlignment="Center"
-                                                                HorizontalContentAlignment="Center" />
+                                                                  MaxWidth="90"
+                                                                  MaxHeight="30"
+                                                                  Visibility="Collapsed"
+                                                                  Grid.Column="1"
+                                                                  Style="{Binding NoButtonStyle}"
+                                                                  x:Name="NoButton" />
                                                 <local:IconButton Margin="5"
-                                                                MaxHeight="30"
-                                                                MaxWidth="90"
-                                                                Grid.Column="2"
-                                                                IsUsingDropShadowEffect="True"
-                                                                Visibility="Collapsed"
-                                                                Style="{Binding CancleButtonStyle}"
-                                                                x:Name="CancleButton"
-                                                                TextContent="Cancle"
-                                                                VerticalContentAlignment="Center"
-                                                                HorizontalContentAlignment="Center" />
+                                                                  MaxHeight="30"
+                                                                  MaxWidth="90"
+                                                                  Grid.Column="2"
+                                                                  Visibility="Collapsed"
+                                                                  Style="{Binding CancleButtonStyle}"
+                                                                  x:Name="CancleButton" />
                                                 <local:IconButton Margin="5"
-                                                                MaxHeight="30"
-                                                                MaxWidth="90"
-                                                                Grid.Column="1"
-                                                                Visibility="Collapsed"
-                                                                IsUsingDropShadowEffect="True"
-                                                                Style="{Binding OKButtonStyle}"
-                                                                x:Name="OKButton"
-                                                                TextContent="OK"
-                                                                VerticalContentAlignment="Center"
-                                                                HorizontalContentAlignment="Center" />
+                                                                  MaxHeight="30"
+                                                                  MaxWidth="90"
+                                                                  Grid.Column="1"
+                                                                  Visibility="Collapsed"
+                                                                  Style="{Binding OKButtonStyle}"
+                                                                  x:Name="OKButton" />
                                             </UniformGrid>
                                         </Grid>
                                     </Grid>
