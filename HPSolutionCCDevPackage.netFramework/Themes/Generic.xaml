@@ -456,8 +456,6 @@
         <Setter Property="TitleBarHeight"
                 Value="{StaticResource default_title_bar_height_dashboard_window}" />
 
-
-
         <Setter Property="WindowChrome.WindowChrome">
             <Setter.Value>
                 <WindowChrome CaptionHeight="{Binding RelativeSource={RelativeSource Mode=FindAncestor, 
@@ -491,10 +489,12 @@
                                     <ControlTemplate TargetType="{x:Type Button}">
                                         <Border Background="{TemplateBinding Background}"
                                                 Padding="{TemplateBinding Padding}">
-                                            <TextBlock HorizontalAlignment="Center"
-                                                       VerticalAlignment="Center"
-                                                       FontWeight="Thin"
-                                                       Text="{TemplateBinding Content}" />
+                                            <Viewbox Stretch="Uniform">
+                                                <TextBlock HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"
+                                                           FontWeight="Thin"
+                                                           Text="{TemplateBinding Content}" />
+                                            </Viewbox>
                                         </Border>
                                     </ControlTemplate>
                                 </Setter.Value>
