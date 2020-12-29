@@ -87,13 +87,6 @@
                                 </Setter.Value>
                             </Setter>
                         </Style>
-
-                        <ControlTemplate x:Key="HorusBoxTextBox"
-                                         TargetType="{x:Type TextBox}">
-                            <Border x:Name="PART_ContentHost"
-                                    Focusable="False"
-                                    Background="{TemplateBinding Background}" />
-                        </ControlTemplate>
                     </ControlTemplate.Resources>
 
                     <!--Horus box template-->
@@ -118,9 +111,9 @@
                         <TextBox x:Name="PART_EditableTextBox"
                                  HorizontalAlignment="Left"
                                  VerticalAlignment="Center"
-                                 Template="{StaticResource HorusBoxTextBox}"
                                  Margin="3,3,23,3"
                                  Focusable="True"
+                                 BorderThickness="0"
                                  Background="Transparent"
                                  Foreground="{Binding EditTextForeground}"
                                  Visibility="Hidden"
