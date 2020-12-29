@@ -4,6 +4,13 @@
                     xmlns:properties="clr-namespace:HPSolutionCCDevPackage.netFramework.Properties"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
+    <ResourceDictionary.MergedDictionaries>
+        <!--<ResourceDictionary Source="/CCDevProject.netFramework;component/ControlTemplateResources/Fonts.xaml" />-->
+        <ResourceDictionary Source="/HPSolutionCCDevPackage.netFramework;component/ControlTemplateResources/HathorScrollView.xaml" />
+        <ResourceDictionary Source="/HPSolutionCCDevPackage.netFramework;component/ControlTemplateResources/HorusBox.xaml" />
+
+    </ResourceDictionary.MergedDictionaries>
+    
     <!--Font area-->
     <FontFamily x:Key="FontAwesome">/HPSolutionCCDevPackage.netFramework;component/Resources/#FontAwesome</FontFamily>
     <FontFamily x:Key="Fredoka">/HPSolutionCCDevPackage.netFramework;component/Resources/#Fredoka One</FontFamily>
