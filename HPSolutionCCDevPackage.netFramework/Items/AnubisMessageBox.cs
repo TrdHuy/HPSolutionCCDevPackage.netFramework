@@ -33,7 +33,8 @@ namespace HPSolutionCCDevPackage.netFramework
         Hand = 2,
         Stop = 3,
         Info = 4,
-        Question = 5
+        Question = 5,
+        Success = 6
     }
 
     public class AnubisMessageBox : Window

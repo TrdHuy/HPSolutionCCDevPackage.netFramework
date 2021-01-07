@@ -109,5 +109,15 @@ namespace HPSolutionCCDevPackage.netFramework.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap messagebox_success_icon {
+            get {
+                object obj = ResourceManager.GetObject("messagebox_success_icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

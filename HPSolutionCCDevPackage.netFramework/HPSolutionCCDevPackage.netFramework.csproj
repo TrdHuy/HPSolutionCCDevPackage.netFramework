@@ -111,5 +111,8 @@
     <Resource Include="Resources\Images\messagebox_quest_icon.png" />
     <Resource Include="Resources\Images\messagebox_stop_icon.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\messagebox_success_icon.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

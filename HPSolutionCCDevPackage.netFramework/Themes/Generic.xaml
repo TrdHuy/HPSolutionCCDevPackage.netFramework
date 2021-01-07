@@ -525,6 +525,15 @@
                                     Property="Source"
                                     Value="/HPSolutionCCDevPackage.netFramework;component/Resources/Images/messagebox_quest_icon.png" />
                         </Trigger>
+                        <Trigger Property="AnubisMesIcon"
+                                 Value="Success">
+                            <Setter TargetName="DefaultContentImage"
+                                    Property="Visibility"
+                                    Value="Visible" />
+                            <Setter TargetName="DefaultContentImage"
+                                    Property="Source"
+                                    Value="/HPSolutionCCDevPackage.netFramework;component/Resources/Images/messagebox_success_icon.png" />
+                        </Trigger>
 
                         <!--Custom content trigger-->
                         <Trigger Property="CustomMessageContent"
