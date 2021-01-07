@@ -7,48 +7,48 @@ using System.Windows.Media;
 
 namespace HPSolutionCCDevPackage.netFramework
 {
-    public class IconButton : Button
+    public class OsirisButton : Button
     {
-        public IconButton()
+        public OsirisButton()
         {
-            DefaultStyleKey = typeof(IconButton);
+            DefaultStyleKey = typeof(OsirisButton);
             this.IsTabStop = true;
         }
 
         #region Public properties
 
         #region IBConerRadius
-        public static readonly DependencyProperty IBCornerRadiusProperty =
+        public static readonly DependencyProperty OBCornerRadiusProperty =
             DependencyProperty.Register("IBCornerRadius",
                 typeof(CornerRadius),
-                typeof(IconButton),
-                new FrameworkPropertyMetadata(defaultIBCornerRadius,
+                typeof(OsirisButton),
+                new FrameworkPropertyMetadata(defaultOBCornerRadius,
                                         FrameworkPropertyMetadataOptions.AffectsMeasure |
                                         FrameworkPropertyMetadataOptions.AffectsRender), null);
 
-        public CornerRadius IBCornerRadius
+        public CornerRadius OBCornerRadius
         {
-            get { return (CornerRadius)GetValue(IBCornerRadiusProperty); }
-            set { SetValue(IBCornerRadiusProperty, value); }
+            get { return (CornerRadius)GetValue(OBCornerRadiusProperty); }
+            set { SetValue(OBCornerRadiusProperty, value); }
         }
         #endregion
 
         #region IBContentOrientation
-        public static readonly DependencyProperty IBContentOrientationProperty =
+        public static readonly DependencyProperty OBContentOrientationProperty =
                 DependencyProperty.Register(
                         "IBContentOrientation",
                         typeof(Orientation),
-                        typeof(IconButton),
+                        typeof(OsirisButton),
                         new FrameworkPropertyMetadata(
-                                defaultIBContentOrientation,
+                                defaultOBContentOrientation,
                                 FrameworkPropertyMetadataOptions.AffectsMeasure,
                                 null),
                         null);
 
-        public Orientation IBContentOrientation
+        public Orientation OBContentOrientation
         {
-            get { return (Orientation)GetValue(IBContentOrientationProperty); }
-            set { SetValue(IBContentOrientationProperty, value); }
+            get { return (Orientation)GetValue(OBContentOrientationProperty); }
+            set { SetValue(OBContentOrientationProperty, value); }
         }
         #endregion
 
@@ -57,7 +57,7 @@ namespace HPSolutionCCDevPackage.netFramework
                 DependencyProperty.Register(
                         "IconSource",
                         typeof(ImageSource),
-                        typeof(IconButton),
+                        typeof(OsirisButton),
                         new FrameworkPropertyMetadata(
                                 defaultIconSource,
                                 FrameworkPropertyMetadataOptions.AffectsMeasure |
@@ -78,7 +78,7 @@ namespace HPSolutionCCDevPackage.netFramework
                 DependencyProperty.Register(
                         "IconStretch",
                         typeof(Stretch),
-                        typeof(IconButton),
+                        typeof(OsirisButton),
                         new FrameworkPropertyMetadata(
                                 defaultIconStretch,
                                 FrameworkPropertyMetadataOptions.AffectsMeasure |
@@ -99,7 +99,7 @@ namespace HPSolutionCCDevPackage.netFramework
                 DependencyProperty.Register(
                         "IconHeight",
                         typeof(double),
-                        typeof(IconButton),
+                        typeof(OsirisButton),
                         new FrameworkPropertyMetadata(
                                 defaultIconHeight,
                                 FrameworkPropertyMetadataOptions.AffectsMeasure,
@@ -118,7 +118,7 @@ namespace HPSolutionCCDevPackage.netFramework
                 DependencyProperty.Register(
                         "IconWidth",
                         typeof(double),
-                        typeof(IconButton),
+                        typeof(OsirisButton),
                         new FrameworkPropertyMetadata(
                                 defaultIconWidth,
                                 FrameworkPropertyMetadataOptions.AffectsMeasure,
@@ -136,7 +136,7 @@ namespace HPSolutionCCDevPackage.netFramework
         {
             // Callback for MinWidth, MaxWidth, Width, MinHeight, MaxHeight, Height, and RenderTransformOffset
             //fe.AreTransformsClean = false;
-            IconButton m = (IconButton)d;
+            OsirisButton m = (OsirisButton)d;
         }
 
         #endregion
@@ -146,7 +146,7 @@ namespace HPSolutionCCDevPackage.netFramework
                 DependencyProperty.Register(
                         "IconTextGapWidth",
                         typeof(double),
-                        typeof(IconButton),
+                        typeof(OsirisButton),
                         new FrameworkPropertyMetadata(
                                 defaultIconTextGapWidth,
                                 FrameworkPropertyMetadataOptions.AffectsMeasure,
@@ -161,38 +161,38 @@ namespace HPSolutionCCDevPackage.netFramework
         #endregion
 
         #region TextAligment
-        public static readonly DependencyProperty IBTextHorizontalAlignmentProperty =
+        public static readonly DependencyProperty OBTextHorizontalAlignmentProperty =
                DependencyProperty.Register(
                        "IBTextHorizontalAlignment",
                        typeof(HorizontalAlignment),
-                       typeof(IconButton),
+                       typeof(OsirisButton),
                        new FrameworkPropertyMetadata(
-                               defaultIBTextHorizontalAlignment,
+                               defaultOBTextHorizontalAlignment,
                                FrameworkPropertyMetadataOptions.AffectsMeasure,
                                null),
                        null);
 
-        public static readonly DependencyProperty IBTextVerticalAlignmentProperty =
+        public static readonly DependencyProperty OBTextVerticalAlignmentProperty =
                 DependencyProperty.Register(
                         "IBTextVerticalAlignment",
                         typeof(VerticalAlignment),
-                        typeof(IconButton),
+                        typeof(OsirisButton),
                         new FrameworkPropertyMetadata(
-                                defaultIBTextVerticalAlignment,
+                                defaultOBTextVerticalAlignment,
                                 FrameworkPropertyMetadataOptions.AffectsMeasure,
                                 null),
                         null);
 
-        public HorizontalAlignment IBTextHorizontalAlignment
+        public HorizontalAlignment OBTextHorizontalAlignment
         {
-            get { return (HorizontalAlignment)GetValue(IBTextHorizontalAlignmentProperty); }
-            set { SetValue(IBTextHorizontalAlignmentProperty, value); }
+            get { return (HorizontalAlignment)GetValue(OBTextHorizontalAlignmentProperty); }
+            set { SetValue(OBTextHorizontalAlignmentProperty, value); }
         }
 
-        public VerticalAlignment IBTextVerticalAlignment
+        public VerticalAlignment OBTextVerticalAlignment
         {
-            get { return (VerticalAlignment)GetValue(IBTextVerticalAlignmentProperty); }
-            set { SetValue(IBTextVerticalAlignmentProperty, value); }
+            get { return (VerticalAlignment)GetValue(OBTextVerticalAlignmentProperty); }
+            set { SetValue(OBTextVerticalAlignmentProperty, value); }
         }
         #endregion
 
@@ -201,7 +201,7 @@ namespace HPSolutionCCDevPackage.netFramework
                 DependencyProperty.Register(
                         "TextContent",
                         typeof(string),
-                        typeof(IconButton),
+                        typeof(OsirisButton),
                         new FrameworkPropertyMetadata(
                                 defaultTextContent,
                                 FrameworkPropertyMetadataOptions.AffectsMeasure,
@@ -217,12 +217,33 @@ namespace HPSolutionCCDevPackage.netFramework
 
         #endregion
 
+        #region TextDecor
+        public static readonly DependencyProperty TextDecorProperty =
+                DependencyProperty.Register(
+                        "TextDecor",
+                        typeof(TextDecorationCollection),
+                        typeof(OsirisButton),
+                        new FrameworkPropertyMetadata(
+                                defaultTextDecor,
+                                FrameworkPropertyMetadataOptions.AffectsRender,
+                                null),
+                        null);
+
+        public TextDecorationCollection TextDecor
+        {
+            get { return (TextDecorationCollection)GetValue(TextDecorProperty); }
+            set { SetValue(TextDecorProperty, value); }
+        }
+
+
+        #endregion
+
         #region MouseOverEffectBackgroud
         public static readonly DependencyProperty MouseOverEffectBackgroudProperty =
             DependencyProperty.Register(
                         "MouseOverEffectBackgroud",
                         typeof(Brush),
-                        typeof(IconButton),
+                        typeof(OsirisButton),
                         new FrameworkPropertyMetadata(
                                 defaultMouseOverEffectBackground,
                                 FrameworkPropertyMetadataOptions.AffectsMeasure,
@@ -241,7 +262,7 @@ namespace HPSolutionCCDevPackage.netFramework
            DependencyProperty.Register(
                        "MousePressedEffectBackgroud",
                        typeof(Brush),
-                       typeof(IconButton),
+                       typeof(OsirisButton),
                        new FrameworkPropertyMetadata(
                                defaultMousePressedEffectBackground,
                                FrameworkPropertyMetadataOptions.AffectsMeasure,
@@ -260,7 +281,7 @@ namespace HPSolutionCCDevPackage.netFramework
            DependencyProperty.Register(
                        "IsUsingDropShadowEffect",
                        typeof(bool),
-                       typeof(IconButton),
+                       typeof(OsirisButton),
                        new FrameworkPropertyMetadata(
                                defaultIsUsingDropShadowEffect,
                                FrameworkPropertyMetadataOptions.AffectsMeasure,
@@ -279,7 +300,7 @@ namespace HPSolutionCCDevPackage.netFramework
            DependencyProperty.Register(
                        "IsBusy",
                        typeof(bool),
-                       typeof(IconButton),
+                       typeof(OsirisButton),
                        new FrameworkPropertyMetadata(
                                defaultIsBusy,
                                FrameworkPropertyMetadataOptions.AffectsMeasure,
@@ -294,7 +315,7 @@ namespace HPSolutionCCDevPackage.netFramework
 
         public static readonly RoutedEvent IsBusyChangedEvent =
             EventManager.RegisterRoutedEvent("IsBusyChanged", RoutingStrategy.Direct,
-                          typeof(IsBusyChangedEventHandler), typeof(IconButton));
+                          typeof(IsBusyChangedEventHandler), typeof(OsirisButton));
 
         public event IsBusyChangedEventHandler IsBusyChanged
         {
@@ -304,7 +325,7 @@ namespace HPSolutionCCDevPackage.netFramework
 
         private static void BusyChangedCallback(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
-            IconButton ctl = (IconButton)obj;
+            OsirisButton ctl = (OsirisButton)obj;
             bool newValue = (bool)args.NewValue;
 
             // Call UpdateStates because the Value might have caused the
@@ -313,7 +334,7 @@ namespace HPSolutionCCDevPackage.netFramework
 
             // Call OnValueChanged to raise the ValueChanged event.
             ctl.OnBusyChanged(
-                new IsBusyChangedEventArgs(IconButton.IsBusyChangedEvent,
+                new IsBusyChangedEventArgs(OsirisButton.IsBusyChangedEvent,
                     newValue));
         }
 
@@ -328,7 +349,7 @@ namespace HPSolutionCCDevPackage.netFramework
                 DependencyProperty.Register(
                         "ProgressSpinnerSize",
                         typeof(double),
-                        typeof(IconButton),
+                        typeof(OsirisButton),
                         new FrameworkPropertyMetadata(
                                 defaultProgressSpinnerSize,
                                 FrameworkPropertyMetadataOptions.AffectsMeasure,
@@ -347,7 +368,7 @@ namespace HPSolutionCCDevPackage.netFramework
             DependencyProperty.Register(
                 "ProgressSpinnerBackground",
                 typeof(Brush),
-                typeof(IconButton),
+                typeof(OsirisButton),
                 new FrameworkPropertyMetadata(
                         defaultProgressSpinnerBackground,
                         FrameworkPropertyMetadataOptions.AffectsMeasure,
@@ -366,14 +387,14 @@ namespace HPSolutionCCDevPackage.netFramework
 
         #region Private properties
 
-        private static CornerRadius defaultIBCornerRadius = default(CornerRadius);
-        private static Orientation defaultIBContentOrientation = Orientation.Horizontal;
+        private static CornerRadius defaultOBCornerRadius = default(CornerRadius);
+        private static Orientation defaultOBContentOrientation = Orientation.Horizontal;
         private static ImageSource defaultIconSource = null;
         private static double defaultIconHeight = 0d;
         private static double defaultIconWidth = 0d;
         private static double defaultIconTextGapWidth = Double.NaN;
-        private static HorizontalAlignment defaultIBTextHorizontalAlignment = HorizontalAlignment.Center;
-        private static VerticalAlignment defaultIBTextVerticalAlignment = VerticalAlignment.Center;
+        private static HorizontalAlignment defaultOBTextHorizontalAlignment = HorizontalAlignment.Center;
+        private static VerticalAlignment defaultOBTextVerticalAlignment = VerticalAlignment.Center;
         private static string defaultTextContent = null;
         private static Brush defaultMouseOverEffectBackground = new SolidColorBrush(Color.FromArgb(80, 26, 195, 237));
         private static Brush defaultMousePressedEffectBackground = new SolidColorBrush(Color.FromArgb(40, 26, 195, 237));
@@ -382,6 +403,7 @@ namespace HPSolutionCCDevPackage.netFramework
         private static double defaultProgressSpinnerSize = 20d;
         private static Brush defaultProgressSpinnerBackground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
         private static Stretch defaultIconStretch = Stretch.None;
+        private static TextDecorationCollection defaultTextDecor = TextDecorations.Baseline;
         
         #endregion
 

@@ -268,6 +268,7 @@ namespace HPSolutionCCDevPackage.netFramework
         private Button _yesButtonElement;
         private Button _cancleButtonElement;
         private Button _noButtonElement;
+        private ContentControl _customContentElement;
 
         #region Window Button area
         private Button CloseButtonElement
@@ -416,10 +417,23 @@ namespace HPSolutionCCDevPackage.netFramework
             set
             {
                 _defaultContentTextBoxElement = value;
-                DefaultContentBoxMeasure();
+                MeasureDefaultContentBox();
             }
         }
 
+        private ContentControl CustomContentElement
+        {
+            get
+            {
+                return _customContentElement;
+            }
+            set
+            {
+                _customContentElement = value;
+                MeasureCustomContentContainer();
+
+            }
+        }
 
         private void NoButtonElement_Click(object sender, RoutedEventArgs e)
         {
@@ -460,11 +474,11 @@ namespace HPSolutionCCDevPackage.netFramework
             get
             {
                 Style yesButStyle = new Style();
-                yesButStyle.TargetType = typeof(IconButton);
-                yesButStyle.Setters.Add(new Setter(IconButton.TextContentProperty, "Yes"));
-                yesButStyle.Setters.Add(new Setter(IconButton.IsUsingDropShadowEffectProperty, true));
-                yesButStyle.Setters.Add(new Setter(IconButton.VerticalContentAlignmentProperty, VerticalAlignment.Center));
-                yesButStyle.Setters.Add(new Setter(IconButton.HorizontalContentAlignmentProperty, HorizontalAlignment.Center));
+                yesButStyle.TargetType = typeof(OsirisButton);
+                yesButStyle.Setters.Add(new Setter(OsirisButton.TextContentProperty, "Yes"));
+                yesButStyle.Setters.Add(new Setter(OsirisButton.IsUsingDropShadowEffectProperty, true));
+                yesButStyle.Setters.Add(new Setter(OsirisButton.VerticalContentAlignmentProperty, VerticalAlignment.Center));
+                yesButStyle.Setters.Add(new Setter(OsirisButton.HorizontalContentAlignmentProperty, HorizontalAlignment.Center));
                 return yesButStyle;
             }
         }
@@ -473,11 +487,11 @@ namespace HPSolutionCCDevPackage.netFramework
             get
             {
                 Style noButStyle = new Style();
-                noButStyle.TargetType = typeof(IconButton);
-                noButStyle.Setters.Add(new Setter(IconButton.TextContentProperty, "No"));
-                noButStyle.Setters.Add(new Setter(IconButton.IsUsingDropShadowEffectProperty, true));
-                noButStyle.Setters.Add(new Setter(IconButton.VerticalContentAlignmentProperty, VerticalAlignment.Center));
-                noButStyle.Setters.Add(new Setter(IconButton.HorizontalContentAlignmentProperty, HorizontalAlignment.Center));
+                noButStyle.TargetType = typeof(OsirisButton);
+                noButStyle.Setters.Add(new Setter(OsirisButton.TextContentProperty, "No"));
+                noButStyle.Setters.Add(new Setter(OsirisButton.IsUsingDropShadowEffectProperty, true));
+                noButStyle.Setters.Add(new Setter(OsirisButton.VerticalContentAlignmentProperty, VerticalAlignment.Center));
+                noButStyle.Setters.Add(new Setter(OsirisButton.HorizontalContentAlignmentProperty, HorizontalAlignment.Center));
                 return noButStyle;
             }
         }
@@ -486,11 +500,11 @@ namespace HPSolutionCCDevPackage.netFramework
             get
             {
                 Style cancleButStyle = new Style();
-                cancleButStyle.TargetType = typeof(IconButton);
-                cancleButStyle.Setters.Add(new Setter(IconButton.TextContentProperty, "Cancle"));
-                cancleButStyle.Setters.Add(new Setter(IconButton.IsUsingDropShadowEffectProperty, true));
-                cancleButStyle.Setters.Add(new Setter(IconButton.VerticalContentAlignmentProperty, VerticalAlignment.Center));
-                cancleButStyle.Setters.Add(new Setter(IconButton.HorizontalContentAlignmentProperty, HorizontalAlignment.Center));
+                cancleButStyle.TargetType = typeof(OsirisButton);
+                cancleButStyle.Setters.Add(new Setter(OsirisButton.TextContentProperty, "Cancle"));
+                cancleButStyle.Setters.Add(new Setter(OsirisButton.IsUsingDropShadowEffectProperty, true));
+                cancleButStyle.Setters.Add(new Setter(OsirisButton.VerticalContentAlignmentProperty, VerticalAlignment.Center));
+                cancleButStyle.Setters.Add(new Setter(OsirisButton.HorizontalContentAlignmentProperty, HorizontalAlignment.Center));
                 return cancleButStyle;
             }
         }
@@ -499,11 +513,11 @@ namespace HPSolutionCCDevPackage.netFramework
             get
             {
                 Style okButStyle = new Style();
-                okButStyle.TargetType = typeof(IconButton);
-                okButStyle.Setters.Add(new Setter(IconButton.TextContentProperty, "OK"));
-                okButStyle.Setters.Add(new Setter(IconButton.IsUsingDropShadowEffectProperty, true));
-                okButStyle.Setters.Add(new Setter(IconButton.VerticalContentAlignmentProperty, VerticalAlignment.Center));
-                okButStyle.Setters.Add(new Setter(IconButton.HorizontalContentAlignmentProperty, HorizontalAlignment.Center));
+                okButStyle.TargetType = typeof(OsirisButton);
+                okButStyle.Setters.Add(new Setter(OsirisButton.TextContentProperty, "OK"));
+                okButStyle.Setters.Add(new Setter(OsirisButton.IsUsingDropShadowEffectProperty, true));
+                okButStyle.Setters.Add(new Setter(OsirisButton.VerticalContentAlignmentProperty, VerticalAlignment.Center));
+                okButStyle.Setters.Add(new Setter(OsirisButton.HorizontalContentAlignmentProperty, HorizontalAlignment.Center));
                 return okButStyle;
             }
         }
@@ -641,8 +655,8 @@ namespace HPSolutionCCDevPackage.netFramework
             this.ResizeMode = ResizeMode.NoResize;
             this.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
             this.MaxWidth = SystemParameters.MaximizedPrimaryScreenWidth;
-            this.Width = _minWindowWidth;
-            this.Height = _minWindowHeight;
+            this.Width = MaxWidth;
+            this.Height = MaxHeight;
             this.AnubisMessage = Message;
             this.AnubisMesType = anubisType;
             this.CustomMessageContent = customMessageContent;
@@ -653,14 +667,34 @@ namespace HPSolutionCCDevPackage.netFramework
         }
         #endregion
 
+        //Measure size for content container
+        private void MeasureCustomContentContainer()
+        {
+            _customContentElement.Content = CustomMessageContent;
+            _customContentElement.Measure(new Size(this.MaxWidth, this.MaxHeight));
+
+            double contentContainerWidth = _customContentElement.DesiredSize.Width;
+            double contentContainerHeight = _customContentElement.DesiredSize.Height;
+
+            if (contentContainerWidth * contentContainerHeight == 0)
+            {
+                contentContainerWidth = this.Width;
+                contentContainerHeight = this.Height;
+            }
+
+            _customContentElement.Width = contentContainerWidth;
+            _customContentElement.Height = contentContainerHeight;
+
+            MeasureWindowSize(contentContainerWidth, contentContainerHeight, 1d);
+        }
 
         //Measure size for content text box
-        private void DefaultContentBoxMeasure()
+        private void MeasureDefaultContentBox()
         {
             _defaultContentTextBoxElement.Text = AnubisMessage;
             _defaultContentTextBoxElement.Measure(new Size(this.MaxWidth, this.MaxHeight));
 
-            double textboxratiowh = 2d; // width : height = 2
+            double textboxratiowh = 3d; // width : height = 3
             double textboxwidth = _defaultContentTextBoxElement.DesiredSize.Width;
             double textboxheight = _defaultContentTextBoxElement.DesiredSize.Height;
             double textboxarea = textboxheight * textboxwidth;
@@ -674,19 +708,19 @@ namespace HPSolutionCCDevPackage.netFramework
             _defaultContentTextBoxElement.Width = newtexboxwidth;
             _defaultContentTextBoxElement.Height = newtexboxheight;
 
-            MeasureWindowSizeAccordToTextBoxSize(newtexboxwidth, newtexboxheight);
+            MeasureWindowSize(newtexboxwidth, newtexboxheight, 1.3d);
         }
 
-        private void MeasureWindowSizeAccordToTextBoxSize(double newTexboxWidth, double newTexboxHeight)
+        //Measure size for window
+        private void MeasureWindowSize(double contentContainerwidth, double contentContainerHeight, double ratio)
         {
-            double windowAndTextBoxRatio = 1.3d;
-
+            double buttonAreaHeight = 50d;
             double oldWidth = this.Width;
             double oldHeight = this.Height;
 
             // Recaculate window size
-            this.Width = newTexboxWidth * windowAndTextBoxRatio;
-            this.Height = newTexboxHeight * windowAndTextBoxRatio + TitleBarHeight;
+            this.Width = contentContainerwidth * ratio;
+            this.Height = contentContainerHeight + TitleBarHeight + buttonAreaHeight;
 
             //update window location
             this.Left = this.Left - (this.Width - oldWidth) / 2;
@@ -697,7 +731,14 @@ namespace HPSolutionCCDevPackage.netFramework
         {
             MinimizeButtonElement = GetTemplateChild("MinimizeButton") as Button;
             CloseButtonElement = GetTemplateChild("CloseButton") as Button;
-            DefaultContentTextBoxElement = GetTemplateChild("DefaultContentTextBox") as TextBox;
+            if (CustomMessageContent != null)
+            {
+                CustomContentElement = GetTemplateChild("CustomControlContainer") as ContentControl;
+            }
+            else
+            {
+                DefaultContentTextBoxElement = GetTemplateChild("DefaultContentTextBox") as TextBox;
+            }
 
             if (AnubisMesType == AnubisMessageBoxType.Default)
             {
@@ -731,7 +772,7 @@ namespace HPSolutionCCDevPackage.netFramework
         {
             base.ShowDialog();
 
-            return AnubisMessgaeResult.ResultNon;
+            return AnubisMesResult;
         }
 
         /// <summary>

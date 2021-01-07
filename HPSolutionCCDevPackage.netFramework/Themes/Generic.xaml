@@ -3,14 +3,15 @@
                     xmlns:local="clr-namespace:HPSolutionCCDevPackage.netFramework"
                     xmlns:properties="clr-namespace:HPSolutionCCDevPackage.netFramework.Properties"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
-
+    
     <ResourceDictionary.MergedDictionaries>
-        <!--<ResourceDictionary Source="/CCDevProject.netFramework;component/ControlTemplateResources/Fonts.xaml" />-->
+        <ResourceDictionary Source="/HPSolutionCCDevPackage.netFramework;component/ControlTemplateResources/OsirisButton.xaml" />
         <ResourceDictionary Source="/HPSolutionCCDevPackage.netFramework;component/ControlTemplateResources/HathorScrollView.xaml" />
         <ResourceDictionary Source="/HPSolutionCCDevPackage.netFramework;component/ControlTemplateResources/HorusBox.xaml" />
 
     </ResourceDictionary.MergedDictionaries>
-    
+
+
     <!--Font area-->
     <FontFamily x:Key="FontAwesome">/HPSolutionCCDevPackage.netFramework;component/Resources/#FontAwesome</FontFamily>
     <FontFamily x:Key="Fredoka">/HPSolutionCCDevPackage.netFramework;component/Resources/#Fredoka One</FontFamily>
@@ -38,22 +39,10 @@
     <!--Dimens area-->
     <system:Double x:Key="regular_font_size">20</system:Double>
     <system:Double x:Key="default_title_bar_height_dashboard_window">30</system:Double>
-    <system:Double x:Key="default_icon_button_corner_radius">0</system:Double>
-    <system:Double x:Key="default_icon_button_icon_height">30</system:Double>
-    <system:Double x:Key="default_icon_button_icon_width">30</system:Double>
-    <system:Double x:Key="default_icon_button_icon_text_gap_width">0</system:Double>
+    
 
-    <Thickness x:Key="default_icon_button_border_thickness">1</Thickness>
 
     <!--Color area-->
-    <SolidColorBrush x:Key="default_bg_icon_button"
-                     Color="#FFDDDDDD" />
-    <SolidColorBrush x:Key="default_border_brush_icon_button"
-                     Color="#FF707070" />
-    <SolidColorBrush x:Key="default_mouse_over_brush_icon_button"
-                     Color="#4C5073CF" />
-    <SolidColorBrush x:Key="default_mouse_pressed_brush_icon_button"
-                     Color="#195073CF" />
     <SolidColorBrush x:Key="default_title_bar_background_dashboard_window"
                      Color="#FFDEDEDE" />
     <SolidColorBrush x:Key="default_mouse_over_window_button_background_dashboard_window"
@@ -114,222 +103,6 @@
             </DataTrigger>
         </Style.Triggers>
 
-    </Style>
-
-    <Style TargetType="{x:Type local:IconButton}">
-        <Setter Property="Background"
-                Value="{StaticResource default_bg_icon_button}" />
-        <Setter Property="BorderThickness"
-                Value="{StaticResource default_icon_button_border_thickness}" />
-        <Setter Property="BorderBrush"
-                Value="{StaticResource default_border_brush_icon_button}" />
-
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="local:IconButton">
-
-                    <Border BorderThickness="{TemplateBinding BorderThickness}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            x:Name="MainBorderContainer"
-                            Padding="{TemplateBinding Padding}"
-                            Background="{TemplateBinding Background}"
-                            CornerRadius="{Binding IBCornerRadius,
-                        FallbackValue={StaticResource default_icon_button_corner_radius}}"
-                            DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, 
-                        AncestorType={x:Type local:IconButton}}}">
-
-                        <VisualStateManager.VisualStateGroups>
-
-                            <VisualStateGroup Name="IsBusyStates">
-
-                                <VisualState Name="Busy">
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="ProgressSpinner"
-                                                         Storyboard.TargetProperty="Opacity"
-                                                         From="0.0"
-                                                         To="1.0"
-                                                         Duration="0:0:1" />
-                                        <DoubleAnimation Storyboard.TargetName="SPanelContainer"
-                                                         Storyboard.TargetProperty="Opacity"
-                                                         From="1.0"
-                                                         To="0.0"
-                                                         Duration="0:0:1" />
-                                    </Storyboard>
-                                </VisualState>
-
-                                <VisualState Name="UnBusy" />
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
-
-                        <Border.OpacityMask>
-                            <VisualBrush>
-                                <VisualBrush.Visual>
-                                    <Grid Width="{Binding ElementName=MainBorderContainer, Path=ActualWidth}"
-                                          Height="{Binding ElementName=MainBorderContainer, Path=ActualHeight}">
-                                        <Border Background="Black"
-                                                CornerRadius="{Binding IBCornerRadius,
-                                            FallbackValue={StaticResource default_icon_button_corner_radius}}" />
-                                    </Grid>
-                                </VisualBrush.Visual>
-                            </VisualBrush>
-                        </Border.OpacityMask>
-
-                        <Grid>
-
-                            <TextBlock Opacity="0.0"
-                                       x:Name="ProgressSpinner"
-                                       Foreground="{Binding ProgressSpinnerBackground}"
-                                       FontSize="{Binding ProgressSpinnerSize}"
-                                       Style="{StaticResource SpinningText}">
-                            </TextBlock>
-
-                            <Grid Visibility="Collapsed"
-                                  x:Name="ImageContentOnlyGrid">
-
-                                <Image x:Name="ImageContentOnly_NoResize"
-                                       Visibility="Collapsed"
-                                       HorizontalAlignment="{Binding HorizontalContentAlignment}"
-                                       VerticalAlignment="{Binding VerticalContentAlignment}"
-                                       Source="{Binding IconSource}"
-                                       Stretch="{Binding IconStretch}" />
-
-                                <Image x:Name="ImageContentOnly_CanResize"
-                                       Visibility="Visible"
-                                       HorizontalAlignment="{Binding HorizontalContentAlignment}"
-                                       VerticalAlignment="{Binding VerticalContentAlignment}"
-                                       Width="{Binding IconWidth}"
-                                       Height="{Binding IconHeight}"
-                                       Source="{Binding IconSource}"
-                                       Stretch="{Binding IconStretch}" />
-                            </Grid>
-
-
-                            <StackPanel Opacity="1.0"
-                                        Visibility="Visible"
-                                        x:Name="SPanelContainer"
-                                        HorizontalAlignment="{Binding HorizontalContentAlignment}"
-                                        VerticalAlignment="{Binding VerticalContentAlignment}"
-                                        Orientation="{Binding IBContentOrientation}">
-                                <Image x:Name="ImageContent"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"
-                                       Width="{Binding IconWidth}"
-                                       Height="{Binding IconHeight}"
-                                       Source="{Binding IconSource}"
-                                       Stretch="{Binding IconStretch}" />
-
-                                <Grid x:Name="GapView"
-                                      Width="{Binding IconTextGapWidth, 
-                                FallbackValue={StaticResource default_icon_button_icon_text_gap_width}}" />
-
-                                <TextBlock x:Name="TextContent"
-                                           HorizontalAlignment="{Binding IBTextHorizontalAlignment}"
-                                           VerticalAlignment="{Binding IBTextVerticalAlignment}"
-                                           FontFamily="{TemplateBinding FontFamily}"
-                                           FontSize="{TemplateBinding FontSize}"
-                                           FontStretch="{TemplateBinding FontStretch}"
-                                           FontStyle="{TemplateBinding FontStyle}"
-                                           FontWeight="{TemplateBinding FontWeight}"
-                                           Foreground="{TemplateBinding Foreground}"
-                                           Text="{Binding TextContent}" />
-                            </StackPanel>
-
-                            <Grid x:Name="MouseOverEffectPanel"
-                                  IsHitTestVisible="False" />
-                        </Grid>
-
-                    </Border>
-
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="TextContent"
-                                 Value="{x:Null}">
-                            <Setter TargetName="SPanelContainer"
-                                    Property="Visibility"
-                                    Value="Collapsed" />
-                            <Setter TargetName="ImageContentOnlyGrid"
-                                    Property="Visibility"
-                                    Value="Visible" />
-                        </Trigger>
-
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="TextContent"
-                                           Value="{x:Null}" />
-                                <Condition Property="IconWidth"
-                                           Value="0" />
-                                <Condition Property="IconHeight"
-                                           Value="0" />
-                            </MultiTrigger.Conditions>
-                            <Setter TargetName="ImageContentOnly_CanResize"
-                                    Property="Visibility"
-                                    Value="Collapsed" />
-                            <Setter TargetName="ImageContentOnly_NoResize"
-                                    Property="Visibility"
-                                    Value="Visible" />
-                        </MultiTrigger>
-
-                        <Trigger Property="IsMouseOver"
-                                 Value="True">
-                            <Setter TargetName="MouseOverEffectPanel"
-                                    Property="Background"
-                                    Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:IconButton}},
-                                Path=MouseOverEffectBackgroud, FallbackValue={StaticResource default_mouse_over_brush_icon_button}}" />
-                        </Trigger>
-
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsPressed"
-                                           Value="True" />
-                                <Condition Property="IsUsingDropShadowEffect"
-                                           Value="False" />
-                            </MultiTrigger.Conditions>
-                            <Setter TargetName="MouseOverEffectPanel"
-                                    Property="Background"
-                                    Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:IconButton}},
-                                Path=MousePressedEffectBackgroud, FallbackValue={StaticResource default_mouse_pressed_brush_icon_button}}" />
-                        </MultiTrigger>
-
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsPressed"
-                                           Value="False" />
-                                <Condition Property="IsUsingDropShadowEffect"
-                                           Value="True" />
-                            </MultiTrigger.Conditions>
-                            <Setter TargetName="MainBorderContainer"
-                                    Property="Effect">
-                                <Setter.Value>
-                                    <DropShadowEffect Color="Black"
-                                                      BlurRadius="4"
-                                                      Direction="330"
-                                                      Opacity="0.5"
-                                                      ShadowDepth="4" />
-                                </Setter.Value>
-                            </Setter>
-                        </MultiTrigger>
-
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsPressed"
-                                           Value="True" />
-                                <Condition Property="IsUsingDropShadowEffect"
-                                           Value="True" />
-                            </MultiTrigger.Conditions>
-                            <Setter TargetName="MainBorderContainer"
-                                    Property="Effect">
-                                <Setter.Value>
-                                    <DropShadowEffect Color="Black"
-                                                      BlurRadius="4"
-                                                      Direction="0"
-                                                      Opacity="0.5"
-                                                      ShadowDepth="1" />
-                                </Setter.Value>
-                            </Setter>
-                        </MultiTrigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
     </Style>
 
     <Style TargetType="{x:Type local:AlyphNameTextBox}">
@@ -539,6 +312,8 @@
                     </ControlTemplate.Resources>
 
                     <Border x:Name="MainBorderContainer"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
                             Width="{TemplateBinding Width}"
                             Height="{TemplateBinding Height}">
 
@@ -605,8 +380,8 @@
                                           Visibility="Visible">
 
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="3*" />
-                                            <RowDefinition Height="0.7*" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="50" />
                                         </Grid.RowDefinitions>
 
 
@@ -614,7 +389,8 @@
                                         <Grid Grid.Row="0"
                                               x:Name="CustomContentArea">
                                             <ContentControl Grid.Row="1"
-                                                            Content="{TemplateBinding Content}"
+                                                            x:Name="CustomControlContainer"
+                                                            Content="{Binding CustomMessageContent}"
                                                             Visibility="Visible" />
                                         </Grid>
 
@@ -622,7 +398,7 @@
                                         <Grid x:Name="DefaultContentArea"
                                               Background="White"
                                               Grid.Row="0"
-                                              Visibility="Visible">
+                                              Visibility="Collapsed">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="*" />
@@ -654,28 +430,28 @@
 
                                             <UniformGrid x:Name="YesNoCancleButtonField"
                                                          Columns="3">
-                                                <local:IconButton Margin="5"
+                                                <local:OsirisButton Margin="5"
                                                                   MaxHeight="30"
                                                                   MaxWidth="90"
                                                                   Visibility="Collapsed"
                                                                   Grid.Column="0"
                                                                   Style="{Binding YesButtonStyle}"
                                                                   x:Name="YesButton" />
-                                                <local:IconButton Margin="5"
+                                                <local:OsirisButton Margin="5"
                                                                   MaxWidth="90"
                                                                   MaxHeight="30"
                                                                   Visibility="Collapsed"
                                                                   Grid.Column="1"
                                                                   Style="{Binding NoButtonStyle}"
                                                                   x:Name="NoButton" />
-                                                <local:IconButton Margin="5"
+                                                <local:OsirisButton Margin="5"
                                                                   MaxHeight="30"
                                                                   MaxWidth="90"
                                                                   Grid.Column="2"
                                                                   Visibility="Collapsed"
                                                                   Style="{Binding CancleButtonStyle}"
                                                                   x:Name="CancleButton" />
-                                                <local:IconButton Margin="5"
+                                                <local:OsirisButton Margin="5"
                                                                   MaxHeight="30"
                                                                   MaxWidth="90"
                                                                   Grid.Column="1"
@@ -805,4 +581,6 @@
         </Setter>
     </Style>
 
+   
+    
 </ResourceDictionary>
