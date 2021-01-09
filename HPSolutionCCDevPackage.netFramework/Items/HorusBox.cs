@@ -362,6 +362,20 @@ namespace HPSolutionCCDevPackage.netFramework
         }
         #endregion
 
+        #region IsUsingIgnoreLowerUpperCase
+        public static readonly DependencyProperty IsUsingIgnoreLowerUpperCaseProperty =
+                DependencyProperty.Register(
+                        "IsUsingIgnoreLowerUpperCase",
+                        typeof(bool),
+                        typeof(HorusBox),
+                        new PropertyMetadata(false));
+
+        public bool IsUsingIgnoreLowerUpperCase
+        {
+            get { return (bool)GetValue(IsUsingIgnoreLowerUpperCaseProperty); }
+            set { SetValue(IsUsingIgnoreLowerUpperCaseProperty, value); }
+        }
+        #endregion
         #endregion
 
         #region Private properties
@@ -471,7 +485,14 @@ namespace HPSolutionCCDevPackage.netFramework
                 IsDropDownOpen = true;
                 TextBox ctrl = sender as TextBox;
                 string filterString = ctrl.Text.Substring(0, ctrl.SelectionStart);
-                Items.Filter = new Predicate<object>(o => Filter(o as ComboBoxItem, filterString));
+                if (ItemsSource != null)
+                {
+                    Items.Filter = new Predicate<object>(o => Filter(o, filterString));
+                }
+                else
+                {
+                    Items.Filter = new Predicate<object>(o => Filter(o as ComboBoxItem, filterString));
+                }
             }
             catch
             {
@@ -490,6 +511,23 @@ namespace HPSolutionCCDevPackage.netFramework
         private bool Filter(ComboBoxItem cbI, string compareString)
         {
             string v = cbI.Content.ToString();
+            if (IsUsingIgnoreLowerUpperCase)
+            {
+                v = v.ToLower();
+                compareString = compareString.ToLower();
+            }
+            return v.IndexOf(compareString) != -1;
+        }
+
+        private bool Filter(object o, string compareString)
+        {
+            dynamic str = o.GetType().GetProperty(DisplayMemberPath).GetValue(o);
+            string v = str.ToString();
+            if (IsUsingIgnoreLowerUpperCase)
+            {
+                v = v.ToLower();
+                compareString = compareString.ToLower();
+            }
             return v.IndexOf(compareString) != -1;
         }
 

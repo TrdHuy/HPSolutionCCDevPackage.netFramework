@@ -8,7 +8,7 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("HPSolutionCCDevPackage.netFramework")]
-[assembly: AssemblyDescription("Update AnubisMessageBox success icon")]
+[assembly: AssemblyDescription("HorusBox issue: Cant filter list with item source")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("HPSolutionCCDevPackage.netFramework")]
@@ -51,5 +51,5 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.9.0")]
-[assembly: AssemblyFileVersion("1.0.9.0")]
+[assembly: AssemblyVersion("1.0.10.0")]
+[assembly: AssemblyFileVersion("1.0.10.0")]
