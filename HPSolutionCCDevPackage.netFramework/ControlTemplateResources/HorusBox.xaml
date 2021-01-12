@@ -2,6 +2,98 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:HPSolutionCCDevPackage.netFramework">
 
+    <Color x:Key="NormalTheme_2nd_B_Color">#FF9A9A9A</Color>
+
+    <Color x:Key="NormalTheme_2nd_Color">#FF81D5FA</Color>
+
+    <SolidColorBrush x:Key="NormalTheme_SelectedItem_Border_Brush"
+                     Color="#FF81D5FA" />
+    <SolidColorBrush x:Key="NormalTheme_Unable_Border_Brush"
+                     Color="#FF9A9A9A" />
+    <SolidColorBrush x:Key="NormalTheme_Unable_Foreground_Brush"
+                     Color="#FF9A9A9A" />
+    
+    <Style TargetType="{x:Type TextBox}"
+           x:Key="HorusTextBox">
+        <Setter Property="VerticalContentAlignment"
+                Value="Center" />
+        <Setter Property="BorderBrush"
+                Value="#FF000000" />
+        <Setter Property="BorderThickness"
+                Value="1" />
+        <Setter Property="TextWrapping"
+                Value="Wrap" />
+        <Setter Property="Background"
+                Value="White" />
+        <Setter Property="Foreground"
+                Value="#FF000000" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBoxBase}">
+                    <Grid>
+
+                        <Border x:Name="border"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Background="{TemplateBinding Background}"
+                                SnapsToDevicePixels="True">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Focusable="False"
+                                          HorizontalScrollBarVisibility="Hidden"
+                                          VerticalScrollBarVisibility="Hidden" />
+                        </Border>
+
+                        <TextBlock IsHitTestVisible="False"
+                                   Text="{TemplateBinding Tag}"
+                                   x:Name="placeholder"
+                                   FontFamily="{TemplateBinding FontFamily}"
+                                   Padding="{TemplateBinding Padding}"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                   Foreground="#AA000000">
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Visibility"
+                                            Value="Collapsed" />
+
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}"
+                                                     Value="">
+                                            <Setter Property="Visibility"
+                                                    Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+            <Trigger Property="IsEnabled"
+                     Value="False">
+                <Setter Property="BorderBrush"
+                        Value="{StaticResource NormalTheme_Unable_Border_Brush}" />
+                <Setter Property="Foreground"
+                        Value="{StaticResource NormalTheme_Unable_Foreground_Brush}" />
+            </Trigger>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Setter Property="BorderBrush"
+                        Value="{StaticResource NormalTheme_SelectedItem_Border_Brush}" />
+            </Trigger>
+            <Trigger Property="IsKeyboardFocused"
+                     Value="True">
+                <Setter Property="BorderBrush"
+                        Value="{StaticResource NormalTheme_SelectedItem_Border_Brush}" />
+            </Trigger>
+        </Style.Triggers>
+
+    </Style>
+
     <Style TargetType="{x:Type local:HorusBox}">
         <Setter Property="HorusCornerRadius"
                 Value="0,0,0,0" />
@@ -113,13 +205,15 @@
                                  VerticalAlignment="Center"
                                  Margin="3,3,23,3"
                                  Focusable="True"
+                                 Tag="{TemplateBinding Tag}"
+                                 Style="{StaticResource HorusTextBox}"
                                  BorderThickness="0"
                                  Background="Transparent"
                                  Foreground="{Binding EditTextForeground}"
                                  Visibility="Hidden"
                                  IsReadOnly="{TemplateBinding IsReadOnly}" />
 
-                        <Popup Name="Popup"
+                        <Popup x:Name="PART_Popup"
                                Placement="Bottom"
                                IsOpen="{TemplateBinding IsDropDownOpen}"
                                AllowsTransparency="True"
@@ -144,12 +238,23 @@
                                         Background="{Binding PopupBackground}"
                                         BorderThickness="{Binding PopupBorderThickness}"
                                         BorderBrush="{Binding PopupBorderBrush}" />
-                                <local:HathorScrollView Margin="4,6,4,6"
-                                                        HorizontalScrollBarVisibility="Auto"
-                                                        VerticalScrollBarVisibility="Auto"
-                                                        SnapsToDevicePixels="True">
-                                    <StackPanel IsItemsHost="True"
-                                                KeyboardNavigation.DirectionalNavigation="Contained" />
+                                <local:HathorScrollView x:Name="DropDownScrollViewer">
+                                    <Grid x:Name="grid"
+                                          RenderOptions.ClearTypeHint="Enabled">
+                                        <Canvas x:Name="canvas"
+                                                HorizontalAlignment="Left"
+                                                Height="0"
+                                                VerticalAlignment="Top"
+                                                Width="0">
+                                            <Rectangle x:Name="OpaqueRect"
+                                                       Fill="{Binding Background, ElementName=DropDownBorder}"
+                                                       Height="{Binding ActualHeight, ElementName=DropDownBorder}"
+                                                       Width="{Binding ActualWidth, ElementName=DropDownBorder}" />
+                                        </Canvas>
+                                        <ItemsPresenter x:Name="ItemsPresenter"
+                                                        KeyboardNavigation.DirectionalNavigation="Contained"
+                                                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                    </Grid>
                                 </local:HathorScrollView>
                             </Grid>
                         </Popup>
@@ -172,7 +277,7 @@
                             <Setter Property="ScrollViewer.CanContentScroll"
                                     Value="false" />
                         </Trigger>
-                        <Trigger SourceName="Popup"
+                        <Trigger SourceName="PART_Popup"
                                  Property="Popup.AllowsTransparency"
                                  Value="true">
                             <Setter TargetName="DropDownBorder"

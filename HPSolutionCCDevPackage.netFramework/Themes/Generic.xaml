@@ -5,6 +5,7 @@
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/HPSolutionCCDevPackage.netFramework;component/ControlTemplateResources/AkerTextBox.xaml" />
         <ResourceDictionary Source="/HPSolutionCCDevPackage.netFramework;component/ControlTemplateResources/OsirisButton.xaml" />
         <ResourceDictionary Source="/HPSolutionCCDevPackage.netFramework;component/ControlTemplateResources/HathorScrollView.xaml" />
         <ResourceDictionary Source="/HPSolutionCCDevPackage.netFramework;component/ControlTemplateResources/HorusBox.xaml" />

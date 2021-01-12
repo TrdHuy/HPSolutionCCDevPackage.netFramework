@@ -376,6 +376,22 @@ namespace HPSolutionCCDevPackage.netFramework
             set { SetValue(IsUsingIgnoreLowerUpperCaseProperty, value); }
         }
         #endregion
+
+        #region FilterPathWhileUsingItemTemplate
+        public static readonly DependencyProperty FilterPathWhileUsingItemTemplateProperty =
+                DependencyProperty.Register(
+                        "FilterPathWhileUsingItemTemplate",
+                        typeof(string),
+                        typeof(HorusBox),
+                        new PropertyMetadata(""));
+
+        public string FilterPathWhileUsingItemTemplate
+        {
+            get { return (string)GetValue(FilterPathWhileUsingItemTemplateProperty); }
+            set { SetValue(FilterPathWhileUsingItemTemplateProperty, value); }
+        }
+        #endregion
+
         #endregion
 
         #region Private properties
@@ -521,8 +537,20 @@ namespace HPSolutionCCDevPackage.netFramework
 
         private bool Filter(object o, string compareString)
         {
-            dynamic str = o.GetType().GetProperty(DisplayMemberPath).GetValue(o);
-            string v = str.ToString();
+            string v = "";
+            if (!String.IsNullOrEmpty(DisplayMemberPath))
+            {
+                v = o.GetType().GetProperty(DisplayMemberPath).GetValue(o).ToString();
+            }else if (!String.IsNullOrEmpty(FilterPathWhileUsingItemTemplate))
+            {
+                v = o.GetType().GetProperty(FilterPathWhileUsingItemTemplate).GetValue(o).ToString();
+            }
+
+            if (String.IsNullOrEmpty(v))
+            {
+                return true;
+            }
+
             if (IsUsingIgnoreLowerUpperCase)
             {
                 v = v.ToLower();
