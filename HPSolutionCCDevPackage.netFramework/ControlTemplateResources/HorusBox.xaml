@@ -12,7 +12,7 @@
                      Color="#FF9A9A9A" />
     <SolidColorBrush x:Key="NormalTheme_Unable_Foreground_Brush"
                      Color="#FF9A9A9A" />
-    
+
     <Style TargetType="{x:Type TextBox}"
            x:Key="HorusTextBox">
         <Setter Property="VerticalContentAlignment"
@@ -42,16 +42,19 @@
                                           VerticalScrollBarVisibility="Hidden" />
                         </Border>
 
-                        <TextBlock IsHitTestVisible="False"
-                                   Text="{TemplateBinding Tag}"
-                                   x:Name="placeholder"
-                                   FontFamily="{TemplateBinding FontFamily}"
-                                   Padding="{TemplateBinding Padding}"
-                                   VerticalAlignment="Center"
-                                   HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                                   Foreground="#AA000000">
-                            <TextBlock.Style>
-                                <Style TargetType="{x:Type TextBlock}">
+                        <TextBox IsHitTestVisible="False"
+                                 Text="{TemplateBinding Tag}"
+                                 x:Name="placeholder"
+                                 FontFamily="{TemplateBinding FontFamily}"
+                                 Padding="{TemplateBinding Padding}"
+                                 VerticalAlignment="Center"
+                                 IsReadOnly="True"
+                                 Background="Transparent"
+                                 BorderThickness="0"
+                                 HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                 Foreground="#AA000000">
+                            <TextBox.Style>
+                                <Style TargetType="{x:Type TextBox}">
                                     <Setter Property="Visibility"
                                             Value="Collapsed" />
 
@@ -63,8 +66,8 @@
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
+                            </TextBox.Style>
+                        </TextBox>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -113,12 +116,16 @@
                 Value="Black" />
         <Setter Property="IconWidth"
                 Value="30" />
-        <Setter Property="MinWidth"
-                Value="120" />
-        <Setter Property="MinHeight"
-                Value="20" />
         <Setter Property="Foreground"
                 Value="White" />
+        <!--<Setter Property="ContentAreaHeight"
+                Value="30" />
+        <Setter Property="ContentAreaWidth"
+                Value="100" />
+        <Setter Property="DropDownAreaHeight"
+                Value="30" />
+        <Setter Property="DropDownAreaWidth"
+                Value="30" />-->
 
         <Setter Property="Template">
             <Setter.Value>
@@ -138,12 +145,17 @@
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
                                             <Border Grid.Column="0"
+                                                    Height="{Binding ContentAreaHeight}"
+                                                    Width="{Binding ContentAreaWidth}"
                                                     CornerRadius="{Binding HorusCornerRadius}"
                                                     Background="{Binding Background}"
                                                     BorderBrush="{Binding BorderBrush}"
                                                     BorderThickness="{Binding BorderThickness}" />
 
-                                            <Border Grid.Column="1"
+                                            <Border x:Name="DropDownBD"
+                                                    Grid.Column="1"
+                                                    Width="{Binding DropDownAreaWidth}"
+                                                    Height="{Binding DropDownAreaHeight}"
                                                     CornerRadius="{Binding DropDownCornerRadius}"
                                                     Background="{Binding DropDownButtonBackground}"
                                                     BorderBrush="{Binding DropDownBorderBrush}"
@@ -172,6 +184,13 @@
                                                         TargetName="Arrow"
                                                         Value="Visible" />
                                             </DataTrigger>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor,
+                                            AncestorType={x:Type local:HorusBox}},Path=RemoveDropDownIcon}"
+                                                         Value="True">
+                                                <Setter Property="Visibility"
+                                                        TargetName="DropDownBD"
+                                                        Value="Collapsed" />
+                                            </DataTrigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>
                                 </Setter.Value>
@@ -180,36 +199,83 @@
                     </ControlTemplate.Resources>
 
                     <!--Horus box template-->
-                    <Grid DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:HorusBox}}}">
+                    <Grid DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:HorusBox}}}"
+                          Height="{Binding Height}"
+                          Width="{Binding Width}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{Binding ContentAreaWidth}" />
+                            <ColumnDefinition Width="{Binding DropDownAreaWidth}" />
+                        </Grid.ColumnDefinitions>
 
-                        <ToggleButton Name="ToggleButton"
+                        <ToggleButton Grid.Column="0"
+                                      Grid.ColumnSpan="2"
+                                      Name="ToggleButton"
                                       Focusable="False"
                                       Style="{StaticResource ComboBoxToggleButton}"
                                       IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
                                       ClickMode="Press">
                         </ToggleButton>
 
-                        <ContentPresenter Name="ContentSite"
-                                          IsHitTestVisible="False"
-                                          Content="{TemplateBinding SelectionBoxItem}"
-                                          ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                                          ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
-                                          Margin="3,3,23,3"
-                                          VerticalAlignment="Center"
-                                          HorizontalAlignment="Left" />
+                        <Border Grid.Column="0"
+                                CornerRadius="{Binding HorusCornerRadius}"
+                                BorderBrush="{Binding BorderBrush}"
+                                BorderThickness="{Binding BorderThickness}"
+                                Height="{Binding ContentAreaHeight}"
+                                Width="{Binding ContentAreaWidth}">
+                            <Grid>
+                                <ScrollViewer x:Name="contentPresenter"
+                                              HorizontalScrollBarVisibility="Hidden"
+                                              VerticalScrollBarVisibility="Hidden"
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                              Content="{TemplateBinding SelectionBoxItem}"
+                                              ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              IsHitTestVisible="False"
+                                              Margin="{TemplateBinding Padding}"
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
 
-                        <TextBox x:Name="PART_EditableTextBox"
-                                 HorizontalAlignment="Left"
-                                 VerticalAlignment="Center"
-                                 Margin="3,3,23,3"
-                                 Focusable="True"
-                                 Tag="{TemplateBinding Tag}"
-                                 Style="{StaticResource HorusTextBox}"
-                                 BorderThickness="0"
-                                 Background="Transparent"
-                                 Foreground="{Binding EditTextForeground}"
-                                 Visibility="Hidden"
-                                 IsReadOnly="{TemplateBinding IsReadOnly}" />
+                                <ScrollViewer x:Name="CustomPresenterWhenUseEditable"
+                                              HorizontalScrollBarVisibility="Hidden"
+                                              VerticalScrollBarVisibility="Hidden"
+                                              ContentTemplate="{TemplateBinding SelectionHorusBoxItemTemplate}"
+                                              Content="{Binding SelectionHorusBoxItem}"
+                                              ContentStringFormat="{TemplateBinding SelectionHorusBoxItemStringFormat}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              IsHitTestVisible="False"
+                                              Visibility="Collapsed"
+                                              Margin="{TemplateBinding Padding}"
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+
+                                <TextBox x:Name="FilterEditTextBox"
+                                         Height="{Binding ContentAreaHeight}"
+                                         Width="{Binding ContentAreaWidth}"
+                                         HorizontalContentAlignment="Left"
+                                         VerticalContentAlignment="Center"
+                                         Style="{StaticResource HorusTextBox}"
+                                         IsHitTestVisible="False"
+                                         Tag="{TemplateBinding Tag}"
+                                         BorderThickness="0"
+                                         Background="Transparent"
+                                         Foreground="{Binding EditTextForeground}"
+                                         Visibility="Hidden"
+                                         IsReadOnly="{TemplateBinding IsReadOnly}" />
+                                <TextBox x:Name="PART_EditableTextBox"
+                                         Height="{Binding ContentAreaHeight}"
+                                         Width="{Binding ContentAreaWidth}"
+                                         HorizontalContentAlignment="Left"
+                                         VerticalContentAlignment="Center"
+                                         Style="{StaticResource HorusTextBox}"
+                                         IsHitTestVisible="False"
+                                         Tag="{TemplateBinding Tag}"
+                                         BorderThickness="0"
+                                         Background="Transparent"
+                                         Foreground="{Binding EditTextForeground}"
+                                         Visibility="Hidden"
+                                         IsReadOnly="{TemplateBinding IsReadOnly}" />
+                            </Grid>
+                        </Border>
 
                         <Popup x:Name="PART_Popup"
                                Placement="Bottom"
@@ -235,25 +301,27 @@
                                 <Border x:Name="DropDownBorder"
                                         Background="{Binding PopupBackground}"
                                         BorderThickness="{Binding PopupBorderThickness}"
-                                        BorderBrush="{Binding PopupBorderBrush}" />
-                                <local:HathorScrollView x:Name="DropDownScrollViewer">
-                                    <Grid x:Name="grid"
-                                          RenderOptions.ClearTypeHint="Enabled">
-                                        <Canvas x:Name="canvas"
-                                                HorizontalAlignment="Left"
-                                                Height="0"
-                                                VerticalAlignment="Top"
-                                                Width="0">
-                                            <Rectangle x:Name="OpaqueRect"
-                                                       Fill="{Binding Background, ElementName=DropDownBorder}"
-                                                       Height="{Binding ActualHeight, ElementName=DropDownBorder}"
-                                                       Width="{Binding ActualWidth, ElementName=DropDownBorder}" />
-                                        </Canvas>
-                                        <ItemsPresenter x:Name="ItemsPresenter"
-                                                        KeyboardNavigation.DirectionalNavigation="Contained"
-                                                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                                    </Grid>
-                                </local:HathorScrollView>
+                                        BorderBrush="{Binding PopupBorderBrush}">
+                                    <local:HathorScrollView x:Name="DropDownScrollViewer">
+                                        <Grid x:Name="grid"
+                                              RenderOptions.ClearTypeHint="Enabled">
+                                            <Canvas x:Name="canvas"
+                                                    HorizontalAlignment="Left"
+                                                    Height="0"
+                                                    VerticalAlignment="Top"
+                                                    Width="0">
+                                                <Rectangle x:Name="OpaqueRect"
+                                                           Fill="{Binding Background, ElementName=DropDownBorder}"
+                                                           Height="{Binding ActualHeight, ElementName=DropDownBorder}"
+                                                           Width="{Binding ActualWidth, ElementName=DropDownBorder}" />
+                                            </Canvas>
+                                            <ItemsPresenter x:Name="ItemsPresenter"
+                                                            KeyboardNavigation.DirectionalNavigation="Contained"
+                                                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                        </Grid>
+                                    </local:HathorScrollView>
+                                </Border>
+
                             </Grid>
                         </Popup>
                     </Grid>
@@ -284,17 +352,6 @@
                             <Setter TargetName="DropDownBorder"
                                     Property="Margin"
                                     Value="0,2,0,0" />
-                        </Trigger>
-                        <Trigger Property="IsEditable"
-                                 Value="true">
-                            <Setter Property="IsTabStop"
-                                    Value="false" />
-                            <Setter TargetName="PART_EditableTextBox"
-                                    Property="Visibility"
-                                    Value="Visible" />
-                            <Setter TargetName="ContentSite"
-                                    Property="Visibility"
-                                    Value="Hidden" />
                         </Trigger>
 
                         <Trigger Property="IsUsingHorusShadow"
