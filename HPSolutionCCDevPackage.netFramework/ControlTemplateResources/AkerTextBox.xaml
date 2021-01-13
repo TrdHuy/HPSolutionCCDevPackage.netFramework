@@ -41,16 +41,19 @@
                                           VerticalScrollBarVisibility="Hidden" />
 
 
-                            <TextBlock IsHitTestVisible="False"
-                                       Text="{TemplateBinding Tag}"
-                                       x:Name="SugestionContent"
-                                       FontFamily="{TemplateBinding FontFamily}"
-                                       Margin="{TemplateBinding Padding}"
-                                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                       HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                                       Foreground="#AA000000">
-                                <TextBlock.Style>
-                                    <Style TargetType="{x:Type TextBlock}">
+                            <TextBox IsHitTestVisible="False"
+                                     Text="{TemplateBinding Tag}"
+                                     x:Name="placeholder"
+                                     FontFamily="{TemplateBinding FontFamily}"
+                                     Padding="{TemplateBinding Padding}"
+                                     HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                     VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                     IsReadOnly="True"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     Foreground="#AA000000">
+                                <TextBox.Style>
+                                    <Style TargetType="{x:Type TextBox}">
                                         <Setter Property="Visibility"
                                                 Value="Collapsed" />
 
@@ -62,8 +65,8 @@
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
+                                </TextBox.Style>
+                            </TextBox>
                         </Grid>
 
                     </Border>

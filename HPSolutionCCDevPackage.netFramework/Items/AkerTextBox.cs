@@ -73,9 +73,9 @@ namespace HPSolutionCCDevPackage.netFramework
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            ScrollViewerElement = GetTemplateChild("PART_ContentHost") as ScrollViewer;
-            TextBoxViewElement = ScrollViewerElement.Content as FrameworkElement;
-            SuggestTextBlockElement = GetTemplateChild("SugestionContent") as TextBlock;
+            //ScrollViewerElement = GetTemplateChild("PART_ContentHost") as ScrollViewer;
+            //TextBoxViewElement = ScrollViewerElement.Content as FrameworkElement;
+            //SuggestTextBlockElement = GetTemplateChild("SugestionContent") as TextBlock;
 
         }
 
