@@ -18,39 +18,9 @@ namespace HPSolutionCCDevPackage.netFramework
         {
             DefaultStyleKey = typeof(AkerTextBox);
             this.IsTabStop = true;
-            AkerExpenseUnit = @"$";
 
             EventManager.RegisterClassHandler(typeof(AkerTextBox), TextBox.PreviewTextInputEvent, new TextCompositionEventHandler(AkerPreviewTextInputEvent));
-            EventManager.RegisterClassHandler(typeof(AkerTextBox), TextBox.TextChangedEvent, new TextChangedEventHandler(AkerTextChangeEvent));
-            EventManager.RegisterClassHandler(typeof(AkerTextBox), TextBox.SelectionChangedEvent, new RoutedEventHandler(AkerSelectionChangedEvent));
-            //DataObject.AddPastingHandler(this, OnAkerTextBoxPaste);
         }
-
-        private void OnAkerTextBoxPaste(object sender, DataObjectPastingEventArgs e)
-        {
-            // Handle paste event here
-            // var text = e.SourceDataObject.GetData(DataFormats.UnicodeText) as string;
-        }
-
-        private void AkerSelectionChangedEvent(object sender, RoutedEventArgs e)
-        {
-            UpdateAkerExpenseSelection("limit_selection");
-        }
-
-        private void AkerTextChangeEvent(object sender, TextChangedEventArgs e)
-        {
-            if (IsExpenseCallTextChange)
-            {
-                UpdateAkerExpenseSelection("aker_text_change");
-            }
-            else
-            {
-                OldCursorPos = SelectionStart;
-                OldLenght = Text.Length;
-            }
-            UpdateAkerExpense();
-        }
-
         #region AkerTextBoxType
         public static readonly DependencyProperty AkerTextBoxTypeProperty =
            DependencyProperty.Register(
@@ -75,11 +45,6 @@ namespace HPSolutionCCDevPackage.netFramework
         #endregion
 
         #region AkerExpense
-        //private static readonly DependencyPropertyKey AkerExpensePropertyKey =
-        //    DependencyProperty.RegisterReadOnly("AkerExpense", typeof(double), typeof(AkerTextBox),
-        //                                        new PropertyMetadata(defaultAkerExpense,
-        //                                            new PropertyChangedCallback(AkerExpenseChangedCallback)));
-
         public static readonly DependencyProperty AkerExpenseProperty =
             DependencyProperty.Register("AkerExpense", typeof(double), typeof(AkerTextBox),
                                                 new PropertyMetadata(defaultAkerExpense,
@@ -118,13 +83,11 @@ namespace HPSolutionCCDevPackage.netFramework
             set { SetValue(AkerExpenseUnitProperty, value); }
         }
 
-
         #endregion
 
         private static AkerTextBoxType defaultAkerTextBoxType = AkerTextBoxType.Normal;
         private static double defaultAkerExpense = 0d;
         private static string defaultAkerExpenseUnit = "$";
-
 
         private Binding binding;
         private BindingExpressionBase bindingEx;
@@ -152,7 +115,13 @@ namespace HPSolutionCCDevPackage.netFramework
                 };
                 binding.StringFormat = "{0:#,##0}" + " " + AkerExpenseUnit;
                 bindingEx = SetBinding(TextProperty, binding);
+
+
+                EventManager.RegisterClassHandler(typeof(AkerTextBox), TextBox.TextChangedEvent, new TextChangedEventHandler(AkerExpenseTextChangeEvent));
+                EventManager.RegisterClassHandler(typeof(AkerTextBox), TextBox.SelectionChangedEvent, new RoutedEventHandler(AkerExpenseSelectionChangedEvent));
+                //DataObject.AddPastingHandler(this, OnAkerTextBoxExpensePaste);
             }
+
             ValidateAkerProperty();
         }
 
@@ -164,22 +133,50 @@ namespace HPSolutionCCDevPackage.netFramework
             }
         }
 
+        private void OnAkerTextBoxExpensePaste(object sender, DataObjectPastingEventArgs e)
+        {
+            // Handle paste event here
+            // var text = e.SourceDataObject.GetData(DataFormats.UnicodeText) as string;
+        }
+
+        private void AkerExpenseSelectionChangedEvent(object sender, RoutedEventArgs e)
+        {
+            UpdateAkerExpenseSelection("limit_selection");
+        }
+
+        private void AkerExpenseTextChangeEvent(object sender, TextChangedEventArgs e)
+        {
+            if (IsExpenseCallTextChange)
+            {
+                UpdateAkerExpenseSelection("aker_text_change");
+            }
+            else
+            {
+                OldCursorPos = SelectionStart;
+                OldLenght = Text.Length;
+            }
+            UpdateAkerExpense();
+        }
+
         protected override void OnPreviewKeyDown(KeyEventArgs e)
         {
-            if (AkerTextBoxType == AkerTextBoxType.Expense &&
-                // If the key is back space and current cursor greater than expense unit string position
-                ((e.Key == Key.Back && SelectionStart > LastSelectableIndex) ||
-                // If the key is delete and current cursor equal expense unit string position
-                (e.Key == Key.Delete && SelectionStart == LastSelectableIndex) ||
-                // If the key is back space or delete when expense value equal 0
-                ((e.Key == Key.Delete || e.Key == Key.Back) && ConvertExpenseHelper() == 0)))
+            // Special handle for Expense type
+            if (AkerTextBoxType == AkerTextBoxType.Expense)
             {
-                e.Handled = true;
-            }
-            // If the key is back space and current cursor is after ',' 
-            else if (e.Key == Key.Back && SelectionStart != 0 && Text[SelectionStart - 1].Equals(','))
-            {
-                HandleBackSpaceAfterComma(e);
+                if (// If the key is back space and current cursor greater than expense unit string position
+                       ((e.Key == Key.Back && SelectionStart > LastSelectableIndex) ||
+                       // If the key is delete and current cursor equal expense unit string position
+                       (e.Key == Key.Delete && SelectionStart == LastSelectableIndex) ||
+                       // If the key is back space or delete when expense value equal 0
+                       ((e.Key == Key.Delete || e.Key == Key.Back) && ConvertExpenseHelper() == 0)))
+                {
+                    e.Handled = true;
+                }
+                // If the key is back space and current cursor is after ',' 
+                else if (e.Key == Key.Back && SelectionStart != 0 && Text[SelectionStart - 1].Equals(','))
+                {
+                    HandleBackSpaceAfterComma(e);
+                }
             }
             else
             {
