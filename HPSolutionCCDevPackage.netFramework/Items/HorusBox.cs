@@ -606,6 +606,8 @@ namespace HPSolutionCCDevPackage.netFramework
         private ScrollViewer _customHorusContentPresenterElement;
         private bool IsSelectionChangeEventUpdatingText = false;
         private bool IsFilterUpdatingSelectIndex = false;
+        private bool IsPreviewKeyUpAndDown = false;
+
         private TextBox HorusEditTextBoxElement
         {
             get
@@ -628,7 +630,6 @@ namespace HPSolutionCCDevPackage.netFramework
                 _horusFilterEditTextBoxElement = value;
             }
         }
-
         private ToggleButton HorusToggleButtonElement
         {
             get
@@ -637,17 +638,7 @@ namespace HPSolutionCCDevPackage.netFramework
             }
             set
             {
-                if (_horusToggleElement != null)
-                {
-                    _horusToggleElement.Checked -= new RoutedEventHandler(HorusCheckedEvent);
-                    _horusToggleElement.Unchecked -= new RoutedEventHandler(HorusUncheckedEvent);
-                }
                 _horusToggleElement = value;
-                if (_horusToggleElement != null)
-                {
-                    _horusToggleElement.Checked += new RoutedEventHandler(HorusCheckedEvent);
-                    _horusToggleElement.Unchecked += new RoutedEventHandler(HorusUncheckedEvent);
-                }
             }
         }
         private ScrollViewer ContentPresenterElement
@@ -670,14 +661,6 @@ namespace HPSolutionCCDevPackage.netFramework
             set
             {
                 _customHorusContentPresenterElement = value;
-            }
-        }
-
-        private void HorusEnterKeyUpEvent(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                Keyboard.ClearFocus();
             }
         }
 
@@ -704,21 +687,24 @@ namespace HPSolutionCCDevPackage.netFramework
         {
             if (IsEditable && ItemTemplate != null)
             {
-                HorusFilterEditTextBoxElement.Visibility = Visibility.Collapsed;
-                CustomHorusContentPresenterElement.Visibility = Visibility.Visible;
-                SelectionHorusBoxItem = SelectedItem;
-                SelectionHorusBoxItemTemplate = ItemTemplate;
-            }
-
-            if (SelectedIndex != -1)
-            {
-                UpdateHorusFilterEditableTextBox(true);
+                // In case there was not any selected item, the filter edit text will be visible instead of item presenter
+                if (SelectedIndex != -1)
+                {
+                    HorusFilterEditTextBoxElement.Visibility = Visibility.Collapsed;
+                    CustomHorusContentPresenterElement.Visibility = Visibility.Visible;
+                    SelectionHorusBoxItem = SelectedItem;
+                    SelectionHorusBoxItemTemplate = ItemTemplate;
+                }
             }
         }
 
         private void HorusEditTextGotFocusEvent(object sender, RoutedEventArgs e)
         {
+            // When text box got focus, it will return full of items list
+            // Also applied in case popup change its focus to text box
+            // and first time got focus from user
             DoFilter("");
+
             if (IsEditable && ItemTemplate != null)
             {
                 HorusFilterEditTextBoxElement.Visibility = Visibility.Visible;
@@ -731,16 +717,6 @@ namespace HPSolutionCCDevPackage.netFramework
             HorusBox ctrl = d as HorusBox;
             ctrl.Width = ctrl.ContentAreaWidth + ctrl.DropDownAreaWidth;
             ctrl.Height = ctrl.ContentAreaHeight;
-        }
-
-        private void HorusCheckedEvent(object sender, RoutedEventArgs e)
-        {
-            //   IsDropDownOpen = true;
-        }
-
-        private void HorusUncheckedEvent(object sender, RoutedEventArgs e)
-        {
-            //   IsDropDownOpen = false;
         }
 
         protected override Size MeasureOverride(Size constraint)
@@ -764,9 +740,17 @@ namespace HPSolutionCCDevPackage.netFramework
             return newSize;
         }
 
-        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+        protected override void OnPreviewKeyDown(KeyEventArgs e)
         {
-            base.OnRenderSizeChanged(sizeInfo);
+            // Only process preview key events if they going to our editable text box
+            if (IsEditable && e.OriginalSource == HorusFilterEditTextBoxElement)
+            {
+                if (e.Key == Key.Up || e.Key == Key.Down)
+                {
+                    IsPreviewKeyUpAndDown = true;
+                }
+                base.OnKeyDown(e);
+            }
         }
 
         public override void OnApplyTemplate()
@@ -775,6 +759,7 @@ namespace HPSolutionCCDevPackage.netFramework
 
             ValidateUsingListFilterPossibility();
             this.SizeChanged += HorusBoxSizeChangedEvent;
+
             HorusFilterEditTextBoxElement = GetTemplateChild("FilterEditTextBox") as TextBox;
             HorusEditTextBoxElement = GetTemplateChild("PART_EditableTextBox") as TextBox;
 
@@ -840,13 +825,27 @@ namespace HPSolutionCCDevPackage.netFramework
         protected override void OnSelectionChanged(SelectionChangedEventArgs e)
         {
             base.OnSelectionChanged(e);
+
+            // If is not the filter thread call, so do job
             if (!IsFilterUpdatingSelectIndex && IsUsingListFilter)
             {
-                if (IsUsingListFilter)
+                // Change the flag when enter text change event
+                IsSelectionChangeEventUpdatingText = true;
+
+                // If user use navigating key to change selection
+                if (IsPreviewKeyUpAndDown)
                 {
                     UpdateHorusFilterEditableTextBox(true);
+                    IsPreviewKeyUpAndDown = false;
                 }
-                IsDropDownOpen = false;
+                // If user use mouse and normal case to change selection
+                else
+                {
+                    UpdateHorusFilterEditableTextBox(true);
+                    IsDropDownOpen = false;
+                }
+
+                IsSelectionChangeEventUpdatingText = false;
             }
         }
 
@@ -857,6 +856,7 @@ namespace HPSolutionCCDevPackage.netFramework
             {
                 HorusFilterEditTextBoxElement.Visibility = Visibility.Visible;
                 HorusFilterEditTextBoxElement.Focus();
+                e.Handled = true;
             }
         }
 
@@ -864,9 +864,7 @@ namespace HPSolutionCCDevPackage.netFramework
         {
             try
             {
-                IsSelectionChangeEventUpdatingText = true;
                 string text = Text;
-
                 // Copy ComboBox.Text to the editable TextBox
                 if (!String.IsNullOrEmpty(text) && HorusFilterEditTextBoxElement != null && HorusFilterEditTextBoxElement.Text != text)
                 {
@@ -881,17 +879,17 @@ namespace HPSolutionCCDevPackage.netFramework
             {
                 MessageBox.Show(e.Message);
             }
-            finally
-            {
-                IsSelectionChangeEventUpdatingText = false;
-            }
         }
 
         private void DoFilter(string filterString)
         {
-            IsFilterUpdatingSelectIndex = true;
             try
             {
+                // Change the flag when enter selection change event
+                // Remember: in filter process (Predicate), the selection change will be called
+                // hence should update the flag before doing filter
+                IsFilterUpdatingSelectIndex = true;
+
                 if (ItemsSource != null)
                 {
                     Items.Filter = new Predicate<object>(o => Filter(o, filterString));
@@ -901,14 +899,31 @@ namespace HPSolutionCCDevPackage.netFramework
                     Items.Filter = new Predicate<object>(o => Filter(o as ComboBoxItem, filterString));
                 }
 
-                if (Items.Count > 0 && SelectedIndex < 0)
-                {
-                    SelectedIndex = 0;
-                }
+                UpdateSeletedIndex();
             }
             finally
             {
                 IsFilterUpdatingSelectIndex = false;
+            }
+        }
+
+        private void UpdateSeletedIndex()
+        {
+            if (Items.Count > 0 && IsFilterUpdatingSelectIndex)
+            {
+                // If the text of horus was empty, mean user not input anything
+                if (String.IsNullOrEmpty(HorusFilterEditTextBoxElement.Text))
+                {
+                    SelectedIndex = -1;
+                }
+                else
+                {
+                    // Update the selected index to first item of the list while popup is opening
+                    if (IsDropDownOpen)
+                    {
+                        SelectedIndex = 0;
+                    }
+                }
             }
         }
 
