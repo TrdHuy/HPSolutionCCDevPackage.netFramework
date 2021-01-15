@@ -39,7 +39,7 @@
                                           Margin="{TemplateBinding Padding}"
                                           HorizontalScrollBarVisibility="Hidden"
                                           VerticalScrollBarVisibility="Hidden" />
-
+                            
                             <TextBox IsHitTestVisible="False"
                                      Text="{TemplateBinding Tag}"
                                      x:Name="placeholder"

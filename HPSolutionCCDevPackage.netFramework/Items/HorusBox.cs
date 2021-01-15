@@ -795,7 +795,6 @@ namespace HPSolutionCCDevPackage.netFramework
                 CustomHorusContentPresenterElement.Visibility = Visibility.Collapsed;
             }
 
-
         }
 
         private void HorusBoxSizeChangedEvent(object sender, SizeChangedEventArgs e)
@@ -898,7 +897,6 @@ namespace HPSolutionCCDevPackage.netFramework
                 {
                     Items.Filter = new Predicate<object>(o => Filter(o as ComboBoxItem, filterString));
                 }
-
                 UpdateSeletedIndex();
             }
             finally
