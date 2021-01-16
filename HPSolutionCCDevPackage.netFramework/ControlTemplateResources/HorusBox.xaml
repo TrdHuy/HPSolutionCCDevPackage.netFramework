@@ -249,12 +249,12 @@
                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
 
                                 <TextBox x:Name="FilterEditTextBox"
+                                         Text="{Binding FilterText,UpdateSourceTrigger=PropertyChanged}"
                                          Height="{Binding ContentAreaHeight}"
                                          Width="{Binding ContentAreaWidth}"
                                          HorizontalContentAlignment="Left"
                                          VerticalContentAlignment="Center"
                                          Style="{StaticResource HorusTextBox}"
-                                         IsHitTestVisible="False"
                                          Tag="{TemplateBinding Tag}"
                                          BorderThickness="0"
                                          Background="Transparent"
@@ -267,7 +267,6 @@
                                          HorizontalContentAlignment="Left"
                                          VerticalContentAlignment="Center"
                                          Style="{StaticResource HorusTextBox}"
-                                         IsHitTestVisible="False"
                                          Tag="{TemplateBinding Tag}"
                                          BorderThickness="0"
                                          Background="Transparent"

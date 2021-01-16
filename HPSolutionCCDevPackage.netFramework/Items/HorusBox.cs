@@ -569,6 +569,22 @@ namespace HPSolutionCCDevPackage.netFramework
         }
         #endregion
 
+        #region FilterText
+        public static readonly DependencyProperty FilterTextProperty =
+           DependencyProperty.Register(
+                       "FilterText",
+                       typeof(string),
+                       typeof(HorusBox),
+                       new PropertyMetadata(defaultFilterText),
+                       null);
+
+        public string FilterText
+        {
+            get { return (string)GetValue(FilterTextProperty); }
+            set { SetValue(FilterTextProperty, value); }
+        }
+        #endregion
+
         #endregion
 
         #region Private properties
@@ -595,6 +611,7 @@ namespace HPSolutionCCDevPackage.netFramework
         private static double defaultContentAreaHeight = 30d;
         private static double defaultDropDownAreaHeight = 30d;
         private static double defaultDropDownAreaWidth = 30d;
+        private static string defaultFilterText = "";
 
 
         #endregion
@@ -667,13 +684,14 @@ namespace HPSolutionCCDevPackage.netFramework
 
         private void HorusEditTexChangedEvent(object sender, TextChangedEventArgs e)
         {
+            TextBox ctrl = sender as TextBox;
+
             // If the flag is un-executed condition, return here 
             if (IsHorusFilterTextBoxLostFocusEventCallTextChangedEvent)
             {
                 return;
             }
 
-            TextBox ctrl = sender as TextBox;
 
             if (!IsSelectionChangeEventUpdatingText && ctrl.IsLoaded)
             {
@@ -696,6 +714,9 @@ namespace HPSolutionCCDevPackage.netFramework
         {
             if (IsEditable)
             {
+                bool selectAll = false;
+                bool usingTextChangeCallback = false;
+
                 // In case using custom template for item view
                 if (ItemTemplate != null)
                 {
@@ -706,21 +727,19 @@ namespace HPSolutionCCDevPackage.netFramework
                         CustomHorusContentPresenterElement.Visibility = Visibility.Visible;
                         SelectionHorusBoxItem = SelectedItem;
                         SelectionHorusBoxItemTemplate = ItemTemplate;
+
+                        // copy the text of HorusBox to filter edit text box
+                        UpdateHorusFilterEditableTextBox(selectAll, usingTextChangeCallback);
                     }
+
                 }
                 else
                 {
-                    // try to copy text of horusbox to filter edit text box if they are different
-                    if (!HorusFilterEditTextBoxElement.Text.Equals(Text))
+                    // In case there was not any selected item, the filter edit text will be visible instead of item presenter
+                    if (SelectedIndex != -1)
                     {
-                        // change the flag when enter text changed event
-                        IsHorusFilterTextBoxLostFocusEventCallTextChangedEvent = true;
-
-                        // copy the text
-                        HorusFilterEditTextBoxElement.Text = Text;
-
-                        // change the flag when outer text changed event
-                        IsHorusFilterTextBoxLostFocusEventCallTextChangedEvent = false;
+                        // copy the text of HorusBox to filter edit text box
+                        UpdateHorusFilterEditableTextBox(selectAll, usingTextChangeCallback);
                     }
                 }
 
@@ -858,19 +877,22 @@ namespace HPSolutionCCDevPackage.netFramework
             // If is not the filter thread call, so do job
             if (!IsFilterUpdatingSelectIndex && IsUsingListFilter)
             {
+                bool selectAll = true;
+                bool usingTextChangeCallback = true;
+
                 // Change the flag when enter text change event
                 IsSelectionChangeEventUpdatingText = true;
 
                 // If user use navigating key to change selection
                 if (IsPreviewKeyUpAndDown)
                 {
-                    UpdateHorusFilterEditableTextBox(true);
+                    UpdateHorusFilterEditableTextBox(selectAll, usingTextChangeCallback);
                     IsPreviewKeyUpAndDown = false;
                 }
                 // If user use mouse and normal case to change selection
                 else
                 {
-                    UpdateHorusFilterEditableTextBox(true);
+                    UpdateHorusFilterEditableTextBox(selectAll, usingTextChangeCallback);
                     IsDropDownOpen = false;
                 }
 
@@ -889,20 +911,39 @@ namespace HPSolutionCCDevPackage.netFramework
             }
         }
 
-        private void UpdateHorusFilterEditableTextBox(bool isSelectAll)
+        private void UpdateHorusFilterEditableTextBox(bool isSelectAll, bool isUsingTextChangeCallback)
         {
             try
             {
-                string text = Text;
-                // Copy ComboBox.Text to the editable TextBox
-                if (!String.IsNullOrEmpty(text) && HorusFilterEditTextBoxElement != null && HorusFilterEditTextBoxElement.Text != text)
+                if (isUsingTextChangeCallback)
                 {
-                    HorusFilterEditTextBoxElement.Text = text;
-                    if (isSelectAll)
+                    string text = Text;
+                    // Copy ComboBox.Text to the editable TextBox
+                    if (!String.IsNullOrEmpty(text) && HorusFilterEditTextBoxElement != null && HorusFilterEditTextBoxElement.Text != text)
                     {
-                        HorusFilterEditTextBoxElement.SelectAll();
+                        HorusFilterEditTextBoxElement.Text = text;
+                        if (isSelectAll)
+                        {
+                            HorusFilterEditTextBoxElement.SelectAll();
+                        }
                     }
                 }
+                else
+                {
+                    // try to copy text of horusbox to filter edit text box if they are different
+                    if (!HorusFilterEditTextBoxElement.Text.Equals(Text))
+                    {
+                        // change the flag when enter text changed event
+                        IsHorusFilterTextBoxLostFocusEventCallTextChangedEvent = true;
+
+                        // copy the text
+                        HorusFilterEditTextBoxElement.Text = Text;
+
+                        // change the flag when outer text changed event
+                        IsHorusFilterTextBoxLostFocusEventCallTextChangedEvent = false;
+                    }
+                }
+
             }
             catch (Exception e)
             {
@@ -1033,5 +1074,4 @@ namespace HPSolutionCCDevPackage.netFramework
             return false;
         }
     }
-
 }
