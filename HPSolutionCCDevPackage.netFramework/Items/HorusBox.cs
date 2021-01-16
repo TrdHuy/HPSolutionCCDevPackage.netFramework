@@ -607,6 +607,7 @@ namespace HPSolutionCCDevPackage.netFramework
         private bool IsSelectionChangeEventUpdatingText = false;
         private bool IsFilterUpdatingSelectIndex = false;
         private bool IsPreviewKeyUpAndDown = false;
+        private bool IsHorusFilterTextBoxLostFocusEventCallTextChangedEvent = false;
 
         private TextBox HorusEditTextBoxElement
         {
@@ -666,7 +667,14 @@ namespace HPSolutionCCDevPackage.netFramework
 
         private void HorusEditTexChangedEvent(object sender, TextChangedEventArgs e)
         {
+            // If the flag is un-executed condition, return here 
+            if (IsHorusFilterTextBoxLostFocusEventCallTextChangedEvent)
+            {
+                return;
+            }
+
             TextBox ctrl = sender as TextBox;
+
             if (!IsSelectionChangeEventUpdatingText && ctrl.IsLoaded)
             {
                 try
@@ -675,6 +683,7 @@ namespace HPSolutionCCDevPackage.netFramework
 
                     string filterString = ctrl.Text.Substring(0, ctrl.SelectionStart);
                     DoFilter(filterString);
+                    UpdateSeletedIndex("filter_text_change");
                 }
                 catch (Exception ex)
                 {
@@ -685,17 +694,38 @@ namespace HPSolutionCCDevPackage.netFramework
 
         private void HorusEditTextLostFocusEvent(object sender, RoutedEventArgs e)
         {
-            if (IsEditable && ItemTemplate != null)
+            if (IsEditable)
             {
-                // In case there was not any selected item, the filter edit text will be visible instead of item presenter
-                if (SelectedIndex != -1)
+                // In case using custom template for item view
+                if (ItemTemplate != null)
                 {
-                    HorusFilterEditTextBoxElement.Visibility = Visibility.Collapsed;
-                    CustomHorusContentPresenterElement.Visibility = Visibility.Visible;
-                    SelectionHorusBoxItem = SelectedItem;
-                    SelectionHorusBoxItemTemplate = ItemTemplate;
+                    // In case there was not any selected item, the filter edit text will be visible instead of item presenter
+                    if (SelectedIndex != -1)
+                    {
+                        HorusFilterEditTextBoxElement.Visibility = Visibility.Collapsed;
+                        CustomHorusContentPresenterElement.Visibility = Visibility.Visible;
+                        SelectionHorusBoxItem = SelectedItem;
+                        SelectionHorusBoxItemTemplate = ItemTemplate;
+                    }
                 }
+                else
+                {
+                    // try to copy text of horusbox to filter edit text box if they are different
+                    if (!HorusFilterEditTextBoxElement.Text.Equals(Text))
+                    {
+                        // change the flag when enter text changed event
+                        IsHorusFilterTextBoxLostFocusEventCallTextChangedEvent = true;
+
+                        // copy the text
+                        HorusFilterEditTextBoxElement.Text = Text;
+
+                        // change the flag when outer text changed event
+                        IsHorusFilterTextBoxLostFocusEventCallTextChangedEvent = false;
+                    }
+                }
+
             }
+
         }
 
         private void HorusEditTextGotFocusEvent(object sender, RoutedEventArgs e)
@@ -897,7 +927,6 @@ namespace HPSolutionCCDevPackage.netFramework
                 {
                     Items.Filter = new Predicate<object>(o => Filter(o as ComboBoxItem, filterString));
                 }
-                UpdateSeletedIndex();
             }
             finally
             {
@@ -905,24 +934,37 @@ namespace HPSolutionCCDevPackage.netFramework
             }
         }
 
-        private void UpdateSeletedIndex()
+        private void UpdateSeletedIndex(string handle)
         {
-            if (Items.Count > 0 && IsFilterUpdatingSelectIndex)
+            switch (handle)
             {
-                // If the text of horus was empty, mean user not input anything
-                if (String.IsNullOrEmpty(HorusFilterEditTextBoxElement.Text))
-                {
-                    SelectedIndex = -1;
-                }
-                else
-                {
-                    // Update the selected index to first item of the list while popup is opening
-                    if (IsDropDownOpen)
+                case "filter_text_change":
+                    if (Items.Count > 0)
                     {
-                        SelectedIndex = 0;
+                        // If the text of horus was empty, mean user not input anything
+                        if (String.IsNullOrEmpty(HorusFilterEditTextBoxElement.Text))
+                        {
+                            SelectedIndex = -1;
+                        }
+                        else
+                        {
+                            // Update the selected index to first item of the list while popup is opening
+                            if (IsDropDownOpen)
+                            {
+                                // Must set this flag to bypass OnselectionChange
+                                IsFilterUpdatingSelectIndex = true;
+
+                                SelectedIndex = 0;
+
+                                IsFilterUpdatingSelectIndex = false;
+                            }
+                        }
                     }
-                }
+                    break;
+                default:
+                    break;
             }
+
         }
 
         private bool Filter(ComboBoxItem cbI, string compareString)
@@ -991,4 +1033,5 @@ namespace HPSolutionCCDevPackage.netFramework
             return false;
         }
     }
+
 }
