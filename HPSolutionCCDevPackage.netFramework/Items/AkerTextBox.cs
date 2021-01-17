@@ -104,9 +104,8 @@ namespace HPSolutionCCDevPackage.netFramework
                 DataContext = this;
                 binding = new Binding("AkerExpense")
                 {
-                    StringFormat = "{0:#,##0}VND",
                     Mode = BindingMode.TwoWay,
-                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                    UpdateSourceTrigger = UpdateSourceTrigger.Explicit
                     //RelativeSource = new RelativeSource()
                     //{
                     //    Mode = RelativeSourceMode.FindAncestor,
@@ -176,6 +175,10 @@ namespace HPSolutionCCDevPackage.netFramework
                 else if (e.Key == Key.Back && SelectionStart != 0 && Text[SelectionStart - 1].Equals(','))
                 {
                     HandleBackSpaceAfterComma(e);
+                }
+                else
+                {
+                    base.OnPreviewKeyDown(e);
                 }
             }
             else

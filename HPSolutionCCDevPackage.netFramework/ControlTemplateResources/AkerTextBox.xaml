@@ -39,7 +39,7 @@
                                           Margin="{TemplateBinding Padding}"
                                           HorizontalScrollBarVisibility="Hidden"
                                           VerticalScrollBarVisibility="Hidden" />
-                            
+                            <!--Tag="{Binding RelativeSource={RelativeSource AncestorType=local:AkerTextBox,Mode=FindAncestor}, Path=AkerExpenseText}"-->
                             <TextBox IsHitTestVisible="False"
                                      Text="{TemplateBinding Tag}"
                                      x:Name="placeholder"
@@ -94,5 +94,4 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-
 </ResourceDictionary>
