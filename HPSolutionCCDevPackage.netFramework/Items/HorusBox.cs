@@ -543,6 +543,13 @@ namespace HPSolutionCCDevPackage.netFramework
                                 new PropertyChangedCallback(ContentAreaSizeChanegCallBack)),
                         null);
 
+        private static void ContentAreaSizeChanegCallBack(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HorusBox ctrl = d as HorusBox;
+            ctrl.Width = ctrl.ContentAreaWidth + ctrl.DropDownAreaWidth;
+            ctrl.Height = ctrl.ContentAreaHeight;
+        }
+
         public double DropDownAreaHeight
         {
             get { return (double)GetValue(DropDownAreaHeightProperty); }
@@ -682,7 +689,7 @@ namespace HPSolutionCCDevPackage.netFramework
             }
         }
 
-        private void HorusEditTexChangedEvent(object sender, TextChangedEventArgs e)
+        private void HorusFilterEditTexChangedEvent(object sender, TextChangedEventArgs e)
         {
             TextBox ctrl = sender as TextBox;
 
@@ -710,7 +717,7 @@ namespace HPSolutionCCDevPackage.netFramework
             }
         }
 
-        private void HorusEditTextLostFocusEvent(object sender, RoutedEventArgs e)
+        private void HorusFilterEditTextLostFocusEvent(object sender, RoutedEventArgs e)
         {
             if (IsEditable)
             {
@@ -747,7 +754,7 @@ namespace HPSolutionCCDevPackage.netFramework
 
         }
 
-        private void HorusEditTextGotFocusEvent(object sender, RoutedEventArgs e)
+        private void HorusFilterEditTextGotFocusEvent(object sender, RoutedEventArgs e)
         {
             // When text box got focus, it will return full of items list
             // Also applied in case popup change its focus to text box
@@ -761,11 +768,71 @@ namespace HPSolutionCCDevPackage.netFramework
             }
         }
 
-        private static void ContentAreaSizeChanegCallBack(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private void HorusFilterEditTexPreviewMouseDownEvent(object sender, MouseButtonEventArgs e)
         {
-            HorusBox ctrl = d as HorusBox;
-            ctrl.Width = ctrl.ContentAreaWidth + ctrl.DropDownAreaWidth;
-            ctrl.Height = ctrl.ContentAreaHeight;
+            HorusToggleButtonElement.IsChecked = !HorusToggleButtonElement.IsChecked;
+        }
+
+        private void HorusBoxSizeChangedEvent(object sender, SizeChangedEventArgs e)
+        {
+            if (ContentAreaWidth == 0 && ContentAreaHeight == 0
+                && DropDownAreaHeight == 0 && DropDownAreaWidth == 0)
+            {
+                double horusContentViewRatio = 0.89d;
+                double horusDropDownIconViewRatio = 1 - horusContentViewRatio;
+
+                ContentAreaHeight = e.NewSize.Height;
+                DropDownAreaHeight = RemoveDropDownIcon ? 0 : e.NewSize.Height;
+
+                ContentAreaWidth = RemoveDropDownIcon ? e.NewSize.Width : e.NewSize.Width * horusContentViewRatio;
+                DropDownAreaWidth = RemoveDropDownIcon ? 0 : e.NewSize.Width * horusDropDownIconViewRatio;
+            }
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            ValidateUsingListFilterPossibility();
+            this.SizeChanged += HorusBoxSizeChangedEvent;
+
+            HorusFilterEditTextBoxElement = GetTemplateChild("FilterEditTextBox") as TextBox;
+            HorusEditTextBoxElement = GetTemplateChild("PART_EditableTextBox") as TextBox;
+
+            HorusToggleButtonElement = GetTemplateChild("ToggleButton") as ToggleButton;
+            ContentPresenterElement = GetTemplateChild("contentPresenter") as ScrollViewer;
+            CustomHorusContentPresenterElement = GetTemplateChild("CustomPresenterWhenUseEditable") as ScrollViewer;
+
+            if (IsUsingListFilter)
+            {
+                HorusEditTextBoxElement.Visibility = Visibility.Collapsed;
+                HorusFilterEditTextBoxElement.Visibility = IsEditable ? Visibility.Visible : Visibility.Collapsed;
+                if (IsEditable)
+                {
+                    HorusFilterEditTextBoxElement.GotFocus += new RoutedEventHandler(HorusFilterEditTextGotFocusEvent);
+                    HorusFilterEditTextBoxElement.LostFocus += new RoutedEventHandler(HorusFilterEditTextLostFocusEvent);
+                    HorusFilterEditTextBoxElement.TextChanged += new TextChangedEventHandler(HorusFilterEditTexChangedEvent);
+                    HorusFilterEditTextBoxElement.PreviewMouseDown += new MouseButtonEventHandler(HorusFilterEditTexPreviewMouseDownEvent);
+                }
+            }
+            else
+            {
+                HorusEditTextBoxElement.Visibility = IsEditable ? Visibility.Visible : Visibility.Collapsed;
+                HorusFilterEditTextBoxElement.Visibility = Visibility.Collapsed;
+            }
+
+            if (IsEditable && ItemTemplate != null)
+            {
+                ContentPresenterElement.Visibility = Visibility.Collapsed;
+                CustomHorusContentPresenterElement.Visibility = IsUsingListFilter ? Visibility.Visible : Visibility.Collapsed;
+            }
+            else if (!IsEditable && ItemTemplate != null)
+            {
+                ContentPresenterElement.Visibility = Visibility.Visible;
+                CustomHorusContentPresenterElement.Visibility = Visibility.Collapsed;
+            }
+
+
         }
 
         protected override Size MeasureOverride(Size constraint)
@@ -799,74 +866,6 @@ namespace HPSolutionCCDevPackage.netFramework
                     IsPreviewKeyUpAndDown = true;
                 }
                 base.OnKeyDown(e);
-            }
-        }
-
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-
-            ValidateUsingListFilterPossibility();
-            this.SizeChanged += HorusBoxSizeChangedEvent;
-
-            HorusFilterEditTextBoxElement = GetTemplateChild("FilterEditTextBox") as TextBox;
-            HorusEditTextBoxElement = GetTemplateChild("PART_EditableTextBox") as TextBox;
-
-            HorusToggleButtonElement = GetTemplateChild("ToggleButton") as ToggleButton;
-            ContentPresenterElement = GetTemplateChild("contentPresenter") as ScrollViewer;
-            CustomHorusContentPresenterElement = GetTemplateChild("CustomPresenterWhenUseEditable") as ScrollViewer;
-
-            if (IsUsingListFilter)
-            {
-                HorusEditTextBoxElement.Visibility = Visibility.Collapsed;
-                HorusFilterEditTextBoxElement.Visibility = IsEditable ? Visibility.Visible : Visibility.Collapsed;
-                if (IsEditable)
-                {
-                    HorusFilterEditTextBoxElement.GotFocus += new RoutedEventHandler(HorusEditTextGotFocusEvent);
-                    HorusFilterEditTextBoxElement.LostFocus += new RoutedEventHandler(HorusEditTextLostFocusEvent);
-                    HorusFilterEditTextBoxElement.TextChanged += new TextChangedEventHandler(HorusEditTexChangedEvent);
-                }
-            }
-            else
-            {
-                HorusEditTextBoxElement.Visibility = IsEditable ? Visibility.Visible : Visibility.Collapsed;
-                HorusFilterEditTextBoxElement.Visibility = Visibility.Collapsed;
-            }
-
-            if (IsEditable && ItemTemplate != null)
-            {
-                ContentPresenterElement.Visibility = Visibility.Collapsed;
-                CustomHorusContentPresenterElement.Visibility = IsUsingListFilter ? Visibility.Visible : Visibility.Collapsed;
-            }
-            else if (!IsEditable && ItemTemplate != null)
-            {
-                ContentPresenterElement.Visibility = Visibility.Visible;
-                CustomHorusContentPresenterElement.Visibility = Visibility.Collapsed;
-            }
-
-        }
-
-        private void HorusBoxSizeChangedEvent(object sender, SizeChangedEventArgs e)
-        {
-            if (ContentAreaWidth == 0 && ContentAreaHeight == 0
-                && DropDownAreaHeight == 0 && DropDownAreaWidth == 0)
-            {
-                double horusContentViewRatio = 0.89d;
-                double horusDropDownIconViewRatio = 1 - horusContentViewRatio;
-
-                ContentAreaHeight = e.NewSize.Height;
-                DropDownAreaHeight = RemoveDropDownIcon ? 0 : e.NewSize.Height;
-
-                ContentAreaWidth = RemoveDropDownIcon ? e.NewSize.Width : e.NewSize.Width * horusContentViewRatio;
-                DropDownAreaWidth = RemoveDropDownIcon ? 0 : e.NewSize.Width * horusDropDownIconViewRatio;
-            }
-        }
-
-        private void ValidateUsingListFilterPossibility()
-        {
-            if (IsUsingListFilter && !IsEditable)
-            {
-                throw new InvalidOperationException("Cannot use list filter when un-editable");
             }
         }
 
@@ -908,6 +907,14 @@ namespace HPSolutionCCDevPackage.netFramework
                 HorusFilterEditTextBoxElement.Visibility = Visibility.Visible;
                 HorusFilterEditTextBoxElement.Focus();
                 e.Handled = true;
+            }
+        }
+
+        private void ValidateUsingListFilterPossibility()
+        {
+            if (IsUsingListFilter && !IsEditable)
+            {
+                throw new InvalidOperationException("Cannot use list filter when un-editable");
             }
         }
 
