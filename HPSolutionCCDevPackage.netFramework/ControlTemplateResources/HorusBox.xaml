@@ -200,8 +200,10 @@
 
                     <!--Horus box template-->
                     <Grid DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:HorusBox}}}"
-                          Height="{Binding Height}"
-                          Width="{Binding Width}">
+                          HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                          VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                          Height="{TemplateBinding Height}"
+                          Width="{TemplateBinding Width}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="{Binding ContentAreaWidth}" />
                             <ColumnDefinition Width="{Binding DropDownAreaWidth}" />
