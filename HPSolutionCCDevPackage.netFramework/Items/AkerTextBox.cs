@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -19,8 +20,8 @@ namespace HPSolutionCCDevPackage.netFramework
             DefaultStyleKey = typeof(AkerTextBox);
             this.IsTabStop = true;
 
-            EventManager.RegisterClassHandler(typeof(AkerTextBox), TextBox.PreviewTextInputEvent, new TextCompositionEventHandler(AkerPreviewTextInputEvent));
         }
+
         #region AkerTextBoxType
         public static readonly DependencyProperty AkerTextBoxTypeProperty =
            DependencyProperty.Register(
@@ -62,7 +63,7 @@ namespace HPSolutionCCDevPackage.netFramework
         public double AkerExpense
         {
             get { return (double)GetValue(AkerExpenseProperty); }
-            internal set { SetValue(AkerExpenseProperty, value); }
+            set { SetValue(AkerExpenseProperty, value); }
         }
 
         #endregion
@@ -99,30 +100,36 @@ namespace HPSolutionCCDevPackage.netFramework
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
+
             if (AkerTextBoxType == AkerTextBoxType.Expense)
             {
-                DataContext = this;
+
+                this.TextChanged -= new TextChangedEventHandler(AkerExpenseTextChangeEvent);
+                this.SelectionChanged -= new RoutedEventHandler(AkerExpenseSelectionChangedEvent);
+                this.PreviewTextInput -= new TextCompositionEventHandler(AkerPreviewTextInputEvent);
+
                 binding = new Binding("AkerExpense")
                 {
                     Mode = BindingMode.TwoWay,
-                    UpdateSourceTrigger = UpdateSourceTrigger.Explicit
-                    //RelativeSource = new RelativeSource()
-                    //{
-                    //    Mode = RelativeSourceMode.FindAncestor,
-                    //    AncestorType = typeof(AkerTextBox)
-                    //}
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+                    RelativeSource = new RelativeSource()
+                    {
+                        Mode = RelativeSourceMode.Self
+                    },
+                    Converter = new ExpenseConverter(AkerExpenseUnit)
                 };
-                binding.StringFormat = "{0:#,##0}" + " " + AkerExpenseUnit;
                 bindingEx = SetBinding(TextProperty, binding);
 
-
-                EventManager.RegisterClassHandler(typeof(AkerTextBox), TextBox.TextChangedEvent, new TextChangedEventHandler(AkerExpenseTextChangeEvent));
-                EventManager.RegisterClassHandler(typeof(AkerTextBox), TextBox.SelectionChangedEvent, new RoutedEventHandler(AkerExpenseSelectionChangedEvent));
                 //DataObject.AddPastingHandler(this, OnAkerTextBoxExpensePaste);
+                this.TextChanged += new TextChangedEventHandler(AkerExpenseTextChangeEvent);
+                this.SelectionChanged += new RoutedEventHandler(AkerExpenseSelectionChangedEvent);
+                this.PreviewTextInput += new TextCompositionEventHandler(AkerPreviewTextInputEvent);
+
             }
 
             ValidateAkerProperty();
         }
+
 
         private void ValidateAkerProperty()
         {
@@ -140,21 +147,36 @@ namespace HPSolutionCCDevPackage.netFramework
 
         private void AkerExpenseSelectionChangedEvent(object sender, RoutedEventArgs e)
         {
-            UpdateAkerExpenseSelection("limit_selection");
+            try
+            {
+                UpdateAkerExpenseSelection("limit_selection");
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show("AkerExpenseSelectionChangedEvent:" + ex.Message);
+            }
         }
 
         private void AkerExpenseTextChangeEvent(object sender, TextChangedEventArgs e)
         {
-            if (IsExpenseCallTextChange)
+            try
             {
-                UpdateAkerExpenseSelection("aker_text_change");
+                if (IsExpenseCallTextChange)
+                {
+                    UpdateAkerExpenseSelection("aker_text_change");
+                }
+                else
+                {
+                    OldCursorPos = SelectionStart;
+                    OldLenght = Text.Length;
+                }
+                //UpdateAkerExpense();
             }
-            else
+            catch (Exception ex)
             {
-                OldCursorPos = SelectionStart;
-                OldLenght = Text.Length;
+                //MessageBox.Show("AkerExpenseTextChangeEvent:" + ex.Message);
             }
-            UpdateAkerExpense();
+
         }
 
         protected override void OnPreviewKeyDown(KeyEventArgs e)
@@ -197,55 +219,75 @@ namespace HPSolutionCCDevPackage.netFramework
 
         private void UpdateAkerExpenseSelection(string handle)
         {
-            int selectionEnd = 0;
-            if (Text.IndexOf(AkerExpenseUnit) > 0)
+            try
             {
-                LastSelectableIndex = Text.IndexOf(AkerExpenseUnit) - 1;
-                selectionEnd = SelectionStart + SelectionLength;
+                int selectionEnd = 0;
+                if (Text.IndexOf(AkerExpenseUnit) > 0)
+                {
+                    LastSelectableIndex = Text.IndexOf(AkerExpenseUnit) - 1;
+                    selectionEnd = SelectionStart + SelectionLength;
+                }
+                switch (handle)
+                {
+                    case "back_space_after_comma":
+                        SelectionStart = SelectionStart - 1;
+                        break;
+                    case "aker_text_change":
+                        if (OldCursorPos != -1)
+                        {
+                            if (Text.Length > OldLenght)
+                            {
+                                SelectionStart = OldCursorPos + 1;
+                            }
+                            else if (Text.Length == OldLenght)
+                            {
+                                SelectionStart = OldCursorPos;
+                            }
+                            else if (Text.Length < OldLenght && OldCursorPos > 0)
+                            {
+                                SelectionStart = OldCursorPos - 1;
+                            }
+                        }
+                        break;
+                    case "limit_selection":
+                        if (SelectionStart > LastSelectableIndex)
+                        {
+                            SelectionStart = LastSelectableIndex;
+                        }
+                        else if (selectionEnd > LastSelectableIndex)
+                        {
+                            SelectionLength -= (selectionEnd - LastSelectableIndex);
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
-            switch (handle)
+            catch (Exception e)
             {
-                case "back_space_after_comma":
-                    SelectionStart = SelectionStart - 1;
-                    break;
-                case "aker_text_change":
-                    if (OldCursorPos != -1)
-                    {
-                        if (Text.Length > OldLenght)
-                        {
-                            SelectionStart = OldCursorPos + 1;
-                        }
-                        else if (Text.Length == OldLenght)
-                        {
-                            SelectionStart = OldCursorPos;
-                        }
-                        else if (Text.Length < OldLenght && OldCursorPos > 0)
-                        {
-                            SelectionStart = OldCursorPos - 1;
-                        }
-                    }
-                    break;
-                case "limit_selection":
-                    if (SelectionStart > LastSelectableIndex)
-                    {
-                        SelectionStart = LastSelectableIndex;
-                    }
-                    else if (selectionEnd > LastSelectableIndex)
-                    {
-                        SelectionLength -= (selectionEnd - LastSelectableIndex);
-                    }
-                    break;
-                default:
-                    break;
+                //MessageBox.Show("UpdateAkerExpenseSelection:" + "handle = " + handle + "__message:" + e.Message);
             }
+
         }
 
         private void UpdateAkerExpense()
         {
-            IsExpenseCallTextChange = true;
-            AkerExpense = ConvertExpenseHelper();
-            bindingEx?.UpdateTarget();
-            IsExpenseCallTextChange = false;
+            try
+            {
+                IsExpenseCallTextChange = true;
+                AkerExpense = ConvertExpenseHelper();
+                bindingEx?.UpdateTarget();
+                IsExpenseCallTextChange = false;
+            }
+            catch (Exception e)
+            {
+                //MessageBox.Show("UpdateAkerExpense:" + e.ToString());
+            }
+            finally
+            {
+                IsExpenseCallTextChange = false;
+            }
+
         }
 
         // Method to convert current text in textbox to double value
@@ -261,13 +303,21 @@ namespace HPSolutionCCDevPackage.netFramework
                 {
                     var matches = Regex.Matches(Text, @"\d+");
                     var toArray = from Match match in matches select match.Value;
-                    string value = string.Join("", toArray);
+                    string cED = string.Join("", toArray);
 
-                    result = Convert.ToDouble(value);
+                    if (!String.IsNullOrEmpty(cED))
+                    {
+                        result = Convert.ToDouble(cED);
+                    }
+                    else
+                    {
+                        result = 0;
+                    }
                 }
             }
             catch (Exception e)
             {
+                MessageBox.Show("ConvertExpenseHelper:" + e.ToString());
                 result = 0;
             }
             return result;
@@ -336,16 +386,30 @@ namespace HPSolutionCCDevPackage.netFramework
 
         private void ExpenseTextBoxInput(TextCompositionEventArgs e)
         {
-            var regex = new Regex(@"^[0-9]*$");
-            if ((regex.IsMatch(e.Text) && SelectionStart <= Text.IndexOf(AkerExpenseUnit)) &&
-                !(e.Text.Equals("0") && (SelectionStart == 0 || ConvertExpenseHelper() == 0)))
+            double v = 0;
+            try
             {
-                e.Handled = false;
+                v = ConvertExpenseHelper();
+                var regex = new Regex(@"^[0-9]*$");
+                if (regex.IsMatch(e.Text) && !(e.Text.Equals("0") && (SelectionStart == 0 || v == 0)))
+                {
+                    e.Handled = false;
+                }
+                else
+                {
+                    e.Handled = true;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                e.Handled = true;
+                //MessageBox.Show("ExpenseTextBoxInput:" + ex.Message);
+                //MessageBox.Show("ExpenseTextBoxInput:" + ex.Message + "\n" +
+                //    "Text = " + Text == null ? "null" : Text + "\n" +
+                //    "SelectionStart = " + SelectionStart + "\n" +
+                //    "AkerExpenseUnit = " + AkerExpenseUnit == null ? "null" : AkerExpenseUnit + "\n"
+                //    );
             }
+
         }
     }
 
@@ -356,5 +420,50 @@ namespace HPSolutionCCDevPackage.netFramework
         Decimal = 2,
         Alphabet = 3,
         Expense = 4
+    }
+
+    internal class ExpenseConverter : IValueConverter
+    {
+        private string ExpenseUnit;
+
+        internal ExpenseConverter(string unit)
+        {
+            ExpenseUnit = unit;
+        }
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string res = String.Format("{0:N0} " + ExpenseUnit,
+                         value);
+            return res;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            double result = 0;
+            try
+            {
+
+                if (!String.IsNullOrEmpty(value.ToString()))
+                {
+                    var matches = Regex.Matches(value.ToString(), @"\d+");
+                    var toArray = from Match match in matches select match.Value;
+                    string cED = string.Join("", toArray);
+
+                    if (!String.IsNullOrEmpty(cED))
+                    {
+                        result = System.Convert.ToDouble(cED);
+                    }
+                    else
+                    {
+                        result = 0;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                result = 0;
+            }
+            return result;
+        }
     }
 }
