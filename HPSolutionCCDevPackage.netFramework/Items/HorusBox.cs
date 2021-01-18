@@ -546,8 +546,6 @@ namespace HPSolutionCCDevPackage.netFramework
         private static void ContentAreaSizeChanegCallBack(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             HorusBox ctrl = d as HorusBox;
-            ctrl.Width = ctrl.ContentAreaWidth + ctrl.DropDownAreaWidth;
-            ctrl.Height = ctrl.ContentAreaHeight;
         }
 
         public double DropDownAreaHeight
@@ -775,11 +773,12 @@ namespace HPSolutionCCDevPackage.netFramework
 
         private void HorusBoxSizeChangedEvent(object sender, SizeChangedEventArgs e)
         {
+            double horusContentViewRatio = 0.89d;
+            double horusDropDownIconViewRatio = 1 - horusContentViewRatio;
+
             if (ContentAreaWidth == 0 && ContentAreaHeight == 0
                 && DropDownAreaHeight == 0 && DropDownAreaWidth == 0)
             {
-                double horusContentViewRatio = 0.89d;
-                double horusDropDownIconViewRatio = 1 - horusContentViewRatio;
 
                 ContentAreaHeight = e.NewSize.Height;
                 DropDownAreaHeight = RemoveDropDownIcon ? 0 : e.NewSize.Height;
@@ -787,7 +786,21 @@ namespace HPSolutionCCDevPackage.netFramework
                 ContentAreaWidth = RemoveDropDownIcon ? e.NewSize.Width : e.NewSize.Width * horusContentViewRatio;
                 DropDownAreaWidth = RemoveDropDownIcon ? 0 : e.NewSize.Width * horusDropDownIconViewRatio;
             }
+            else
+            {
+                if (VerticalAlignment == VerticalAlignment.Stretch)
+                {
+                    ContentAreaWidth = RemoveDropDownIcon ? e.NewSize.Width : e.NewSize.Width * horusContentViewRatio;
+                    DropDownAreaWidth = RemoveDropDownIcon ? 0 : e.NewSize.Width * horusDropDownIconViewRatio;
+                }
+                if (HorizontalAlignment == HorizontalAlignment.Stretch)
+                {
+                    ContentAreaHeight = e.NewSize.Height;
+                    DropDownAreaHeight = RemoveDropDownIcon ? 0 : e.NewSize.Height;
+                }
+            }
         }
+
 
         public override void OnApplyTemplate()
         {
@@ -833,6 +846,16 @@ namespace HPSolutionCCDevPackage.netFramework
             }
 
 
+        }
+
+        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+        {
+            base.OnRenderSizeChanged(sizeInfo);
+        }
+
+        protected override void OnChildDesiredSizeChanged(UIElement child)
+        {
+            base.OnChildDesiredSizeChanged(child);
         }
 
         protected override Size MeasureOverride(Size constraint)
