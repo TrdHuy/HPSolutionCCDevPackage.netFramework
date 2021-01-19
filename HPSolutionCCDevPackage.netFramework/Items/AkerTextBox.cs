@@ -100,13 +100,13 @@ namespace HPSolutionCCDevPackage.netFramework
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
+            this.PreviewTextInput += new TextCompositionEventHandler(AkerPreviewTextInputEvent);
 
             if (AkerTextBoxType == AkerTextBoxType.Expense)
             {
 
                 this.TextChanged -= new TextChangedEventHandler(AkerExpenseTextChangeEvent);
                 this.SelectionChanged -= new RoutedEventHandler(AkerExpenseSelectionChangedEvent);
-                this.PreviewTextInput -= new TextCompositionEventHandler(AkerPreviewTextInputEvent);
 
                 binding = new Binding("AkerExpense")
                 {
@@ -123,7 +123,6 @@ namespace HPSolutionCCDevPackage.netFramework
                 //DataObject.AddPastingHandler(this, OnAkerTextBoxExpensePaste);
                 this.TextChanged += new TextChangedEventHandler(AkerExpenseTextChangeEvent);
                 this.SelectionChanged += new RoutedEventHandler(AkerExpenseSelectionChangedEvent);
-                this.PreviewTextInput += new TextCompositionEventHandler(AkerPreviewTextInputEvent);
 
             }
 
