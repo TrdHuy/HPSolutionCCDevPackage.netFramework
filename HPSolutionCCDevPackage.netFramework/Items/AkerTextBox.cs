@@ -47,7 +47,7 @@ namespace HPSolutionCCDevPackage.netFramework
 
         #region AkerExpense
         public static readonly DependencyProperty AkerExpenseProperty =
-            DependencyProperty.Register("AkerExpense", typeof(double), typeof(AkerTextBox),
+            DependencyProperty.Register("AkerExpense", typeof(decimal), typeof(AkerTextBox),
                                                 new PropertyMetadata(defaultAkerExpense,
                                                     new PropertyChangedCallback(AkerExpenseChangedCallback)));
 
@@ -60,9 +60,9 @@ namespace HPSolutionCCDevPackage.netFramework
         /// <summary>
         /// Used to set the AkerExpense
         /// </summary>
-        public double AkerExpense
+        public decimal AkerExpense
         {
-            get { return (double)GetValue(AkerExpenseProperty); }
+            get { return (decimal)GetValue(AkerExpenseProperty); }
             set { SetValue(AkerExpenseProperty, value); }
         }
 
@@ -87,7 +87,7 @@ namespace HPSolutionCCDevPackage.netFramework
         #endregion
 
         private static AkerTextBoxType defaultAkerTextBoxType = AkerTextBoxType.Normal;
-        private static double defaultAkerExpense = 0d;
+        private static decimal defaultAkerExpense = default(decimal);
         private static string defaultAkerExpenseUnit = "$";
 
         private Binding binding;
@@ -292,9 +292,9 @@ namespace HPSolutionCCDevPackage.netFramework
         // Method to convert current text in textbox to double value
         // this will get all number from current text, then concat them,
         // and last convert it to double
-        private double ConvertExpenseHelper()
+        private decimal ConvertExpenseHelper()
         {
-            double result = 0;
+            decimal result = 0;
             try
             {
 
@@ -306,7 +306,7 @@ namespace HPSolutionCCDevPackage.netFramework
 
                     if (!String.IsNullOrEmpty(cED))
                     {
-                        result = Convert.ToDouble(cED);
+                        result = Convert.ToDecimal(cED);
                     }
                     else
                     {
@@ -385,7 +385,7 @@ namespace HPSolutionCCDevPackage.netFramework
 
         private void ExpenseTextBoxInput(TextCompositionEventArgs e)
         {
-            double v = 0;
+            decimal v = 0;
             try
             {
                 v = ConvertExpenseHelper();
@@ -438,7 +438,7 @@ namespace HPSolutionCCDevPackage.netFramework
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            double result = 0;
+            decimal result = 0;
             try
             {
 
@@ -450,7 +450,7 @@ namespace HPSolutionCCDevPackage.netFramework
 
                     if (!String.IsNullOrEmpty(cED))
                     {
-                        result = System.Convert.ToDouble(cED);
+                        result = System.Convert.ToDecimal(cED);
                     }
                     else
                     {
