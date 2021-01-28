@@ -40,6 +40,7 @@ namespace HPSolutionCCDevPackage.netFramework
     public class AnubisMessageBox : Window
     {
 
+        #region Public properties
         #region TitleBarBackground
         public static readonly DependencyProperty TitleBarBackgroundProperty =
             DependencyProperty.Register("TitleBarBackground", typeof(Brush), typeof(AnubisMessageBox),
@@ -82,7 +83,12 @@ namespace HPSolutionCCDevPackage.netFramework
                  new FrameworkPropertyMetadata(
                     defaulCustomMessageContent,
                     FrameworkPropertyMetadataOptions.AffectsRender,
-                    null));
+                    new PropertyChangedCallback(OnCustomContentChangeCallback)));
+
+        private static void OnCustomContentChangeCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            AnubisMessageBox ctrl = d as AnubisMessageBox;
+        }
 
         /// <summary>
         /// Content of the menu tab
@@ -258,6 +264,8 @@ namespace HPSolutionCCDevPackage.netFramework
             get { return (AnubisMessageImage)GetValue(AnubisMesIconProperty); }
             set { SetValue(AnubisMesIconProperty, value); }
         }
+        #endregion
+
         #endregion
 
         private double _minWindowHeight = 150;
@@ -602,6 +610,40 @@ namespace HPSolutionCCDevPackage.netFramework
                 WindowStartupLocation.CenterOwner);
         }
         public AnubisMessageBox(
+            object customMessageContent)
+        {
+            Instantiate(null,
+                null,
+                customMessageContent,
+                AnubisMessageBoxType.Default,
+                AnubisMessageImage.Non,
+                WindowStartupLocation.CenterScreen);
+        }
+        public AnubisMessageBox(
+            object customMessageContent,
+            AnubisMessageBoxType anubisType)
+        {
+            Instantiate(null,
+                null,
+                customMessageContent,
+                anubisType,
+                AnubisMessageImage.Non,
+                WindowStartupLocation.CenterScreen);
+        }
+        public AnubisMessageBox(
+            object customMessageContent,
+            AnubisMessageBoxType anubisType,
+            string caption)
+        {
+            Instantiate(null,
+                null,
+                customMessageContent,
+                anubisType,
+                AnubisMessageImage.Non,
+                WindowStartupLocation.CenterScreen,
+                caption);
+        }
+        public AnubisMessageBox(
             Window ownerWindow,
             object customMessageContent,
             AnubisMessageBoxType anubisType)
@@ -767,7 +809,6 @@ namespace HPSolutionCCDevPackage.netFramework
         {
             base.OnRenderSizeChanged(sizeInfo);
         }
-
 
         public new AnubisMessgaeResult Show()
         {

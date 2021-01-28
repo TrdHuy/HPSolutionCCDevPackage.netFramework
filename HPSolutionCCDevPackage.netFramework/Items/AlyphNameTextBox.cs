@@ -10,7 +10,7 @@ using System.Windows.Shapes;
 
 namespace HPSolutionCCDevPackage.netFramework
 {
-    public class AlyphNameTextBox : Control
+    internal class AlyphNameTextBox : Control
     {
 
         public AlyphNameTextBox()

@@ -38,6 +38,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -53,6 +54,14 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="ControlTemplateResources\AkerTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ControlTemplateResources\AnubisMessageBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ControlTemplateResources\AtumImageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -79,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Items\AkerTextBox.cs" />
+    <Compile Include="Items\AtumImageView.cs" />
     <Compile Include="Items\HathorScrollView.cs" />
     <Compile Include="Items\AlyphNameTextBox.cs" />
     <Compile Include="Items\AnubisMessageBox.cs" />
@@ -97,6 +107,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Utils\HPSPExtension.cs" />
     <Compile Include="Utils\InputCommand.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
