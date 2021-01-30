@@ -16,11 +16,14 @@ using System.Diagnostics;
 using System.Windows.Data;
 using System.Windows.Markup.Primitives;
 using HPSolutionCCDevPackage.netFramework.Utils;
+using System.Reflection;
 
 namespace HPSolutionCCDevPackage.netFramework
 {
     public class AtumImageView : Control
     {
+        private static Logger logger = new Logger("AtumImageView");
+
         public AtumImageView()
         {
             DefaultStyleKey = typeof(AtumImageView);
@@ -313,6 +316,9 @@ namespace HPSolutionCCDevPackage.netFramework
             ctrl.ValidatePropertyFeasibility();
         }
 
+        /// <summary>
+        /// Use image locate helper window to get image location data
+        /// </summary>
         public bool IsSupportImageLocateHelper
         {
             get
@@ -350,8 +356,13 @@ namespace HPSolutionCCDevPackage.netFramework
                     new FrameworkPropertyMetadata(
                             default(AtumUserData),
                             FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender,
-                            null),
+                            new PropertyChangedCallback(AtumUserDataChangedCallback)),
                     null);
+
+        private static void AtumUserDataChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            AtumImageView ctrl = d as AtumImageView;
+        }
 
         public AtumUserData AtumImageData
         {
@@ -366,6 +377,35 @@ namespace HPSolutionCCDevPackage.netFramework
         }
         #endregion
 
+        #region IsEnableAtumTransformer
+        public static readonly DependencyProperty IsEnableAtumTransformerProperty =
+            DependencyProperty.Register(
+                    "IsEnableAtumTransformer",
+                    typeof(bool),
+                    typeof(AtumImageView),
+                    new PropertyMetadata(
+                            false,
+                            new PropertyChangedCallback(IsEnableAtumTransformerChangedCallback)),
+                    null);
+
+        private static void IsEnableAtumTransformerChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            AtumImageView ctrl = d as AtumImageView;
+            ctrl.UpdateAtumTransformerFunction();
+        }
+
+        public bool IsEnableAtumTransformer
+        {
+            get
+            {
+                return (bool)GetValue(IsEnableAtumTransformerProperty);
+            }
+            set
+            {
+                SetValue(IsEnableAtumTransformerProperty, value);
+            }
+        }
+        #endregion
 
         #endregion
 
@@ -379,6 +419,7 @@ namespace HPSolutionCCDevPackage.netFramework
         private AtumLocator atumLocator;
         private AtumZoomer atumZoomer;
         private TransformHelperWindow locateHelperWindow;
+        private int sourceChangedCounter = 0;
 
         internal AtumUserData tempUserData = new AtumUserData();
 
@@ -399,11 +440,14 @@ namespace HPSolutionCCDevPackage.netFramework
 
         public void ResetAtumTransform()
         {
-            if (IsSupportAtumLocator)
+            AtumImageData = null;
+            tempUserData = null;
+
+            if (IsSupportAtumLocator && IsEnableAtumTransformer)
             {
                 atumLocator.ResetLocator();
             }
-            if (IsSupportAtumZoomer)
+            if (IsSupportAtumZoomer && IsEnableAtumTransformer)
             {
                 atumZoomer.ResetZoomer();
             }
@@ -438,6 +482,7 @@ namespace HPSolutionCCDevPackage.netFramework
             if (ReadLocalValue(SourceProperty) != DependencyProperty.UnsetValue &&
                 ReadLocalValue(ImagePathProperty) != DependencyProperty.UnsetValue)
             {
+                logger.E("InvalidOperationException: Can not use both Source and Imagepath at the same time");
                 throw new InvalidOperationException("Can not use both Source and Imagepath at the same time");
             }
         }
@@ -446,26 +491,28 @@ namespace HPSolutionCCDevPackage.netFramework
         {
             base.OnApplyTemplate();
 
-            AtumImageElement = GetTemplateChild("ImagePresenter") as AtumImage;
-            AtumContentGridElement = GetTemplateChild("AtumContentGrid") as Grid;
-            AtumMainGridElement = GetTemplateChild("AtumMainGrid") as Grid;
-            GridContentStreamGeoElement = GetTemplateChild("GridContentStreamGeometry") as StreamGeometry;
+            try
+            {
+                AtumImageElement = GetTemplateChild("ImagePresenter") as AtumImage;
+                AtumContentGridElement = GetTemplateChild("AtumContentGrid") as Grid;
+                AtumMainGridElement = GetTemplateChild("AtumMainGrid") as Grid;
+                GridContentStreamGeoElement = GetTemplateChild("GridContentStreamGeometry") as StreamGeometry;
 
-            AtumMainGridElement.SizeChanged += OnAtumMainGridSizeChanged;
+                AtumMainGridElement.SizeChanged += OnAtumMainGridSizeChanged;
 
-            ValidatePropertyFeasibility();
-            SetUpFeature();
+                ValidatePropertyFeasibility();
+                SetUpFeature();
+            }
+            catch (Exception e)
+            {
+                logger.E("Exception: " + e.Message);
+                SetUpAlternativeFeature();
+            }
         }
 
         protected virtual void OnAtumMainGridSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            //if (!e.Handled)
-            //{
-            //    UpdateBoundary(e.NewSize.Height,
-            //        e.NewSize.Width,
-            //        CornerRadius,
-            //        BorderThickness);
-            //}
+            logger.I("OnMainGridSizeChanged: from " + e.PreviousSize + " to " + e.NewSize);
 
             if (!e.Handled && GridContentStreamGeoElement != null && IsUsingAtumClippingBorder)
             {
@@ -487,6 +534,19 @@ namespace HPSolutionCCDevPackage.netFramework
 
         protected virtual void OnAtumImageSourceChanged(ImageSourceChangedEventArgs e)
         {
+            logger.I("OnImageSourceChanged: New source: " + e.NewValue.ToString());
+
+            // Increase source change counter everytime source change
+            sourceChangedCounter++;
+
+            // Clear atum image data
+            // Avoid clear atum data when the first time source change
+            if (sourceChangedCounter > 1)
+            {
+                AtumImageData = null;
+                tempUserData = null;
+            }
+
             RaiseEvent(e);
         }
 
@@ -501,15 +561,20 @@ namespace HPSolutionCCDevPackage.netFramework
 
         protected virtual void OnImageSourceRendered(DrawingContext drawingContext)
         {
+            logger.I("[OnImageSourceRendered]");
+
             AtumImageSourceRenderedEventArgs e = new AtumImageSourceRenderedEventArgs(
                  AtumImageView.AtumImageSourceRenderedEvent,
                  drawingContext,
                  Source);
+
             RaiseEvent(e);
         }
 
         protected virtual void OnPreviewAsyncSourceUpdated(PreviewAsyncSourceUpdatedEventArgs preSourceArg)
         {
+            logger.I("[OnPreviewAsyncSourceUpdated]");
+
             RaiseEvent(preSourceArg);
         }
         #endregion
@@ -531,34 +596,30 @@ namespace HPSolutionCCDevPackage.netFramework
                 AtumContentGridElement,
                 AtumImageElement);
 
-                if (!IsSupportImageLocateHelper)
-                {
-                    AtumImageElement.MouseLeftButtonDown += atumLocator.AtumImagePrsenter_MouseLeftDown;
-                    AtumImageElement.MouseLeftButtonUp += atumLocator.AtumImagePrsenter_MouseLeftUp;
-                    AtumImageElement.MouseMove += atumLocator.AtumImagePresenter_MouseMove;
-                    AtumImageElement.MouseLeave += atumLocator.AtumImagePrsenter_MouseLeave;
-                }
-                else
-                {
-                    locateHelperWindow = new TransformHelperWindow(this);
-                    this.MouseLeftButtonDown += locateHelperWindow.AtumImageView_MouseLeftButtonDown;
-                    this.MouseEnter += locateHelperWindow.AtumImageView_MouseEnter;
-                }
-
-
                 if (IsSupportAtumZoomer)
                 {
                     atumZoomer = new AtumZoomer(this, AtumImageElement, AtumContentGridElement, AtumMainGridElement);
-
-                    if (!IsSupportImageLocateHelper)
-                    {
-                        AtumImageElement.MouseWheel += atumZoomer.AtumImagePrsenter_MouseWheel;
-                    }
                 }
+
+                if (IsSupportImageLocateHelper)
+                {
+                    locateHelperWindow = new TransformHelperWindow(this);
+                }
+
+                UpdateAtumTransformerFunction();
             }
             else
             {
+                SetUpAlternativeFeature();
+            }
 
+        }
+
+
+        private void SetUpAlternativeFeature()
+        {
+            if(AtumImageElement != null)
+            {
                 var bindingVertical = new Binding("VerticalContentAlignment")
                 {
                     Mode = BindingMode.TwoWay,
@@ -583,6 +644,49 @@ namespace HPSolutionCCDevPackage.netFramework
 
         }
 
+
+
+        private void UpdateAtumTransformerFunction()
+        {
+            if (AtumImageElement != null && IsInitialized)
+            {
+                if (atumLocator != null && IsEnableAtumTransformer)
+                {
+                    if (!IsSupportImageLocateHelper)
+                    {
+                        AtumImageElement.MouseLeftButtonDown -= atumLocator.AtumImagePrsenter_MouseLeftDown;
+                        AtumImageElement.MouseLeftButtonUp -= atumLocator.AtumImagePrsenter_MouseLeftUp;
+                        AtumImageElement.MouseMove -= atumLocator.AtumImagePresenter_MouseMove;
+                        AtumImageElement.MouseLeave -= atumLocator.AtumImagePrsenter_MouseLeave;
+
+                        AtumImageElement.MouseLeftButtonDown += atumLocator.AtumImagePrsenter_MouseLeftDown;
+                        AtumImageElement.MouseLeftButtonUp += atumLocator.AtumImagePrsenter_MouseLeftUp;
+                        AtumImageElement.MouseMove += atumLocator.AtumImagePresenter_MouseMove;
+                        AtumImageElement.MouseLeave += atumLocator.AtumImagePrsenter_MouseLeave;
+                    }
+                    else
+                    {
+                        this.MouseLeftButtonDown -= locateHelperWindow.AtumImageView_MouseLeftButtonDown;
+                        this.MouseEnter -= locateHelperWindow.AtumImageView_MouseEnter;
+
+                        this.MouseLeftButtonDown += locateHelperWindow.AtumImageView_MouseLeftButtonDown;
+                        this.MouseEnter += locateHelperWindow.AtumImageView_MouseEnter;
+                    }
+                }
+
+                if (atumZoomer != null && IsEnableAtumTransformer)
+                {
+                    if (!IsSupportImageLocateHelper)
+                    {
+                        AtumImageElement.MouseWheel -= atumZoomer.AtumImagePrsenter_MouseWheel;
+                        AtumImageElement.MouseWheel += atumZoomer.AtumImagePrsenter_MouseWheel;
+                    }
+                }
+
+            }
+
+        }
+
         private void ValidatePropertyFeasibility()
         {
             if (!IsInitialized)
@@ -594,6 +698,7 @@ namespace HPSolutionCCDevPackage.netFramework
             {
                 if (!IsSupportAtumLocator)
                 {
+                    logger.E("AtumImageData must be used with AtumLocator or AtumZoomer");
                     throw new InvalidOperationException("AtumImageData must be used with AtumLocator or AtumZoomer");
                 }
             }
@@ -602,11 +707,13 @@ namespace HPSolutionCCDevPackage.netFramework
             {
                 if (Stretch != Stretch.UniformToFill)
                 {
+                    logger.E("IsSupportAtumLocator must be used with stretch UniformToFill");
                     throw new InvalidOperationException("IsSupportAtumLocator must be used with stretch UniformToFill");
                 }
 
                 if (!IsUsingAtumClippingBorder)
                 {
+                    logger.E("IsSupportAtumLocator must be used with Atum Clipping Border");
                     throw new InvalidOperationException("IsSupportAtumLocator must be used with Atum Clipping Border");
                 }
 
@@ -616,6 +723,7 @@ namespace HPSolutionCCDevPackage.netFramework
             {
                 if (!IsSupportAtumLocator)
                 {
+                    logger.E("AtumZoomer must be used with Atum Locator");
                     throw new InvalidOperationException("AtumZoomer must be used with Atum Locator");
                 }
             }
@@ -624,6 +732,7 @@ namespace HPSolutionCCDevPackage.netFramework
             {
                 if (!IsSupportAtumLocator)
                 {
+                    logger.E("Image Locate Helper must be used with Atum Locator");
                     throw new InvalidOperationException("Image Locate Helper must be used with Atum Locator");
                 }
             }
@@ -632,6 +741,7 @@ namespace HPSolutionCCDevPackage.netFramework
 
         private void UpdateStates(bool useTransitions, bool IsBusy)
         {
+            logger.I("[AtumImageView] State change: busy=" + IsBusy);
 
             if (IsBusy)
             {
@@ -645,6 +755,8 @@ namespace HPSolutionCCDevPackage.netFramework
 
         private async void UpdateAtumSource(object sender, string newImagePath, string oldImagePath)
         {
+            logger.I("[UpdateAtumSource] newImagePath=" + newImagePath + "oldImagePath=" + oldImagePath);
+
             //Preview async source update
             var preSourceArg = new PreviewAsyncSourceUpdatedEventArgs(
                 AtumImageView.PreviewAsyncSourceUpdatedEvent,
@@ -927,6 +1039,21 @@ namespace HPSolutionCCDevPackage.netFramework
 
                 return attachedProperties;
             }
+
+            public static object CloneProperties(object obj)
+            {
+                if (obj != null)
+                {
+                    var listProperties = obj.GetType().GetProperties();
+                    var x = Activator.CreateInstance(obj.GetType());
+                    foreach (PropertyInfo pi in listProperties)
+                    {
+                        x.GetType().GetProperty(pi.Name).SetValue(x, pi.GetValue(obj));
+                    }
+                    return x;
+                }
+                return null;
+            }
         }
         private struct Radii
         {
@@ -1021,6 +1148,7 @@ namespace HPSolutionCCDevPackage.netFramework
             {
                 if (border == null || frame == null || imagePresenter == null || contentParent == null)
                 {
+                    logger.E("Can not set up transform function, deal to null exception!");
                     throw new InvalidOperationException("Can not set up transform function, deal to null exception!");
                 }
                 this.frame = frame;
@@ -1044,44 +1172,29 @@ namespace HPSolutionCCDevPackage.netFramework
             private void frame_SizeChanged(object sender, SizeChangedEventArgs e)
             {
                 UpdateMinSize();
+
+                if (CanChangeImageLocation)
+                {
+                    var newLeft = imagePresenter.Margin.Left;
+                    var newTop = imagePresenter.Margin.Top;
+
+                    if (!e.PreviousSize.IsZero())
+                    {
+                        var withRatioChange = e.NewSize.Width / e.PreviousSize.Width;
+                        var heightRatioChange = e.NewSize.Height / e.PreviousSize.Height;
+                        newLeft *= withRatioChange;
+                        newTop *= heightRatioChange;
+                    }
+
+                    UpdateImageLocation(new Thickness(newLeft, newTop, 0.0, 0.0));
+
+                    logger.V(":image location: new left = " + newLeft + " new top = " + newTop);
+                }
             }
 
+            // This was called whenever image source is changed
+            // and the firstime source is rendered
             private void InitalizeAlignment()
-            {
-                double left = 0.0;
-                double top = 0.0;
-                switch (contentParent.VerticalAlignment)
-                {
-
-                    case VerticalAlignment.Bottom:
-                        top = (frame.ActualHeight - minSize.Height);
-                        break;
-                    case VerticalAlignment.Center:
-                        top = (frame.ActualHeight - minSize.Height) / 2;
-                        break;
-                    case VerticalAlignment.Top:
-                    case VerticalAlignment.Stretch:
-                        top = 0.0d;
-                        break;
-                }
-                switch (contentParent.HorizontalAlignment)
-                {
-                    case HorizontalAlignment.Right:
-                        left = (frame.ActualWidth - minSize.Width);
-                        break;
-                    case HorizontalAlignment.Center:
-                        left = (frame.ActualWidth - minSize.Width) / 2;
-                        break;
-                    case HorizontalAlignment.Left:
-                    case HorizontalAlignment.Stretch:
-                        left = 0.0d;
-                        break;
-                }
-                initMargin = new Thickness(left, top, 0.0, 0.0);
-            }
-
-            // Called when first source rendered
-            private void InitalizeAlignmentWithUserData()
             {
                 var data = border.AtumImageData;
                 if (data != null)
@@ -1101,7 +1214,49 @@ namespace HPSolutionCCDevPackage.netFramework
                     {
                         initMargin = new Thickness(initLeft, initTop, 0.0, 0.0);
                     }
+                    else
+                    {
+                        initMargin = new Thickness(0.0);
+                    }
                 }
+                else
+                {
+                    UpdateLocatorBoundary(false);
+
+                    double left = 0.0;
+                    double top = 0.0;
+                    switch (contentParent.VerticalAlignment)
+                    {
+
+                        case VerticalAlignment.Bottom:
+                            top = (frame.ActualHeight - minSize.Height);
+                            break;
+                        case VerticalAlignment.Center:
+                            top = (frame.ActualHeight - minSize.Height) / 2;
+                            break;
+                        case VerticalAlignment.Top:
+                        case VerticalAlignment.Stretch:
+                            top = 0.0d;
+                            break;
+                    }
+                    switch (contentParent.HorizontalAlignment)
+                    {
+                        case HorizontalAlignment.Right:
+                            left = (frame.ActualWidth - minSize.Width);
+                            break;
+                        case HorizontalAlignment.Center:
+                            left = (frame.ActualWidth - minSize.Width) / 2;
+                            break;
+                        case HorizontalAlignment.Left:
+                        case HorizontalAlignment.Stretch:
+                            left = 0.0d;
+                            break;
+                    }
+                    initMargin = new Thickness(left, top, 0.0, 0.0);
+
+                    logger.V(":init margin " + initMargin.ToString());
+                }
+
             }
 
             private void border_ImageSourceChanged(object sender, ImageSourceChangedEventArgs e)
@@ -1132,23 +1287,6 @@ namespace HPSolutionCCDevPackage.netFramework
             {
                 var imgSize = new Size(e.NewValue.Width, e.NewValue.Height);
 
-                UpdateLocatorBoundary(false);
-
-                if (isNeedSetInitMargin)
-                {
-                    //Refresh alignment value
-                    InitalizeAlignment();
-
-                    if (imagePresenter.IsFirstTimeSourceRendered)
-                    {
-                        InitalizeAlignmentWithUserData();
-                    }
-
-                    UpdateImageLocation(initMargin);
-                    isNeedSetInitMargin = false;
-
-                }
-
                 // Update origin image size and minimum image size
                 if (imageSize.IsDifferent(imgSize))
                 {
@@ -1156,26 +1294,42 @@ namespace HPSolutionCCDevPackage.netFramework
 
                     UpdateMinSize();
                 }
+
+                UpdateLocatorBoundary(false);
+
+                if (isNeedSetInitMargin || imagePresenter.IsFirstTimeSourceRendered)
+                {
+                    //Refresh alignment value
+                    InitalizeAlignment();
+
+                    UpdateImageLocation(initMargin);
+                    isNeedSetInitMargin = false;
+                }
+
             }
 
+            //When zoom is change, only the size of atum image presenter is change
+            //Hence need to update the image location base on the ratio of old size
+            //and new size.
             private void atumImage_SizeChanged(object sender, SizeChangedEventArgs e)
             {
                 UpdateLocatorBoundary(false);
 
                 if (CanChangeImageLocation)
                 {
-                    var newLeft = imagePresenter.Margin.Left;
-                    var newTop = imagePresenter.Margin.Top;
+                    var oldLeft = imagePresenter.Margin.Left;
+                    var oldTop = imagePresenter.Margin.Top;
 
                     if (!e.PreviousSize.IsZero())
                     {
                         var withRatioChange = e.NewSize.Width / e.PreviousSize.Width;
                         var heightRatioChange = e.NewSize.Height / e.PreviousSize.Height;
-                        newLeft *= withRatioChange;
-                        newTop *= heightRatioChange;
+                        var newLeft = oldLeft * withRatioChange < minLeft ? oldLeft : oldLeft * withRatioChange;
+                        var newTop = oldTop * heightRatioChange < minLeft ? oldTop : oldTop * heightRatioChange;
+                        UpdateImageLocation(new Thickness(newLeft, newTop, 0.0, 0.0));
                     }
 
-                    UpdateImageLocation(new Thickness(newLeft, newTop, 0.0, 0.0));
+                    UpdateImageLocation(new Thickness(oldLeft, oldTop, 0.0, 0.0));
                 }
             }
 
@@ -1226,6 +1380,8 @@ namespace HPSolutionCCDevPackage.netFramework
                     maxTop = lastRect.BottomRight.Y * frameHeightRatio;
                 }
 
+                logger.V(":boundary minLeft = " + minLeft + " minTop = " + minTop);
+                logger.V(":boundary maxLeft = " + maxLeft + " maxTop = " + maxTop);
 
             }
 
@@ -1233,15 +1389,17 @@ namespace HPSolutionCCDevPackage.netFramework
             {
                 if (margin != null)
                 {
-                    // update new left value accord to litmited value
+                    // update new left value accord to the boundary
                     var newLeft = margin.Left <= minLeft ? minLeft : margin.Left >= maxLeft ? maxLeft : margin.Left;
 
-                    // update new top value accord to litmited value
+                    // update new top value accord to the boundary
                     var newTop = margin.Top <= minTop ? minTop : margin.Top >= maxTop ? maxTop : margin.Top;
 
                     imagePresenter.Margin = new Thickness(newLeft, newTop, 0.0, 0.0);
 
                     UpdateUserImageData();
+
+                    logger.I("::::: image location: left = " + newLeft + " top = " + newTop);
                 }
             }
 
@@ -1258,18 +1416,17 @@ namespace HPSolutionCCDevPackage.netFramework
                 data.FrameSize = new Size(frame.RenderSize.Width, frame.RenderSize.Height);
                 data.ImageSize = new Size(imageSize.Width, imageSize.Height);
                 data.ImageMinSize = new Size(minSize.Width, minSize.Height);
+
+                logger.D(":margin = " + data.AtumImageMargin.ToString());
+                logger.D(":frame size = " + data.FrameSize.ToString());
+                logger.D(":image size:" + data.ImageSize.ToString());
+                logger.D(":image min size:" + data.ImageMinSize.ToString());
+
             }
 
             public void ResetLocator()
             {
-                if (border.AtumImageData == null)
-                {
-                    InitalizeAlignment();
-                }
-                else
-                {
-                    InitalizeAlignmentWithUserData();
-                }
+                InitalizeAlignment();
                 UpdateImageLocation(initMargin);
             }
 
@@ -1303,12 +1460,9 @@ namespace HPSolutionCCDevPackage.netFramework
 
                     UpdateImageLocation(new Thickness(newLeft, newTop, 0.0, 0.0));
 
-                    UpdateUserImageData();
-
-                    // Log firing
-                    //Console.WriteLine("currentMPoint: X = " + currentMPoint.X + " Y = " + currentMPoint.Y);
-                    //Console.WriteLine("pressedMPoint: X = " + pressedMPoint.X + " Y = " + pressedMPoint.Y);
-                    //Console.WriteLine("Set Margin: New Left = " + newLeft + "   New Top = " + newTop);
+                    logger.D("current mouse point: X = " + currentMPoint.X + " Y = " + currentMPoint.Y);
+                    logger.D("pressed mouse point: X = " + pressedMPoint.X + " Y = " + pressedMPoint.Y);
+                    logger.D("Set Margin: New Left = " + newLeft + "   New Top = " + newTop);
 
                 }
             }
@@ -1355,6 +1509,7 @@ namespace HPSolutionCCDevPackage.netFramework
             {
                 if (border == null || imagePresenter == null || contentParent == null || frame == null)
                 {
+                    logger.E("Can not set up zoom function, deal to null exception!");
                     throw new InvalidOperationException("Can not set up zoom function, deal to null exception!");
                 }
                 this.border = border;
@@ -1371,12 +1526,10 @@ namespace HPSolutionCCDevPackage.netFramework
 
             private void ImagePresenter_ImageSourceRendered(object sender, AtumImageSourceRenderedEventArgs e)
             {
+
                 var imgSize = new Size(e.NewValue.Width, e.NewValue.Height);
 
-                if (imagePresenter.IsFirstTimeSourceRendered)
-                {
-                    InitalizeUserZoom();
-                }
+                logger.D("[ImagePresenter_ImageSourceRendered] newImageSize=" + imgSize);
 
                 // When current origin image size is different from current rendered image
                 // need to update new image size and minimum size
@@ -1387,6 +1540,16 @@ namespace HPSolutionCCDevPackage.netFramework
                     UpdateMinSize();
                 }
 
+                // When enter the image locate helper window, the image source have been change before 
+                // the event was registered, hence it won't update the user zoom data, and image size
+                // base on user's zoom.
+                // So need to init the user zoom, and update image size.
+                if (imagePresenter.IsFirstTimeSourceRendered)
+                {
+                    InitalizeUserZoom();
+
+                    UpdateImagePresenterSize();
+                }
             }
 
             private void InitalizeUserZoom()
@@ -1408,7 +1571,6 @@ namespace HPSolutionCCDevPackage.netFramework
             {
                 UpdateMinSize();
 
-
                 // when frame size change and source has been rendered
                 // must update image presenter size
                 if (imagePresenter.IsSourceHasBeenRendered)
@@ -1419,6 +1581,8 @@ namespace HPSolutionCCDevPackage.netFramework
 
             private void border_ImageSourceChanged(object sender, ImageSourceChangedEventArgs e)
             {
+
+                InitalizeUserZoom();
 
                 // when new source was updated
                 // update origin image size and minimum size as well
@@ -1473,6 +1637,7 @@ namespace HPSolutionCCDevPackage.netFramework
                 }
                 var data = border.tempUserData;
                 data.Zoom = currentZoom;
+                logger.D("currentZoom=" + currentZoom + " imageSize=" + imageSize);
             }
 
             public void AtumImagePrsenter_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -1514,8 +1679,9 @@ namespace HPSolutionCCDevPackage.netFramework
 
             public void Show()
             {
-                clonedView = CloneAtum(atumImageView) as AtumImageView;
-                clonedView.IsSupportImageLocateHelper = false;
+                logger.I("[OnTransformHelperWindowShow]");
+
+                UpdateCloneViewProperties();
 
                 UpdateCloneViewSize();
 
@@ -1546,6 +1712,15 @@ namespace HPSolutionCCDevPackage.netFramework
                         atumImageView.atumLocator.ResetLocator();
                     }
                 }
+            }
+
+            private void UpdateCloneViewProperties()
+            {
+                clonedView = CloneAtum(atumImageView) as AtumImageView;
+                clonedView.IsSupportImageLocateHelper = false;
+                clonedView.IsEnableAtumTransformer = true;
+
+                clonedView.AtumImageData = DependencyObjectHelper.CloneProperties(atumImageView.tempUserData) as AtumUserData;
             }
 
             private void UpdateCloneViewSize()

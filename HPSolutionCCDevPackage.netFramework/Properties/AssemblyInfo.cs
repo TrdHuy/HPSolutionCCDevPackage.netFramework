@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyTitle("HPSolutionCCDevPackage.netFramework")]
 [assembly: AssemblyDescription("New controller: AtumImageView")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("HPSoftwareSolution")]
 [assembly: AssemblyProduct("HPSolutionCCDevPackage.netFramework")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]

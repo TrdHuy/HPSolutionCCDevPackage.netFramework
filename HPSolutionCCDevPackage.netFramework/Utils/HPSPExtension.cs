@@ -24,5 +24,17 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
             return size.Width != compareSize.Width ||
                 size.Height != compareSize.Height;
         }
+
+        public static bool IsNaN(this Size size)
+        {
+            return Double.IsNaN(size.Width) ||
+                Double.IsNaN(size.Height);
+        }
+
+        public static bool IsInfinity(this Size size)
+        {
+            return Double.IsInfinity(size.Width) ||
+                Double.IsInfinity(size.Height);
+        }
     }
 }
