@@ -3,7 +3,6 @@
                     xmlns:local="clr-namespace:HPSolutionCCDevPackage.netFramework"
                     xmlns:properties="clr-namespace:HPSolutionCCDevPackage.netFramework.Properties"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
-    
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/HPSolutionCCDevPackage.netFramework;component/ControlTemplateResources/AkerTextBox.xaml" />
         <ResourceDictionary Source="/HPSolutionCCDevPackage.netFramework;component/ControlTemplateResources/OsirisButton.xaml" />
@@ -11,14 +10,13 @@
         <ResourceDictionary Source="/HPSolutionCCDevPackage.netFramework;component/ControlTemplateResources/HorusBox.xaml" />
         <ResourceDictionary Source="/HPSolutionCCDevPackage.netFramework;component/ControlTemplateResources/AnubisMessageBox.xaml" />
         <ResourceDictionary Source="/HPSolutionCCDevPackage.netFramework;component/ControlTemplateResources/AtumImageView.xaml" />
-
+        <ResourceDictionary Source="/HPSolutionCCDevPackage.netFramework;component/ControlTemplateResources/AmunTextBox.xaml" />
+        <ResourceDictionary Source="/HPSolutionCCDevPackage.netFramework;component/ControlTemplateResources/HehWindow.xaml" />
     </ResourceDictionary.MergedDictionaries>
-
-
+    
     <!--Font area-->
     <FontFamily x:Key="FontAwesome">/HPSolutionCCDevPackage.netFramework;component/Resources/#FontAwesome</FontFamily>
     <FontFamily x:Key="Fredoka">/HPSolutionCCDevPackage.netFramework;component/Resources/#Fredoka One</FontFamily>
-
     <!--Image area-->
     <BitmapImage x:Key="MessageBoxErrorIcon"
                  UriSource="/Resources/Images/messagebox_error_icon.png"></BitmapImage>
@@ -30,7 +28,6 @@
                  UriSource="/Resources/Images/messagebox_quest_icon.png"></BitmapImage>
     <BitmapImage x:Key="MessageBoxStopIcon"
                  UriSource="/Resources/Images/messagebox_stop_icon.png"></BitmapImage>
-
     <!--String area-->
     <system:String x:Key="FontAwesomeCloseWindowIcon">&#xf2d3;</system:String>
     <system:String x:Key="FontAwesomeMinimizeWindowIcon">&#xf2d1;</system:String>
@@ -38,13 +35,9 @@
     <system:String x:Key="FontAwesomeRestoreWindowIcon">&#xf2d2;</system:String>
     <system:String x:Key="FontAwesomePreviousPageIcon">&#xf0a8;</system:String>
     <system:String x:Key="FontAwesomeNextPageIcon">&#xf0a9;</system:String>
-
     <!--Dimens area-->
     <system:Double x:Key="regular_font_size">20</system:Double>
     <system:Double x:Key="default_title_bar_height_dashboard_window">30</system:Double>
-    
-
-
     <!--Color area-->
     <SolidColorBrush x:Key="default_title_bar_background_dashboard_window"
                      Color="#FFDEDEDE" />
@@ -62,7 +55,6 @@
         <Setter Property="FontSize"
                 Value="{StaticResource regular_font_size}" />
     </Style>
-
     <Style TargetType="{x:Type TextBlock}"
            x:Key="SpinningText">
         <Setter Property="HorizontalAlignment"
@@ -82,7 +74,6 @@
                 <RotateTransform></RotateTransform>
             </Setter.Value>
         </Setter>
-
         <Style.Resources>
             <Storyboard x:Key="Spin">
                 <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
@@ -92,7 +83,6 @@
                                  RepeatBehavior="Forever" />
             </Storyboard>
         </Style.Resources>
-
         <Style.Triggers>
             <DataTrigger Binding="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=IsVisible}"
                          Value="True">
@@ -105,9 +95,7 @@
                 </DataTrigger.ExitActions>
             </DataTrigger>
         </Style.Triggers>
-
     </Style>
-
     <Style TargetType="{x:Type local:AlyphNameTextBox}">
         <Setter Property="FirstNameForeground"
                 Value="Black" />
@@ -140,7 +128,6 @@
                             Height="{TemplateBinding Height}">
                         <Grid>
                             <Canvas x:Name="MainCanvas">
-
                                 <Line x:Name="LeftLine"
                                       X1="0"
                                       Y1="0"
@@ -155,23 +142,18 @@
                                       Y2="{Binding Height}"
                                       Stroke="{Binding FirstNameForeground}"
                                       StrokeThickness="{Binding StrokeThickess}"></Line>
-
                                 <Line x:Name="LeftBottomLine"
                                       Stroke="{Binding LastNameForeground}"
                                       StrokeThickness="{Binding StrokeThickess}"></Line>
-
                                 <Line x:Name="RightBottomLine"
                                       Stroke="{Binding FirstNameForeground}"
                                       StrokeThickness="{Binding StrokeThickess}"></Line>
-
                                 <Line x:Name="LeftTopLine"
                                       Stroke="{Binding LastNameForeground}"
                                       StrokeThickness="{Binding StrokeThickess}"></Line>
-
                                 <Line x:Name="RightTopLine"
                                       Stroke="{Binding FirstNameForeground}"
                                       StrokeThickness="{Binding StrokeThickess}"></Line>
-
                                 <StackPanel x:Name="TextContainer"
                                             VerticalAlignment="Center"
                                             HorizontalAlignment="Center"
@@ -188,27 +170,21 @@
                                                        FontSize="{TemplateBinding FontSize}"
                                                        FontWeight="{TemplateBinding FontWeight}"
                                                        Text="{Binding FirstName}"
-                                                       x:Name="FirstNameTextBlock">
-                                            </TextBlock>
+                                                       x:Name="FirstNameTextBlock"></TextBlock>
                                             <TextBlock HorizontalAlignment="Center"
                                                        VerticalAlignment="Center"
                                                        FontSize="{TemplateBinding FontSize}"
                                                        Text=" "
-                                                       FontWeight="{TemplateBinding FontWeight}">
-
-                                            </TextBlock>
+                                                       FontWeight="{TemplateBinding FontWeight}"></TextBlock>
                                         </StackPanel>
-
                                         <TextBlock Foreground="{Binding LastNameForeground}"
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"
                                                    FontSize="{TemplateBinding FontSize}"
                                                    FontWeight="{TemplateBinding FontWeight}"
                                                    Text="{Binding LastName}"
-                                                   x:Name="LastNameTextBlock">
-                                        </TextBlock>
+                                                   x:Name="LastNameTextBlock"></TextBlock>
                                     </StackPanel>
-
                                     <TextBlock HorizontalAlignment="Center"
                                                FontSize="{Binding TitleFontSize}"
                                                FontWeight="{Binding TitleFontWeight}"
@@ -217,15 +193,11 @@
                                                x:Name="TitleTextBlock"
                                                Text="{Binding Title}"></TextBlock>
                                 </StackPanel>
-
                             </Canvas>
-
                         </Grid>
                     </Border>
-
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-
 </ResourceDictionary>

@@ -37,6 +37,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -49,9 +50,14 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="ControlTemplateResources\AkerTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ControlTemplateResources\AmunTextBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -64,6 +70,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ControlTemplateResources\HathorScrollView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ControlTemplateResources\HehWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -87,10 +97,12 @@
   <ItemGroup>
     <Compile Include="Atrributes\StringValue.cs" />
     <Compile Include="Items\AkerTextBox.cs" />
+    <Compile Include="Items\AmunTextBox.cs" />
     <Compile Include="Items\AtumImageView.cs" />
     <Compile Include="Items\HathorScrollView.cs" />
     <Compile Include="Items\AlyphNameTextBox.cs" />
     <Compile Include="Items\AnubisMessageBox.cs" />
+    <Compile Include="Items\HehWindow.cs" />
     <Compile Include="Items\HorusBox.cs" />
     <Compile Include="Items\OsirisButton.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
