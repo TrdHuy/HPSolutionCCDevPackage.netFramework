@@ -1,6 +1,7 @@
 ﻿using HPSolutionCCDevPackage.netFramework.Atrributes;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace HPSolutionCCDevPackage.netFramework.Utils
 {
-    public class Logger
+    internal class Logger
     {
         private enum LogLv
         {
@@ -37,7 +38,9 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
 
         private const string TAG = "HPSCCDP";
         private static object LogLocker = new object();
+        private static readonly SemaphoreSlim Mutex = new SemaphoreSlim(1);
 
+        private static ObservableQueue<Task<bool>> TaskQueue { get; set; }
         private static StringBuilder _logBuilder { get; set; }
         private static StringBuilder _userLogBuilder { get; set; }
         private static string filePath { get; set; }
@@ -53,7 +56,9 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
         {
             Console.WriteLine("Init static Logger");
 
-
+            TaskQueue = new ObservableQueue<Task<bool>>();
+            var cast = TaskQueue as IEnumerable<Task<bool>>;
+            ((INotifyCollectionChanged)cast).CollectionChanged += TaskQueueChanged;
 #if DEBUG
             InitLogDebug();
 #else
@@ -128,10 +133,21 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
 
         }
 
+        private static void TaskQueueChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                ProcessQueue();
+            }
+        }
+
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             WriteLog("F", TAG, "[UnhandledException]:" + e.ExceptionObject.ToString());
-            ExportLogFile();
+            var task1 = GenerateTask("F", TAG, "[UnhandledException]:" + e.ExceptionObject.ToString());
+            TaskQueue.Enqueue(task1);
+            var task2 = GenerateTask("", "", "", true);
+            TaskQueue.Enqueue(task2);
         }
 
         public Logger(string className)
@@ -159,38 +175,103 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
             ExportLogFile();
         }
 
-        public async void I(string message, [CallerMemberName] string callerMeberName = null)
+        public void I(string message, [CallerMemberName] string callMemberName = null)
         {
-            WriteLog("I", TAG, className, callerMeberName, message);
-        }
-        public async void D(string message, [CallerMemberName] string callerMeberName = null)
-        {
-            WriteLog("D", TAG, className, callerMeberName, message);
+            var task = GenerateTask("I", TAG, className, callMemberName, message);
+            TaskQueue.Enqueue(task);
         }
 
-        public async void E(string message, [CallerMemberName] string callerMeberName = null)
+        public void D(string message, [CallerMemberName] string callMemberName = null)
         {
-            WriteLog("E", TAG, className, callerMeberName, message);
+            var task = GenerateTask("D", TAG, className, callMemberName, message);
+            TaskQueue.Enqueue(task);
         }
 
-        public async void W(string message, [CallerMemberName] string callerMeberName = null)
+        public void E(string message, [CallerMemberName] string callMemberName = null)
         {
-            WriteLog("W", TAG, className, callerMeberName, message);
+            var task = GenerateTask("E", TAG, className, callMemberName, message);
+            TaskQueue.Enqueue(task);
         }
 
-        public async void F(string message, [CallerMemberName] string callerMeberName = null)
+        public void W(string message, [CallerMemberName] string callMemberName = null)
         {
-            WriteLog("F", TAG, className, callerMeberName, message);
+            var task = GenerateTask("W", TAG, className, callMemberName, message);
+            TaskQueue.Enqueue(task);
         }
 
-        public async void V(string message, [CallerMemberName] string callerMeberName = null)
+        public void F(string message, [CallerMemberName] string callMemberName = null)
         {
-            WriteLog("V", TAG, className, callerMeberName, message);
+            var task = GenerateTask("F", TAG, className, callMemberName, message);
+            TaskQueue.Enqueue(task);
         }
 
-        private void WriteLog(string logLv, string tag, string className, string methodName, string message)
+        public void V(string message, [CallerMemberName] string callMemberName = null)
         {
-            lock (LogLocker)
+            var task = GenerateTask("V", TAG, className, callMemberName, message);
+            TaskQueue.Enqueue(task);
+        }
+
+        private static async void ProcessQueue()
+        {
+            await Mutex.WaitAsync();
+            try
+            {
+                int reDoWorkCounter = 0;
+
+                while (TaskQueue.Count >= 1)
+                {
+                    var taskFormQueue = TaskQueue.Peek();
+                    reDoWorkCounter++;
+                    taskFormQueue.Start();
+                    var success = taskFormQueue.Result;
+                    if (success || reDoWorkCounter >= 3)
+                    {
+                        var removeTask = TaskQueue.Dequeue();
+                        removeTask = null;
+                        reDoWorkCounter = 0;
+                    }
+                }
+            }
+            finally
+            {
+                Mutex.Release();
+            }
+        }
+
+        private Task<bool> GenerateTask(string logLV, string TAG, string className, string callMemberName, string message, bool isExportLogFile = false)
+        {
+            var task = !isExportLogFile ?
+                new Task<bool>(() =>
+                {
+                    return WriteLog(logLV, TAG, className, callMemberName, message);
+                }) :
+             new Task<bool>(() =>
+             {
+                 var resExportLog = ExportLogFile();
+                 return resExportLog;
+             });
+
+            return task;
+        }
+
+        private static Task<bool> GenerateTask(string logLV, string TAG, string message, bool isExportLogFile = false)
+        {
+            var task = !isExportLogFile ?
+                new Task<bool>(() =>
+                {
+                    return WriteLog(logLV, TAG, message);
+                }) :
+            new Task<bool>(() =>
+            {
+                var resExportLog = ExportLogFile();
+                return resExportLog;
+            });
+            return task;
+        }
+
+        private bool WriteLog(string logLv, string tag, string className, string methodName, string message)
+        {
+            try
             {
                 // Log format
                 // (dd-MM HH:mm:ss) (Log lv) (Pid) (Tid) (Tag) (Class name:Method name:Message)
@@ -221,11 +302,17 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
                     ClearBuffer(_userLogBuilder);
                 }
             }
+            catch
+            {
+                return false;
+            }
+
+            return true;
         }
 
-        private static void WriteLog(string logLv, string tag, string message)
+        private static bool WriteLog(string logLv, string tag, string message)
         {
-            lock (LogLocker)
+            try
             {
                 var dateTimeNow = DateTime.Now.ToString("dd-MM HH:mm:ss:ffffff");
                 var newLogLine = dateTimeNow + " " +
@@ -252,6 +339,11 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
                     ClearBuffer(_userLogBuilder);
                 }
             }
+            catch
+            {
+                return false;
+            }
+            return true;
         }
 
         private static void ClearBuffer(StringBuilder builder)
@@ -263,7 +355,7 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
             }
         }
 
-        public static void ExportLogFile()
+        public static bool ExportLogFile()
         {
             try
             {
@@ -283,9 +375,40 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
             }
             catch (Exception e)
             {
-
+                return false;
             }
+            return true;
         }
     }
 
+    internal class ObservableQueue<T> : Queue<T>, INotifyCollectionChanged
+    {
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
+
+        public new void Enqueue(T item)
+        {
+            base.Enqueue(item);
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
+        }
+
+        public new T Dequeue()
+        {
+            var x = base.Dequeue();
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, x));
+            return x;
+        }
+
+        protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        {
+            RaiseCollectionChanged(e);
+        }
+
+        private void RaiseCollectionChanged(NotifyCollectionChangedEventArgs e)
+        {
+            if (CollectionChanged != null)
+            {
+                CollectionChanged(this, e);
+            }
+        }
+    }
 }
