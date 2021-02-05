@@ -148,8 +148,8 @@
 
                             <Viewbox x:Name="SpiningText"
                                      Stretch="Uniform"
-                                     Visibility="Collapsed"
-                                     Opacity="0.0">
+                                     Visibility="Visible"
+                                     Opacity="1.0">
                                 <TextBlock Foreground="{TemplateBinding Foreground}"
                                            Style="{StaticResource SpinningText}" />
                             </Viewbox>

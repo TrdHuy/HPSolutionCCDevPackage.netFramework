@@ -99,6 +99,7 @@
     <Compile Include="Items\AkerTextBox.cs" />
     <Compile Include="Items\AmunTextBox.cs" />
     <Compile Include="Items\AtumImageView.cs" />
+    <Compile Include="Items\DO\BindingProxy.cs" />
     <Compile Include="Items\HathorScrollView.cs" />
     <Compile Include="Items\AlyphNameTextBox.cs" />
     <Compile Include="Items\AnubisMessageBox.cs" />
