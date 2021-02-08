@@ -30,6 +30,8 @@ namespace HPSolutionCCDevPackage.netFramework
             IsUsingAtumClippingBorder = true;
             IsSupportAtumLocator = false;
             IsSupportAtumZoomer = false;
+            SpiningTextRatio = 1d;
+            IsSupportLoadingAnimation = true;
         }
 
         #region Public properties
@@ -70,7 +72,7 @@ namespace HPSolutionCCDevPackage.netFramework
             var x = new ImageSourceChangedEventArgs(AtumImageView.ImageSourceChangedEvent,
                 e.OldValue as ImageSource,
                 e.NewValue as ImageSource);
-            //ctrl.AtumImageElement.Margin = new Thickness();
+
             ctrl.OnAtumImageSourceChanged(x);
         }
 
@@ -201,6 +203,9 @@ namespace HPSolutionCCDevPackage.netFramework
             ctrl.UpdateAtumSource(ctrl, e.NewValue as string, e.OldValue as string);
         }
 
+        /// <summary>
+        /// Use image path to load image source async
+        /// </summary>
         public string ImagePath
         {
             get
@@ -407,6 +412,69 @@ namespace HPSolutionCCDevPackage.netFramework
         }
         #endregion
 
+        #region IsBusy
+        public static readonly DependencyProperty IsBusyProperty =
+            DependencyProperty.Register(
+                    "IsBusy",
+                    typeof(bool),
+                    typeof(AtumImageView),
+                    new PropertyMetadata(
+                            false,
+                            new PropertyChangedCallback(IsBusyChangedCallback)),
+                    null);
+
+        private static void IsBusyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            AtumImageView ctrl = d as AtumImageView;
+        }
+
+        public bool IsBusy
+        {
+            get
+            {
+                return (bool)GetValue(IsBusyProperty);
+            }
+            private set
+            {
+                SetValue(IsBusyProperty, value);
+            }
+        }
+        #endregion
+
+        #region SpiningTextRatio
+        public static readonly DependencyProperty SpiningTextRatioProperty =
+           DependencyProperty.Register("SpiningTextRatio", typeof(double), typeof(AtumImageView),
+             new PropertyMetadata(default(double)));
+
+        public double SpiningTextRatio
+        {
+            get { return (double)GetValue(SpiningTextRatioProperty); }
+            set { SetValue(SpiningTextRatioProperty, value); }
+        }
+        #endregion
+
+        #region IsSupportLoadingAnimation
+        public static readonly DependencyProperty IsSupportLoadingAnimationProperty =
+            DependencyProperty.Register(
+                    "IsSupportLoadingAnimation",
+                    typeof(bool),
+                    typeof(AtumImageView),
+                    new PropertyMetadata(true),
+                    null);
+
+        public bool IsSupportLoadingAnimation
+        {
+            get
+            {
+                return (bool)GetValue(IsSupportLoadingAnimationProperty);
+            }
+            set
+            {
+                SetValue(IsSupportLoadingAnimationProperty, value);
+            }
+        }
+        #endregion
+
         #endregion
 
 
@@ -416,17 +484,19 @@ namespace HPSolutionCCDevPackage.netFramework
 
 
         #region Private properties
-        private AtumLocator atumLocator;
-        private AtumZoomer atumZoomer;
-        private TransformHelperWindow locateHelperWindow;
-        private int sourceChangedCounter = 0;
-
-        internal AtumUserData tempUserData = new AtumUserData();
+        private AtumLocator atumLocator { get; set; }
+        private AtumZoomer atumZoomer { get; set; }
+        private TransformHelperWindow locateHelperWindow { get; set; }
+        private int sourceChangedCounter { get; set; } = 0;
+        private bool isSourceUpdatedByImagePath { get; set; } = false;
 
         private AtumImage AtumImageElement { get; set; }
+        private Viewbox SpinningViewBoxElement { get; set; }
         private Grid AtumContentGridElement { get; set; }
         private Grid AtumMainGridElement { get; set; }
         private StreamGeometry GridContentStreamGeoElement { get; set; }
+
+        internal AtumUserData tempUserData { get; set; } = new AtumUserData();
 
         #endregion
 
@@ -480,7 +550,8 @@ namespace HPSolutionCCDevPackage.netFramework
 
             // Validate source and image path property
             if (ReadLocalValue(SourceProperty) != DependencyProperty.UnsetValue &&
-                ReadLocalValue(ImagePathProperty) != DependencyProperty.UnsetValue)
+                ReadLocalValue(ImagePathProperty) != DependencyProperty.UnsetValue &&
+                !isSourceUpdatedByImagePath)
             {
                 logger.E("InvalidOperationException: Can not use both Source and Imagepath at the same time");
                 throw new InvalidOperationException("Can not use both Source and Imagepath at the same time");
@@ -497,9 +568,11 @@ namespace HPSolutionCCDevPackage.netFramework
                 AtumContentGridElement = GetTemplateChild("AtumContentGrid") as Grid;
                 AtumMainGridElement = GetTemplateChild("AtumMainGrid") as Grid;
                 GridContentStreamGeoElement = GetTemplateChild("GridContentStreamGeometry") as StreamGeometry;
+                SpinningViewBoxElement = GetTemplateChild("SpiningText") as Viewbox;
 
                 AtumMainGridElement.SizeChanged += OnAtumMainGridSizeChanged;
-
+                AtumImageElement.ImageSourceRendered += OnAtumImageSourceRendered;
+                SpinningViewBoxElement.IsVisibleChanged += OnSpinningViewBoxVisibleChanged;
                 ValidatePropertyFeasibility();
                 SetUpFeature();
             }
@@ -507,6 +580,29 @@ namespace HPSolutionCCDevPackage.netFramework
             {
                 logger.E("Exception: " + e.Message);
                 SetUpAlternativeFeature();
+            }
+        }
+
+        private void OnSpinningViewBoxVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            // Measure spining view box size
+            if (SpinningViewBoxElement != null &&
+                SpinningViewBoxElement.Visibility == Visibility.Visible &&
+                AtumMainGridElement != null)
+            {
+                var x = AtumMainGridElement.RenderSize;
+                SpiningTextRatio = SpiningTextRatio > 1 ? 1 : SpiningTextRatio < 0 ? 0 : SpiningTextRatio;
+                var mainSize = x.Height < x.Width ? x.Height : x.Width;
+                SpinningViewBoxElement.Height = mainSize * SpiningTextRatio;
+                SpinningViewBoxElement.Width = mainSize * SpiningTextRatio;
+            }
+        }
+
+        private void OnAtumImageSourceRendered(object sender, AtumImageSourceRenderedEventArgs e)
+        {
+            if (AtumImageElement != null && AtumImageElement.Source != null)
+            {
+                OnImageSourceRendered(e.DrawingContext);
             }
         }
 
@@ -530,11 +626,23 @@ namespace HPSolutionCCDevPackage.netFramework
                 }
             }
 
+            // Measure spining view box size
+            if (SpinningViewBoxElement != null &&
+                SpinningViewBoxElement.Visibility == Visibility.Visible &&
+                AtumMainGridElement != null)
+            {
+                var x = AtumMainGridElement.RenderSize;
+                SpiningTextRatio = SpiningTextRatio > 1 ? 1 : SpiningTextRatio < 0 ? 0 : SpiningTextRatio;
+                var mainSize = x.Height < x.Width ? x.Height : x.Width;
+                SpinningViewBoxElement.Height = mainSize * SpiningTextRatio;
+                SpinningViewBoxElement.Width = mainSize * SpiningTextRatio;
+            }
+
         }
 
         protected virtual void OnAtumImageSourceChanged(ImageSourceChangedEventArgs e)
         {
-            logger.I("OnImageSourceChanged: New source: " + e.NewValue.ToString());
+            logger.I("OnImageSourceChanged: New source: " + e.NewValue as string);
 
             // Increase source change counter everytime source change
             sourceChangedCounter++;
@@ -548,15 +656,6 @@ namespace HPSolutionCCDevPackage.netFramework
             }
 
             RaiseEvent(e);
-        }
-
-        protected override void OnRender(DrawingContext drawingContext)
-        {
-            base.OnRender(drawingContext);
-            if (AtumImageElement != null && AtumImageElement.Source != null)
-            {
-                OnImageSourceRendered(drawingContext);
-            }
         }
 
         protected virtual void OnImageSourceRendered(DrawingContext drawingContext)
@@ -618,7 +717,7 @@ namespace HPSolutionCCDevPackage.netFramework
 
         private void SetUpAlternativeFeature()
         {
-            if(AtumImageElement != null)
+            if (AtumImageElement != null)
             {
                 var bindingVertical = new Binding("VerticalContentAlignment")
                 {
@@ -739,61 +838,69 @@ namespace HPSolutionCCDevPackage.netFramework
 
         }
 
-        private void UpdateStates(bool useTransitions, bool IsBusy)
+        private void UpdateStates(bool useTransitions, bool isBusy)
         {
-            logger.I("[AtumImageView] State change: busy=" + IsBusy);
-
-            if (IsBusy)
-            {
-                VisualStateManager.GoToState(this, "Busy", useTransitions);
-            }
-            else
-            {
-                VisualStateManager.GoToState(this, "UnBusy", useTransitions);
-            }
+            logger.I("[AtumImageView] State change: busy=" + isBusy);
+            IsBusy = isBusy;
         }
 
         private async void UpdateAtumSource(object sender, string newImagePath, string oldImagePath)
         {
             logger.I("[UpdateAtumSource] newImagePath=" + newImagePath + "oldImagePath=" + oldImagePath);
 
-            //Preview async source update
+            Task<ImageSource> getSource = GetImageSource(newImagePath);
+
+            var watch = Stopwatch.StartNew();
+
             var preSourceArg = new PreviewAsyncSourceUpdatedEventArgs(
-                AtumImageView.PreviewAsyncSourceUpdatedEvent,
-                oldImagePath,
-                newImagePath);
+                       AtumImageView.PreviewAsyncSourceUpdatedEvent,
+                       oldImagePath,
+                       newImagePath);
+
             OnPreviewAsyncSourceUpdated(preSourceArg);
 
+            //Preview async source update
             if (!preSourceArg.Handled)
             {
                 bool isBusy = true;
+
+                // Update the visual state
                 UpdateStates(true, isBusy);
 
-                var newSource = await GetImageSource(newImagePath);
+                var newSource = await getSource;
 
                 //Update source
                 Source = newSource;
 
+                var rest = ImageFileLoadingDelayTime - watch.ElapsedMilliseconds;
+
+                if (rest > 0 && IsSupportLoadingAnimation)
+                {
+                    await Task.Delay(Convert.ToInt32(rest));
+                }
+
+                // Update the flag
+                isSourceUpdatedByImagePath = true;
+
                 // Update the visual state
                 isBusy = false;
                 UpdateStates(true, isBusy);
+
+            }
+            else
+            {
+                watch.Stop();
             }
 
         }
         private async Task<ImageSource> GetImageSource(string imagePath)
         {
-            var watch = Stopwatch.StartNew();
+            // Delay for const of time to avoid blocking UI
+            await Task.Delay(300);
+
             var x = AIVUtil.ToImageSource(AIVUtil.GetBitmapFromName(imagePath));
-            watch.Stop();
 
-            var rest = ImageFileLoadingDelayTime - watch.ElapsedMilliseconds;
-
-            if (rest > 0)
-            {
-                await Task.Delay(Convert.ToInt32(rest));
-            }
             return x;
-
         }
 
         private void GenerateGeometry(StreamGeometryContext ctx, Rect rect, Radii radii)

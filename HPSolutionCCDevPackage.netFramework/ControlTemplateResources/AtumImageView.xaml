@@ -61,6 +61,35 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:AtumImageView}">
 
+                    <ControlTemplate.Resources>
+                        <Storyboard x:Key="BusyAnimation">
+                            <DoubleAnimation Duration="0:0:1"
+                                             From="0.0"
+                                             Storyboard.TargetName="SpiningText"
+                                             Storyboard.TargetProperty="Opacity"
+                                             To="1.0" />
+                            <DoubleAnimation Duration="0:0:1"
+                                             From="1.0"
+                                             Storyboard.TargetName="ImagePresenter"
+                                             Storyboard.TargetProperty="Opacity"
+                                             To="0.0" />
+
+                        </Storyboard>
+
+                        <Storyboard x:Key="UnbusyAnimation">
+                            <DoubleAnimation Duration="0:0:1"
+                                             From="0.0"
+                                             Storyboard.TargetName="ImagePresenter"
+                                             Storyboard.TargetProperty="Opacity"
+                                             To="1.0" />
+                            <DoubleAnimation Duration="0:0:1"
+                                             From="1.0"
+                                             Storyboard.TargetName="SpiningText"
+                                             Storyboard.TargetProperty="Opacity"
+                                             To="0.0" />
+                        </Storyboard>
+                    </ControlTemplate.Resources>
+
                     <Border DataContext="{Binding RelativeSource={RelativeSource AncestorType=local:AtumImageView,Mode=FindAncestor}}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             Height="{TemplateBinding Height}"
@@ -69,57 +98,6 @@
                             Background="{TemplateBinding Background}"
                             CornerRadius="{Binding CornerRadius}"
                             x:Name="LayoutHolder">
-
-                        <!--Visual state manager-->
-                        <VisualStateManager.VisualStateGroups>
-
-                            <VisualStateGroup Name="IsBusyStates">
-
-                                <VisualState Name="Busy">
-                                    <Storyboard>
-                                        <DoubleAnimation Duration="0:0:1"
-                                                         From="0.0"
-                                                         Storyboard.TargetName="SpiningText"
-                                                         Storyboard.TargetProperty="Opacity"
-                                                         To="1.0" />
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SpiningText"
-                                                                       Storyboard.TargetProperty="Visibility">
-                                            <DiscreteObjectKeyFrame KeyTime="0:0:0"
-                                                                    Value="{x:Static Visibility.Visible}" />
-                                        </ObjectAnimationUsingKeyFrames>
-
-                                        <DoubleAnimation Duration="0:0:1"
-                                                         From="1.0"
-                                                         Storyboard.TargetName="ImagePresenter"
-                                                         Storyboard.TargetProperty="Opacity"
-                                                         To="0.0" />
-
-                                    </Storyboard>
-                                </VisualState>
-
-                                <VisualState Name="UnBusy">
-                                    <Storyboard>
-                                        <DoubleAnimation Duration="0:0:1"
-                                                         From="0.0"
-                                                         Storyboard.TargetName="ImagePresenter"
-                                                         Storyboard.TargetProperty="Opacity"
-                                                         To="1.0" />
-                                        <DoubleAnimation Duration="0:0:1"
-                                                         From="1.0"
-                                                         Storyboard.TargetName="SpiningText"
-                                                         Storyboard.TargetProperty="Opacity"
-                                                         To="0.0" />
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SpiningText"
-                                                                       Storyboard.TargetProperty="Visibility">
-                                            <DiscreteObjectKeyFrame KeyTime="0:0:1"
-                                                                    Value="{x:Static Visibility.Collapsed}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
-
-
 
                         <Grid x:Name="AtumMainGrid"
                               VerticalAlignment="Stretch"
@@ -146,9 +124,11 @@
 
                             </Grid>
 
-                            <Viewbox x:Name="SpiningText"
+                            <Viewbox HorizontalAlignment="Center"
+                                     VerticalAlignment="Center"
+                                     x:Name="SpiningText"
                                      Stretch="Uniform"
-                                     Visibility="Visible"
+                                     Visibility="Collapsed"
                                      Opacity="1.0">
                                 <TextBlock Foreground="{TemplateBinding Foreground}"
                                            Style="{StaticResource SpinningText}" />
@@ -156,6 +136,55 @@
                         </Grid>
 
                     </Border>
+
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsBusy"
+                                           Value="True" />
+                                <Condition Property="IsSupportLoadingAnimation"
+                                           Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Visibility"
+                                    Value="Visible"
+                                    TargetName="SpiningText" />
+                            <Setter Property="Visibility"
+                                    Value="Collapsed"
+                                    TargetName="AtumContentGrid" />
+
+                            <MultiTrigger.EnterActions>
+                                <BeginStoryboard Storyboard="{StaticResource BusyAnimation}"
+                                                 x:Name="BusyStoryboard" />
+                            </MultiTrigger.EnterActions>
+                            <MultiTrigger.ExitActions>
+                                <RemoveStoryboard BeginStoryboardName="BusyStoryboard" />
+                            </MultiTrigger.ExitActions>
+                        </MultiTrigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsBusy"
+                                           Value="False" />
+                                <Condition Property="IsSupportLoadingAnimation"
+                                           Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Visibility"
+                                    Value="Collapsed"
+                                    TargetName="SpiningText" />
+                            <Setter Property="Visibility"
+                                    Value="Visible"
+                                    TargetName="AtumContentGrid" />
+
+                            <MultiTrigger.EnterActions>
+                                <BeginStoryboard Storyboard="{StaticResource UnbusyAnimation}"
+                                                 x:Name="UnbusyStoryboard" />
+                            </MultiTrigger.EnterActions>
+                            <MultiTrigger.ExitActions>
+                                <RemoveStoryboard BeginStoryboardName="UnbusyStoryboard" />
+                            </MultiTrigger.ExitActions>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
