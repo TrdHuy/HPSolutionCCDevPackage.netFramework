@@ -8,11 +8,15 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using HPSolutionCCDevPackage.netFramework.Utils;
+using System.Windows.Data;
 
 namespace HPSolutionCCDevPackage.netFramework
 {
     public class HorusBox : ComboBox
     {
+        private static Logger logger = new Logger("HorusBox");
+
         public HorusBox()
         {
             DefaultStyleKey = typeof(HorusBox);
@@ -590,7 +594,86 @@ namespace HPSolutionCCDevPackage.netFramework
         }
         #endregion
 
+        #region DropDownChangedEvent
+        public static readonly RoutedEvent DropDownChangedEvent =
+            EventManager.RegisterRoutedEvent("DropDownChanged", RoutingStrategy.Direct,
+                          typeof(DropDownOpenEventHandler), typeof(HorusBox));
+
+        public event DropDownOpenEventHandler DropDownChanged
+        {
+            add { AddHandler(DropDownChangedEvent, value); }
+            remove { RemoveHandler(DropDownChangedEvent, value); }
+        }
         #endregion
+
+        #region IsUsingLoadingPopupAsync
+        public static readonly DependencyProperty IsUsingLoadingPopupAsyncProperty =
+                DependencyProperty.Register(
+                        "IsUsingLoadingPopupAsync",
+                        typeof(bool),
+                        typeof(HorusBox),
+                        new FrameworkPropertyMetadata(
+                                defaultIsUsingLoadingPopupAsync,
+                                FrameworkPropertyMetadataOptions.AffectsMeasure |
+                                FrameworkPropertyMetadataOptions.AffectsRender,
+                                null,
+                                null),
+                        null);
+
+        public bool IsUsingLoadingPopupAsync
+        {
+            get { return (bool)GetValue(IsUsingLoadingPopupAsyncProperty); }
+            set { SetValue(IsUsingLoadingPopupAsyncProperty, value); }
+        }
+        #endregion
+
+        #region LoadingPopupDelayTime
+        public static readonly DependencyProperty LoadingPopupDelayTimeProperty =
+           DependencyProperty.Register("LoadingPopupDelayTime", typeof(long), typeof(HorusBox),
+             new PropertyMetadata(defaultLoadingPopupDelayTime));
+
+        /// <summary>
+        /// Delay a period of specifictime when open popup
+        /// </summary>
+        public long LoadingPopupDelayTime
+        {
+            get { return (long)GetValue(LoadingPopupDelayTimeProperty); }
+            set { SetValue(LoadingPopupDelayTimeProperty, value); }
+        }
+        #endregion
+
+        #region SelectedItemTemplate
+        public static readonly DependencyProperty SelectedItemTemplateProperty =
+                DependencyProperty.Register(
+                        "SelectedItemTemplate",
+                        typeof(DataTemplate),
+                        typeof(HorusBox),
+                        new FrameworkPropertyMetadata(
+                                default(DataTemplate),
+                                FrameworkPropertyMetadataOptions.AffectsMeasure,
+                                new PropertyChangedCallback(SelectedItemTemplateChangedCallBack)),
+                        null);
+
+        private static void SelectedItemTemplateChangedCallBack(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HorusBox ctrl = d as HorusBox;
+            ctrl.UpdateBindingSelectedItemTemplate();
+        }
+
+        public DataTemplate SelectedItemTemplate
+        {
+            get { return (DataTemplate)GetValue(SelectedItemTemplateProperty); }
+            set { SetValue(SelectedItemTemplateProperty, value); }
+        }
+        #endregion
+
+        #endregion
+
+
+
+        //------------------------------------------
+
+
 
         #region Private properties
 
@@ -612,25 +695,66 @@ namespace HPSolutionCCDevPackage.netFramework
         private static bool defaultIsUsingHorusShadow = false;
         private static bool defaultIsUsingHorusPopupShadow = false;
         private static bool defaultRemoveDropDownIcon = false;
+        private static bool defaultIsUsingLoadingPopupAsync = false;
         private static double defaultContentAreaWidth = 100d;
         private static double defaultContentAreaHeight = 30d;
         private static double defaultDropDownAreaHeight = 30d;
         private static double defaultDropDownAreaWidth = 30d;
         private static string defaultFilterText = "";
-
-
-        #endregion
+        private static long defaultLoadingPopupDelayTime = 100;
 
         private TextBox _horusEditTextBoxElement;
         private TextBox _horusFilterEditTextBoxElement;
+        private Popup _horusPopupElement;
         private ToggleButton _horusToggleElement;
         private ScrollViewer _contentPresenterElement;
         private ScrollViewer _customHorusContentPresenterElement;
-        private bool IsSelectionChangeEventUpdatingText = false;
-        private bool IsFilterUpdatingSelectIndex = false;
-        private bool IsPreviewKeyUpAndDown = false;
-        private bool IsHorusFilterTextBoxLostFocusEventCallTextChangedEvent = false;
 
+        private bool IsSelectionChangeEventUpdatingText { get; set; } = false;
+        private bool IsFilterUpdatingSelectIndex { get; set; } = false;
+        private bool IsPreviewKeyUpAndDown { get; set; } = false;
+        private bool IsHorusFilterTextBoxLostFocusEventCallTextChangedEvent { get; set; } = false;
+        private Popup HorusPopupElement
+        {
+            get
+            {
+                return _horusPopupElement;
+            }
+            set
+            {
+                if (_horusPopupElement != null)
+                {
+                    _horusPopupElement.Opened -= new EventHandler(HorusPopup_Opened);
+                }
+                _horusPopupElement = value;
+                if (_horusPopupElement != null)
+                {
+                    _horusPopupElement.Opened += new EventHandler(HorusPopup_Opened);
+                }
+            }
+        }
+        private ScrollViewer ContentPresenterElement
+        {
+            get
+            {
+                return _contentPresenterElement;
+            }
+            set
+            {
+                _contentPresenterElement = value;
+            }
+        }
+        private ScrollViewer CustomHorusContentPresenterElement
+        {
+            get
+            {
+                return _customHorusContentPresenterElement;
+            }
+            set
+            {
+                _customHorusContentPresenterElement = value;
+            }
+        }
         private TextBox HorusEditTextBoxElement
         {
             get
@@ -661,31 +785,183 @@ namespace HPSolutionCCDevPackage.netFramework
             }
             set
             {
+                if (_horusToggleElement != null)
+                {
+                    _horusToggleElement.Checked -= new RoutedEventHandler(HorusToggle_Checked);
+                    _horusToggleElement.Unchecked -= new RoutedEventHandler(HorusToggle_Unchecked);
+
+                }
                 _horusToggleElement = value;
+                if (_horusToggleElement != null)
+                {
+                    _horusToggleElement.Checked += new RoutedEventHandler(HorusToggle_Checked);
+                    _horusToggleElement.Unchecked += new RoutedEventHandler(HorusToggle_Unchecked);
+
+                }
             }
         }
-        private ScrollViewer ContentPresenterElement
+
+        #endregion
+
+
+
+        //------------------------------------------
+
+
+
+        #region Override methods
+        public override void OnApplyTemplate()
         {
-            get
+            base.OnApplyTemplate();
+
+            ValidateUsingListFilterPossibility();
+            this.SizeChanged += HorusBoxSizeChangedEvent;
+
+            HorusPopupElement = GetTemplateChild("PART_Popup") as Popup;
+            HorusFilterEditTextBoxElement = GetTemplateChild("FilterEditTextBox") as TextBox;
+            HorusEditTextBoxElement = GetTemplateChild("PART_EditableTextBox") as TextBox;
+
+            HorusToggleButtonElement = GetTemplateChild("ToggleButton") as ToggleButton;
+            ContentPresenterElement = GetTemplateChild("contentPresenter") as ScrollViewer;
+            CustomHorusContentPresenterElement = GetTemplateChild("CustomPresenterWhenUseEditable") as ScrollViewer;
+
+            if (IsUsingListFilter)
             {
-                return _contentPresenterElement;
+                HorusEditTextBoxElement.Visibility = Visibility.Collapsed;
+                HorusFilterEditTextBoxElement.Visibility = IsEditable ? Visibility.Visible : Visibility.Collapsed;
+                if (IsEditable)
+                {
+                    HorusFilterEditTextBoxElement.GotFocus += new RoutedEventHandler(HorusFilterEditTextGotFocusEvent);
+                    HorusFilterEditTextBoxElement.LostFocus += new RoutedEventHandler(HorusFilterEditTextLostFocusEvent);
+                    HorusFilterEditTextBoxElement.TextChanged += new TextChangedEventHandler(HorusFilterEditTexChangedEvent);
+                    HorusFilterEditTextBoxElement.PreviewMouseDown += new MouseButtonEventHandler(HorusFilterEditTexPreviewMouseDownEvent);
+                }
             }
-            set
+            else
             {
-                _contentPresenterElement = value;
+                HorusEditTextBoxElement.Visibility = IsEditable ? Visibility.Visible : Visibility.Collapsed;
+                HorusFilterEditTextBoxElement.Visibility = Visibility.Collapsed;
             }
+
+            if (IsEditable && ItemTemplate != null)
+            {
+                ContentPresenterElement.Visibility = Visibility.Collapsed;
+                CustomHorusContentPresenterElement.Visibility = IsUsingListFilter ? Visibility.Visible : Visibility.Collapsed;
+                UpdateBindingSelectedItemTemplate();
+            }
+            else if (!IsEditable && ItemTemplate != null)
+            {
+                ContentPresenterElement.Visibility = Visibility.Visible;
+                CustomHorusContentPresenterElement.Visibility = Visibility.Collapsed;
+                UpdateBindingSelectedItemTemplate();
+            }
+
         }
-        private ScrollViewer CustomHorusContentPresenterElement
+
+        protected override Size MeasureOverride(Size constraint)
         {
-            get
+            Size newSize = base.MeasureOverride(constraint);
+            if (VerticalAlignment == VerticalAlignment.Stretch)
             {
-                return _customHorusContentPresenterElement;
+                if (Double.IsInfinity(constraint.Height))
+                {
+                    newSize.Height = this.MinHeight;
+                }
             }
-            set
+
+            if (HorizontalAlignment == HorizontalAlignment.Stretch)
             {
-                _customHorusContentPresenterElement = value;
+                if (Double.IsInfinity(constraint.Width))
+                {
+                    newSize.Width = this.MinWidth;
+                }
+            }
+            return newSize;
+        }
+
+        protected override void OnPreviewKeyDown(KeyEventArgs e)
+        {
+            // Only process preview key events if they going to our editable text box
+            if (IsEditable && e.OriginalSource == HorusFilterEditTextBoxElement)
+            {
+                if (e.Key == Key.Up || e.Key == Key.Down)
+                {
+                    IsPreviewKeyUpAndDown = true;
+                }
+                base.OnKeyDown(e);
             }
         }
+
+        protected override void OnSelectionChanged(SelectionChangedEventArgs e)
+        {
+            base.OnSelectionChanged(e);
+
+            // If is not the filter thread call, so do job
+            if (!IsFilterUpdatingSelectIndex && IsUsingListFilter)
+            {
+                bool selectAll = true;
+                bool usingTextChangeCallback = true;
+
+                // Change the flag when enter text change event
+                IsSelectionChangeEventUpdatingText = true;
+
+                // If user use navigating key to change selection
+                if (IsPreviewKeyUpAndDown)
+                {
+                    UpdateHorusFilterEditableTextBox(selectAll, usingTextChangeCallback);
+                    IsPreviewKeyUpAndDown = false;
+                }
+                // If user use mouse and normal case to change selection
+                else
+                {
+                    UpdateHorusFilterEditableTextBox(selectAll, usingTextChangeCallback);
+                    IsDropDownOpen = false;
+                }
+
+                IsSelectionChangeEventUpdatingText = false;
+            }
+        }
+
+        protected override void OnGotFocus(RoutedEventArgs e)
+        {
+            base.OnGotFocus(e);
+            if (IsEditable && IsUsingListFilter)
+            {
+                HorusFilterEditTextBoxElement.Visibility = Visibility.Visible;
+                HorusFilterEditTextBoxElement.Focus();
+                e.Handled = true;
+            }
+        }
+        #endregion
+
+
+
+        //------------------------------------------
+
+
+
+        #region Private methods
+        protected void OnDropDownOpenChange(DropDownOpenEventArgs dropDownOpenEventArgs)
+        {
+            logger.I("DropDownOpen = " + dropDownOpenEventArgs.Value);
+            //Changed event
+            IsDropDownOpen = dropDownOpenEventArgs.Value;
+            RaiseEvent(dropDownOpenEventArgs);
+        }
+        private void HorusToggle_Checked(object sender, RoutedEventArgs e)
+        {
+            OnDropDownOpenChange(new DropDownOpenEventArgs(HorusBox.DropDownChangedEvent, true));
+        }
+        private void HorusToggle_Unchecked(object sender, RoutedEventArgs e)
+        {
+            OnDropDownOpenChange(new DropDownOpenEventArgs(HorusBox.DropDownChangedEvent, false));
+        }
+
+        private void HorusPopup_Opened(object sender, EventArgs e)
+        {
+            logger.I("Horrus popup opened");
+        }
+
 
         private void HorusFilterEditTexChangedEvent(object sender, TextChangedEventArgs e)
         {
@@ -696,7 +972,6 @@ namespace HPSolutionCCDevPackage.netFramework
             {
                 return;
             }
-
 
             if (!IsSelectionChangeEventUpdatingText && ctrl.IsLoaded)
             {
@@ -710,7 +985,7 @@ namespace HPSolutionCCDevPackage.netFramework
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    logger.E(ex.Message);
                 }
             }
         }
@@ -801,142 +1076,53 @@ namespace HPSolutionCCDevPackage.netFramework
             }
         }
 
-
-        public override void OnApplyTemplate()
+        private void UpdateBindingSelectedItemTemplate()
         {
-            base.OnApplyTemplate();
-
-            ValidateUsingListFilterPossibility();
-            this.SizeChanged += HorusBoxSizeChangedEvent;
-
-            HorusFilterEditTextBoxElement = GetTemplateChild("FilterEditTextBox") as TextBox;
-            HorusEditTextBoxElement = GetTemplateChild("PART_EditableTextBox") as TextBox;
-
-            HorusToggleButtonElement = GetTemplateChild("ToggleButton") as ToggleButton;
-            ContentPresenterElement = GetTemplateChild("contentPresenter") as ScrollViewer;
-            CustomHorusContentPresenterElement = GetTemplateChild("CustomPresenterWhenUseEditable") as ScrollViewer;
-
-            if (IsUsingListFilter)
+            if (ContentPresenterElement != null && CustomHorusContentPresenterElement != null)
             {
-                HorusEditTextBoxElement.Visibility = Visibility.Collapsed;
-                HorusFilterEditTextBoxElement.Visibility = IsEditable ? Visibility.Visible : Visibility.Collapsed;
-                if (IsEditable)
+                if (SelectedItemTemplate != null)
                 {
-                    HorusFilterEditTextBoxElement.GotFocus += new RoutedEventHandler(HorusFilterEditTextGotFocusEvent);
-                    HorusFilterEditTextBoxElement.LostFocus += new RoutedEventHandler(HorusFilterEditTextLostFocusEvent);
-                    HorusFilterEditTextBoxElement.TextChanged += new TextChangedEventHandler(HorusFilterEditTexChangedEvent);
-                    HorusFilterEditTextBoxElement.PreviewMouseDown += new MouseButtonEventHandler(HorusFilterEditTexPreviewMouseDownEvent);
+
+                    var binding = new Binding("SelectedItemTemplate")
+                    {
+                        Mode = BindingMode.TwoWay,
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+                        RelativeSource = new RelativeSource()
+                        {
+                            Mode = RelativeSourceMode.TemplatedParent
+                        }
+                    };
+                    ContentPresenterElement.SetBinding(ContentControl.ContentTemplateProperty, binding);
+                    CustomHorusContentPresenterElement.SetBinding(ContentControl.ContentTemplateProperty, binding);
+
+                    logger.I("Binded selected item template to custom template");
                 }
-            }
-            else
-            {
-                HorusEditTextBoxElement.Visibility = IsEditable ? Visibility.Visible : Visibility.Collapsed;
-                HorusFilterEditTextBoxElement.Visibility = Visibility.Collapsed;
-            }
-
-            if (IsEditable && ItemTemplate != null)
-            {
-                ContentPresenterElement.Visibility = Visibility.Collapsed;
-                CustomHorusContentPresenterElement.Visibility = IsUsingListFilter ? Visibility.Visible : Visibility.Collapsed;
-            }
-            else if (!IsEditable && ItemTemplate != null)
-            {
-                ContentPresenterElement.Visibility = Visibility.Visible;
-                CustomHorusContentPresenterElement.Visibility = Visibility.Collapsed;
-            }
-
-
-        }
-
-        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
-        {
-            base.OnRenderSizeChanged(sizeInfo);
-        }
-
-        protected override void OnChildDesiredSizeChanged(UIElement child)
-        {
-            base.OnChildDesiredSizeChanged(child);
-        }
-
-        protected override Size MeasureOverride(Size constraint)
-        {
-            Size newSize = base.MeasureOverride(constraint);
-            if (VerticalAlignment == VerticalAlignment.Stretch)
-            {
-                if (Double.IsInfinity(constraint.Height))
-                {
-                    newSize.Height = this.MinHeight;
-                }
-            }
-
-            if (HorizontalAlignment == HorizontalAlignment.Stretch)
-            {
-                if (Double.IsInfinity(constraint.Width))
-                {
-                    newSize.Width = this.MinWidth;
-                }
-            }
-            return newSize;
-        }
-
-        protected override void OnPreviewKeyDown(KeyEventArgs e)
-        {
-            // Only process preview key events if they going to our editable text box
-            if (IsEditable && e.OriginalSource == HorusFilterEditTextBoxElement)
-            {
-                if (e.Key == Key.Up || e.Key == Key.Down)
-                {
-                    IsPreviewKeyUpAndDown = true;
-                }
-                base.OnKeyDown(e);
-            }
-        }
-
-        protected override void OnSelectionChanged(SelectionChangedEventArgs e)
-        {
-            base.OnSelectionChanged(e);
-
-            // If is not the filter thread call, so do job
-            if (!IsFilterUpdatingSelectIndex && IsUsingListFilter)
-            {
-                bool selectAll = true;
-                bool usingTextChangeCallback = true;
-
-                // Change the flag when enter text change event
-                IsSelectionChangeEventUpdatingText = true;
-
-                // If user use navigating key to change selection
-                if (IsPreviewKeyUpAndDown)
-                {
-                    UpdateHorusFilterEditableTextBox(selectAll, usingTextChangeCallback);
-                    IsPreviewKeyUpAndDown = false;
-                }
-                // If user use mouse and normal case to change selection
                 else
                 {
-                    UpdateHorusFilterEditableTextBox(selectAll, usingTextChangeCallback);
-                    IsDropDownOpen = false;
+                    var binding = new Binding("SelectionBoxItemTemplate")
+                    {
+                        Mode = BindingMode.OneWay,
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+                        RelativeSource = new RelativeSource()
+                        {
+                            Mode = RelativeSourceMode.TemplatedParent
+                        }
+                    };
+                    ContentPresenterElement.SetBinding(ContentControl.ContentTemplateProperty, binding);
+                    CustomHorusContentPresenterElement.SetBinding(ContentControl.ContentTemplateProperty, binding);
+
                 }
 
-                IsSelectionChangeEventUpdatingText = false;
-            }
-        }
 
-        protected override void OnGotFocus(RoutedEventArgs e)
-        {
-            base.OnGotFocus(e);
-            if (IsEditable && IsUsingListFilter)
-            {
-                HorusFilterEditTextBoxElement.Visibility = Visibility.Visible;
-                HorusFilterEditTextBoxElement.Focus();
-                e.Handled = true;
             }
+
         }
 
         private void ValidateUsingListFilterPossibility()
         {
             if (IsUsingListFilter && !IsEditable)
             {
+                logger.F("Cannot use list filter when un-editabl");
                 throw new InvalidOperationException("Cannot use list filter when un-editable");
             }
         }
@@ -977,6 +1163,7 @@ namespace HPSolutionCCDevPackage.netFramework
             }
             catch (Exception e)
             {
+                logger.E(e.Message);
                 MessageBox.Show(e.Message);
             }
         }
@@ -1103,5 +1290,25 @@ namespace HPSolutionCCDevPackage.netFramework
             }
             return false;
         }
+
+        #endregion
     }
+
+    public class DropDownOpenEventArgs : RoutedEventArgs
+    {
+        private bool _value;
+
+        public DropDownOpenEventArgs(RoutedEvent id, bool val)
+        {
+            _value = val;
+            RoutedEvent = id;
+        }
+
+        public bool Value
+        {
+            get { return _value; }
+        }
+    }
+    public delegate void DropDownOpenEventHandler(object sender, DropDownOpenEventArgs e);
+
 }
