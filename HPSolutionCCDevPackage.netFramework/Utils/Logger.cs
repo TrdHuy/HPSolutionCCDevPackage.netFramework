@@ -127,7 +127,6 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
                 }
                 catch
                 {
-
                 }
             }
 
@@ -137,7 +136,7 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                ProcessQueue();
+                Task.Run(() => ProcessQueue());
             }
         }
 
