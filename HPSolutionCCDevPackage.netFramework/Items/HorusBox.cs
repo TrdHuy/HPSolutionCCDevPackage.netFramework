@@ -855,6 +855,12 @@ namespace HPSolutionCCDevPackage.netFramework
                 CustomHorusContentPresenterElement.Visibility = Visibility.Collapsed;
                 UpdateBindingSelectedItemTemplate();
             }
+            else if (!IsEditable && ItemTemplate == null)
+            {
+                ContentPresenterElement.Visibility = Visibility.Visible;
+                CustomHorusContentPresenterElement.Visibility = Visibility.Collapsed;
+                UpdateBindingSelectedItemTemplate();
+            }
 
         }
 
@@ -920,6 +926,7 @@ namespace HPSolutionCCDevPackage.netFramework
 
                 IsSelectionChangeEventUpdatingText = false;
             }
+            UpdateHorusContentPresenter();
         }
 
         protected override void OnGotFocus(RoutedEventArgs e)
@@ -992,6 +999,17 @@ namespace HPSolutionCCDevPackage.netFramework
 
         private void HorusFilterEditTextLostFocusEvent(object sender, RoutedEventArgs e)
         {
+            UpdateHorusContentPresenter();
+        }
+
+        private void UpdateHorusContentPresenter()
+        {
+            if (!IsInitialized)
+            {
+                logger.I("Horus was not initialized");
+                return;
+            }
+
             if (IsEditable)
             {
                 bool selectAll = false;
@@ -1005,12 +1023,18 @@ namespace HPSolutionCCDevPackage.netFramework
                     {
                         HorusFilterEditTextBoxElement.Visibility = Visibility.Collapsed;
                         CustomHorusContentPresenterElement.Visibility = Visibility.Visible;
-                        SelectionHorusBoxItem = SelectedItem;
-                        SelectionHorusBoxItemTemplate = ItemTemplate;
-
-                        // copy the text of HorusBox to filter edit text box
-                        UpdateHorusFilterEditableTextBox(selectAll, usingTextChangeCallback);
                     }
+                    else
+                    {
+                        HorusFilterEditTextBoxElement.Visibility = Visibility.Visible;
+                        CustomHorusContentPresenterElement.Visibility = Visibility.Collapsed;
+                    }
+
+                    SelectionHorusBoxItem = SelectedItem;
+                    SelectionHorusBoxItemTemplate = ItemTemplate;
+
+                    // copy the text of HorusBox to filter edit text box
+                    UpdateHorusFilterEditableTextBox(selectAll, usingTextChangeCallback);
 
                 }
                 else
@@ -1024,6 +1048,10 @@ namespace HPSolutionCCDevPackage.netFramework
                 }
 
             }
+            logger.I("IsEditable = " + IsEditable);
+            logger.I("CustomHorusContentPresenter visibility = " + CustomHorusContentPresenterElement.Visibility);
+            logger.I("HorusFilterEditTextBox visibility = " + HorusFilterEditTextBoxElement.Visibility);
+            logger.I("Text = " + Text);
 
         }
 
@@ -1096,6 +1124,7 @@ namespace HPSolutionCCDevPackage.netFramework
                     CustomHorusContentPresenterElement.SetBinding(ContentControl.ContentTemplateProperty, binding);
 
                     logger.I("Binded selected item template to custom template");
+
                 }
                 else
                 {
@@ -1112,8 +1141,6 @@ namespace HPSolutionCCDevPackage.netFramework
                     CustomHorusContentPresenterElement.SetBinding(ContentControl.ContentTemplateProperty, binding);
 
                 }
-
-
             }
 
         }
@@ -1135,7 +1162,7 @@ namespace HPSolutionCCDevPackage.netFramework
                 {
                     string text = Text;
                     // Copy ComboBox.Text to the editable TextBox
-                    if (!String.IsNullOrEmpty(text) && HorusFilterEditTextBoxElement != null && HorusFilterEditTextBoxElement.Text != text)
+                    if (text != null && HorusFilterEditTextBoxElement != null && HorusFilterEditTextBoxElement.Text != text)
                     {
                         HorusFilterEditTextBoxElement.Text = text;
                         if (isSelectAll)

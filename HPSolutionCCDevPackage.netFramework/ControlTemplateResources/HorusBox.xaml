@@ -225,13 +225,15 @@
                                 Height="{Binding ContentAreaHeight}"
                                 Width="{Binding ContentAreaWidth}">
                             <Grid>
+
                                 <ScrollViewer x:Name="contentPresenter"
                                               HorizontalScrollBarVisibility="Hidden"
                                               VerticalScrollBarVisibility="Hidden"
-                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                                              Content="{TemplateBinding SelectionBoxItem}"
+                                              ContentTemplate="{TemplateBinding SelectionHorusBoxItemTemplate}"
+                                              Content="{Binding SelectionBoxItem}"
                                               ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
                                               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              Visibility="Collapsed"
                                               IsHitTestVisible="False"
                                               Margin="{TemplateBinding Padding}"
                                               SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
