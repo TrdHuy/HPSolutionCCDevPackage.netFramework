@@ -926,7 +926,7 @@ namespace HPSolutionCCDevPackage.netFramework
 
                 IsSelectionChangeEventUpdatingText = false;
             }
-            UpdateHorusContentPresenter();
+            UpdateHorusContentPresenter(true);
         }
 
         protected override void OnGotFocus(RoutedEventArgs e)
@@ -999,10 +999,10 @@ namespace HPSolutionCCDevPackage.netFramework
 
         private void HorusFilterEditTextLostFocusEvent(object sender, RoutedEventArgs e)
         {
-            UpdateHorusContentPresenter();
+            UpdateHorusContentPresenter(false);
         }
 
-        private void UpdateHorusContentPresenter()
+        private void UpdateHorusContentPresenter(bool IsSelectionChangeCall)
         {
             if (!IsInitialized)
             {
@@ -1018,24 +1018,23 @@ namespace HPSolutionCCDevPackage.netFramework
                 // In case using custom template for item view
                 if (ItemTemplate != null)
                 {
-                    // In case there was not any selected item, the filter edit text will be visible instead of item presenter
-                    if (SelectedIndex != -1)
+                    if (!IsSelectionChangeCall)
                     {
-                        HorusFilterEditTextBoxElement.Visibility = Visibility.Collapsed;
-                        CustomHorusContentPresenterElement.Visibility = Visibility.Visible;
-                    }
-                    else
-                    {
-                        HorusFilterEditTextBoxElement.Visibility = Visibility.Visible;
-                        CustomHorusContentPresenterElement.Visibility = Visibility.Collapsed;
+                        // In case there was not any selected item, the filter edit text will be visible instead of item presenter
+                        if (SelectedIndex != -1)
+                        {
+                            HorusFilterEditTextBoxElement.Visibility = Visibility.Collapsed;
+                            CustomHorusContentPresenterElement.Visibility = Visibility.Visible;
+                        }
+                        else
+                        {
+                            HorusFilterEditTextBoxElement.Visibility = Visibility.Visible;
+                            CustomHorusContentPresenterElement.Visibility = Visibility.Collapsed;
+                        }
                     }
 
                     SelectionHorusBoxItem = SelectedItem;
                     SelectionHorusBoxItemTemplate = ItemTemplate;
-
-                    // copy the text of HorusBox to filter edit text box
-                    UpdateHorusFilterEditableTextBox(selectAll, usingTextChangeCallback);
-
                 }
                 else
                 {
@@ -1046,9 +1045,8 @@ namespace HPSolutionCCDevPackage.netFramework
                         UpdateHorusFilterEditableTextBox(selectAll, usingTextChangeCallback);
                     }
                 }
-
             }
-            logger.I("IsEditable = " + IsEditable);
+            logger.I("IsEditable = " + IsEditable + " IsFocused = " + IsFocused + " IsSelectionChangeCall = " + IsSelectionChangeCall);
             logger.I("CustomHorusContentPresenter visibility = " + CustomHorusContentPresenterElement.Visibility);
             logger.I("HorusFilterEditTextBox visibility = " + HorusFilterEditTextBoxElement.Visibility);
             logger.I("Text = " + Text);
