@@ -221,7 +221,7 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
                 {
                     var taskFormQueue = TaskQueue.Peek();
                     reDoWorkCounter++;
-                    taskFormQueue.Start();
+                    taskFormQueue?.Start();
                     var success = taskFormQueue.Result;
                     if (success || reDoWorkCounter >= 3)
                     {
