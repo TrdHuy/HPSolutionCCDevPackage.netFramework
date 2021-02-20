@@ -1032,6 +1032,18 @@ namespace HPSolutionCCDevPackage.netFramework
                             CustomHorusContentPresenterElement.Visibility = Visibility.Collapsed;
                         }
                     }
+                    else
+                    {
+                        // In case selection change event call update presenter,
+                        // if both edit text box and presenter are visible, hide the edit text
+                        // show the presenter.
+                        if (HorusFilterEditTextBoxElement.Visibility == Visibility.Visible &&
+                            CustomHorusContentPresenterElement.Visibility == Visibility.Visible)
+                        {
+                            HorusFilterEditTextBoxElement.Visibility = Visibility.Collapsed;
+                            CustomHorusContentPresenterElement.Visibility = Visibility.Visible;
+                        }
+                    }
 
                     SelectionHorusBoxItem = SelectedItem;
                     SelectionHorusBoxItemTemplate = ItemTemplate;
@@ -1039,7 +1051,7 @@ namespace HPSolutionCCDevPackage.netFramework
                 else
                 {
                     // In case there was not any selected item, the filter edit text will be visible instead of item presenter
-                    if (SelectedIndex != -1)
+                    if (SelectedIndex != -1 && !IsSelectionChangeCall)
                     {
                         // copy the text of HorusBox to filter edit text box
                         UpdateHorusFilterEditableTextBox(selectAll, usingTextChangeCallback);
