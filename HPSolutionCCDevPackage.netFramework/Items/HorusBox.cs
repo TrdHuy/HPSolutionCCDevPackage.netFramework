@@ -1059,8 +1059,8 @@ namespace HPSolutionCCDevPackage.netFramework
                 }
             }
             logger.I("IsEditable = " + IsEditable + " IsFocused = " + IsFocused + " IsSelectionChangeCall = " + IsSelectionChangeCall);
-            logger.I("CustomHorusContentPresenter visibility = " + CustomHorusContentPresenterElement.Visibility);
-            logger.I("HorusFilterEditTextBox visibility = " + HorusFilterEditTextBoxElement.Visibility);
+            logger.I("CustomHorusContentPresenter visibility = " + CustomHorusContentPresenterElement?.Visibility);
+            logger.I("HorusFilterEditTextBox visibility = " + HorusFilterEditTextBoxElement?.Visibility);
             logger.I("Text = " + Text);
 
         }
