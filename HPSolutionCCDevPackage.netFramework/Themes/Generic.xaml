@@ -12,6 +12,7 @@
         <ResourceDictionary Source="/HPSolutionCCDevPackage.netFramework;component/ControlTemplateResources/AtumImageView.xaml" />
         <ResourceDictionary Source="/HPSolutionCCDevPackage.netFramework;component/ControlTemplateResources/AmunTextBox.xaml" />
         <ResourceDictionary Source="/HPSolutionCCDevPackage.netFramework;component/ControlTemplateResources/HehWindow.xaml" />
+        <ResourceDictionary Source="/HPSolutionCCDevPackage.netFramework;component/ControlTemplateResources/SquareGrid.xaml" />
     </ResourceDictionary.MergedDictionaries>
     
     <!--Font area-->
