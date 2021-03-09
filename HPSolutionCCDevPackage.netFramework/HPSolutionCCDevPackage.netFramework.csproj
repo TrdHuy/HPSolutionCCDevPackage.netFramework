@@ -81,6 +81,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ControlTemplateResources\MontuBox\MontuBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ControlTemplateResources\MontuBox\MontuBoxItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ControlTemplateResources\OsirisButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -109,6 +117,8 @@
     <Compile Include="Items\AnubisMessageBox.cs" />
     <Compile Include="Items\HehWindow.cs" />
     <Compile Include="Items\HorusBox.cs" />
+    <Compile Include="Items\MontuBox\MontuBox.cs" />
+    <Compile Include="Items\MontuBox\MontuBoxItem.cs" />
     <Compile Include="Items\OsirisButton.cs" />
     <Compile Include="Items\SquareGrid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

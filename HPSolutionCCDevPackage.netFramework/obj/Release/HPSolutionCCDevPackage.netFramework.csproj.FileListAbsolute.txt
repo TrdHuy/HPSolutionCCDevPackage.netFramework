@@ -11,3 +11,28 @@ C:\Users\HuyTran\source\repos\HPSolutionCCDevPackage.netFramework\HPSolutionCCDe
 C:\Users\HuyTran\source\repos\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\HPSolutionCCDevPackage.netFramework.csproj.CoreCompileInputs.cache
 C:\Users\HuyTran\source\repos\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\HPSolutionCCDevPackage.netFramework.dll
 C:\Users\HuyTran\source\repos\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\HPSolutionCCDevPackage.netFramework.pdb
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\bin\Release\HPSolutionCCDevPackage.netFramework.dll
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\bin\Release\HPSolutionCCDevPackage.netFramework.pdb
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\GeneratedInternalTypeHelper.g.cs
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\HPSolutionCCDevPackage.netFramework_MarkupCompile.cache
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\HPSolutionCCDevPackage.netFramework_MarkupCompile.lref
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\AkerTextBox.baml
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\AmunTextBox.baml
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\AnubisMessageBox.baml
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\AtumImageView.baml
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\HathorScrollView.baml
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\HehWindow.baml
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\HorusBox.baml
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\OsirisButton.baml
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\Themes\Fonts.baml
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\Themes\Generic.baml
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\HPSolutionCCDevPackage.netFramework.g.resources
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\HPSolutionCCDevPackage.netFramework.Properties.Resources.resources
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\HPSolutionCCDevPackage.netFramework.csproj.GenerateResource.cache
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\HPSolutionCCDevPackage.netFramework.csproj.CoreCompileInputs.cache
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\HPSolutionCCDevPackage.netFramework.dll
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\HPSolutionCCDevPackage.netFramework.pdb
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\SquareGrid.baml
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\MontuBox\MontuBox.baml
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\MontuBox\MontuBoxItem.baml
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\HPSolutionCCDevPackage.netFramework.csprojAssemblyReference.cache

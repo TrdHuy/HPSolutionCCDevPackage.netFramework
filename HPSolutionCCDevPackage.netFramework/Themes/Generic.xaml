@@ -13,6 +13,8 @@
         <ResourceDictionary Source="/HPSolutionCCDevPackage.netFramework;component/ControlTemplateResources/AmunTextBox.xaml" />
         <ResourceDictionary Source="/HPSolutionCCDevPackage.netFramework;component/ControlTemplateResources/HehWindow.xaml" />
         <ResourceDictionary Source="/HPSolutionCCDevPackage.netFramework;component/ControlTemplateResources/SquareGrid.xaml" />
+        <ResourceDictionary Source="/HPSolutionCCDevPackage.netFramework;component/ControlTemplateResources/MontuBox/MontuBoxItem.xaml" />
+        <ResourceDictionary Source="/HPSolutionCCDevPackage.netFramework;component/ControlTemplateResources/MontuBox/MontuBox.xaml" />
     </ResourceDictionary.MergedDictionaries>
     
     <!--Font area-->

@@ -21,8 +21,8 @@ namespace HPSolutionCCDevPackage.netFramework
         {
             DefaultStyleKey = typeof(HorusBox);
             this.IsTabStop = true;
-            this.MinHeight = 30;
-            this.MinWidth = 100;
+            //this.MinHeight = 30;
+            //this.MinWidth = 100;
         }
 
         #region Public properties
@@ -871,7 +871,7 @@ namespace HPSolutionCCDevPackage.netFramework
             {
                 if (Double.IsInfinity(constraint.Height))
                 {
-                    newSize.Height = this.MinHeight;
+                    //newSize.Height = this.MinHeight;
                 }
             }
 
@@ -879,7 +879,7 @@ namespace HPSolutionCCDevPackage.netFramework
             {
                 if (Double.IsInfinity(constraint.Width))
                 {
-                    newSize.Width = this.MinWidth;
+                    //newSize.Width = this.MinWidth;
                 }
             }
             return newSize;

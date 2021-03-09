@@ -4,17 +4,17 @@
 library
 C#
 .cs
-C:\Users\HuyTran\source\repos\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\
+C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\
 HPSolutionCCDevPackage.netFramework
 none
 false
 DEBUG;TRACE
 
-1-731644535
+131140298500
 
-5-446781523
-13-1505183044
-Themes\Generic.xaml;
+21-798285744
+17-2104730778
+ControlTemplateResources\AkerTextBox.xaml;ControlTemplateResources\AmunTextBox.xaml;ControlTemplateResources\AnubisMessageBox.xaml;ControlTemplateResources\AtumImageView.xaml;ControlTemplateResources\HathorScrollView.xaml;ControlTemplateResources\HehWindow.xaml;ControlTemplateResources\HorusBox.xaml;ControlTemplateResources\MontuBox\MontuBox.xaml;ControlTemplateResources\MontuBox\MontuBoxItem.xaml;ControlTemplateResources\OsirisButton.xaml;ControlTemplateResources\SquareGrid.xaml;Themes\Fonts.xaml;Themes\Generic.xaml;
 
 False
 

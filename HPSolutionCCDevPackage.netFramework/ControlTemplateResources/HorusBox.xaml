@@ -220,7 +220,7 @@
 
                         <Border Grid.Column="0"
                                 CornerRadius="{Binding HorusCornerRadius}"
-                                BorderBrush="{Binding BorderBrush}"
+                                BorderBrush="Transparent"
                                 BorderThickness="{Binding BorderThickness}"
                                 Height="{Binding ContentAreaHeight}"
                                 Width="{Binding ContentAreaWidth}">
@@ -261,6 +261,7 @@
                                          Style="{StaticResource HorusTextBox}"
                                          Tag="{TemplateBinding Tag}"
                                          BorderThickness="0"
+                                         FontSize="{TemplateBinding FontSize}"
                                          Background="Transparent"
                                          Foreground="{Binding EditTextForeground}"
                                          Visibility="Hidden"
@@ -271,6 +272,7 @@
                                          HorizontalContentAlignment="Left"
                                          VerticalContentAlignment="Center"
                                          Style="{StaticResource HorusTextBox}"
+                                         FontSize="{TemplateBinding FontSize}"
                                          Tag="{TemplateBinding Tag}"
                                          BorderThickness="0"
                                          Background="Transparent"

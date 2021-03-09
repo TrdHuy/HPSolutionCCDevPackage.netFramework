@@ -1,0 +1,64 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:HPSolutionCCDevPackage.netFramework">
+    <Style TargetType="{x:Type local:MontuBox}">
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:MontuBox}">
+
+                    <Border x:Name="RootBorder"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}">
+
+                        <Grid  DataContext="{Binding RelativeSource={RelativeSource AncestorType=local:MontuBox,Mode=FindAncestor}}">
+                            <ToggleButton Background="Transparent"
+                                          BorderThickness="0"
+                                          BorderBrush="Transparent"
+                                          IsChecked="{Binding IsDropDownOpen}" 
+                                          ClickMode="Hover"/>
+                            <ContentPresenter x:Name="MontuContentPresenter"
+                                              Margin="{TemplateBinding Padding}"
+                                              VerticalAlignment="Center"
+                                              IsHitTestVisible="False" />
+
+
+                            <Popup x:Name="MontuPopup"
+                                   Placement="Bottom"
+                                   IsOpen="{Binding IsDropDownOpen}"
+                                   AllowsTransparency="True"
+                                   Focusable="False"
+                                   PopupAnimation="Slide">
+                                <Grid Name="DropDown"
+                                      Margin="0,0,15,15"
+                                      SnapsToDevicePixels="True"
+                                      MinWidth="{TemplateBinding ActualWidth}">
+
+                                    <Grid.Effect>
+                                        <DropShadowEffect Color="Black"
+                                                          BlurRadius="4"
+                                                          Direction="330"
+                                                          Opacity="0.8"
+                                                          ShadowDepth="4" />
+                                    </Grid.Effect>
+                                    <Border Background="White"
+                                            x:Name="MontuPopupBorder"
+                                            BorderThickness="1"
+                                            MaxHeight="90"
+                                            BorderBrush="Black">
+                                        <local:HathorScrollView>
+                                            <ItemsControl x:Name="MontuItemControl" />
+                                        </local:HathorScrollView>
+                                    </Border>
+                                </Grid>
+
+                            </Popup>
+                        </Grid>
+                    </Border>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

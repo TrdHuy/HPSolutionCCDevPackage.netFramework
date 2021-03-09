@@ -1,0 +1,48 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:HPSolutionCCDevPackage.netFramework">
+    <Style TargetType="{x:Type local:MontuBoxItem}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:MontuBoxItem}">
+                    <Border x:Name="RootBorder"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}">
+                        <Grid Background="Transparent"
+                              DataContext="{Binding RelativeSource={RelativeSource AncestorType=local:MontuBoxItem,Mode=FindAncestor}}">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <!--Checkbox area-->
+                            <CheckBox Grid.Column="0"
+                                      x:Name="MontuICheckBox"
+                                      IsChecked="{Binding IsSelected}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      Style="{Binding CheckBoxStyle}" />
+
+                            <!--Gap area-->
+                            <Grid Grid.Column="1"
+                                  Background="Transparent"
+                                  Width="{Binding GapWidth}" />
+
+                            <!--Content area-->
+                            <ContentPresenter x:Name="MontuIContentPrsenter"
+                                              Grid.Column="2"
+                                              Content="{Binding Content}"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+
+                        </Grid>
+                    </Border>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
