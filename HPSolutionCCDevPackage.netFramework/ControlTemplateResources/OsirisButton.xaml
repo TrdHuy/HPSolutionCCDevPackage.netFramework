@@ -23,7 +23,7 @@
                      Color="#4C5073CF" />
     <SolidColorBrush x:Key="default_mouse_pressed_brush_icon_button"
                      Color="#195073CF" />
-    
+
     <Style TargetType="{x:Type local:OsirisButton}">
         <Setter Property="Background"
                 Value="{StaticResource default_bg_icon_button}" />
@@ -31,13 +31,13 @@
                 Value="{StaticResource default_icon_button_border_thickness}" />
         <Setter Property="BorderBrush"
                 Value="{StaticResource default_border_brush_icon_button}" />
-        
+
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:OsirisButton">
 
                     <ControlTemplate.Resources>
-                        
+
                         <Style TargetType="{x:Type TextBlock}"
                                x:Key="SpinningText">
                             <Setter Property="HorizontalAlignment"
@@ -84,7 +84,7 @@
                         </Style>
 
                     </ControlTemplate.Resources>
-                    
+
                     <Border BorderThickness="{TemplateBinding BorderThickness}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             x:Name="MainBorderContainer"
@@ -117,19 +117,6 @@
                                 <VisualState Name="UnBusy" />
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-
-                        <Border.OpacityMask>
-                            <VisualBrush>
-                                <VisualBrush.Visual>
-                                    <Grid Width="{Binding ElementName=MainBorderContainer, Path=ActualWidth}"
-                                          Height="{Binding ElementName=MainBorderContainer, Path=ActualHeight}">
-                                        <Border Background="Black"
-                                                CornerRadius="{Binding OBCornerRadius,
-                                            FallbackValue={StaticResource default_icon_button_corner_radius}}" />
-                                    </Grid>
-                                </VisualBrush.Visual>
-                            </VisualBrush>
-                        </Border.OpacityMask>
 
                         <Grid>
 
@@ -275,7 +262,7 @@
                             </Setter>
                         </MultiTrigger>
 
-                        <!--Pressed trigger--> 
+                        <!--Pressed trigger-->
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsPressed"
