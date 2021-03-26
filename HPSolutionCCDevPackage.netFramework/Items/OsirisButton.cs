@@ -350,10 +350,7 @@ namespace HPSolutionCCDevPackage.netFramework
                         "ProgressSpinnerSize",
                         typeof(double),
                         typeof(OsirisButton),
-                        new FrameworkPropertyMetadata(
-                                defaultProgressSpinnerSize,
-                                FrameworkPropertyMetadataOptions.AffectsMeasure,
-                                null),
+                        new PropertyMetadata(20d),
                         null);
 
         public double ProgressSpinnerSize
@@ -400,7 +397,6 @@ namespace HPSolutionCCDevPackage.netFramework
         private static Brush defaultMousePressedEffectBackground = new SolidColorBrush(Color.FromArgb(40, 26, 195, 237));
         private static bool defaultIsUsingDropShadowEffect = default(bool);
         private static bool defaultIsBusy = default(bool);
-        private static double defaultProgressSpinnerSize = 20d;
         private static Brush defaultProgressSpinnerBackground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
         private static Stretch defaultIconStretch = Stretch.None;
         private static TextDecorationCollection defaultTextDecor = TextDecorations.Baseline;
