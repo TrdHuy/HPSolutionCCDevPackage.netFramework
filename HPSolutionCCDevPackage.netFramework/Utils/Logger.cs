@@ -37,9 +37,9 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
         }
 
         private const string TAG = "HPSCCDP";
-        private static object LogLocker = new object();
-        private static readonly SemaphoreSlim Mutex = new SemaphoreSlim(1);
+        private const int OLD_LOG_FILES_CAPICITY = 1;
 
+        private static readonly SemaphoreSlim Mutex = new SemaphoreSlim(1);
         private static ObservableQueue<Task<bool>> TaskQueue { get; set; }
         private static StringBuilder _logBuilder { get; set; }
         private static StringBuilder _userLogBuilder { get; set; }
@@ -54,7 +54,6 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
 
         static Logger()
         {
-            Console.WriteLine("Init static Logger");
 
             TaskQueue = new ObservableQueue<Task<bool>>();
             var cast = TaskQueue as IEnumerable<Task<bool>>;
@@ -105,6 +104,7 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
                 try
                 {
                     var dateTimeNow = DateTime.Now.ToString("ddMMyyHHmmss");
+                    
                     fileName =
                     Assembly.GetCallingAssembly().GetName().Name + "_" +
                     Assembly.GetCallingAssembly().GetName().Version + "_" +
@@ -127,11 +127,44 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
                 }
                 catch
                 {
+
                 }
+            }
+
+            DeleteLogInFolder();
+        }
+
+        /// <summary>
+        /// Delete old logs 
+        /// </summary>
+        private static void DeleteLogInFolder()
+        {
+            try
+            {
+                var enumerateFile = Directory.EnumerateFiles(directory, "*.txt");
+                List<string> fileNames = new List<string>(enumerateFile);
+                var fileCount = enumerateFile.Count();
+                if (fileCount > OLD_LOG_FILES_CAPICITY)
+                {
+                    for (int i = OLD_LOG_FILES_CAPICITY; i < fileCount; i++)
+                    {
+                        var temp = fileNames[i];
+                        File.Delete(temp);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
             }
 
         }
 
+        /// <summary>
+        /// When a writting log task was push to a queue, process the queue
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private static void TaskQueueChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
@@ -140,6 +173,11 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
             }
         }
 
+        /// <summary>
+        /// Fire a log when app fall into unhandle exception
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             WriteLog("F", TAG, "[UnhandledException]:" + e.ExceptionObject.ToString());
@@ -149,6 +187,10 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
             TaskQueue.Enqueue(task2);
         }
 
+        /// <summary>
+        /// ctor
+        /// </summary>
+        /// <param name="className"></param>
         public Logger(string className)
         {
             this.className = className;
@@ -159,13 +201,11 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
 
         private static void InitUserLog()
         {
-            Console.WriteLine("Init release logger");
             _userLogBuilder = new StringBuilder();
         }
 
         private static void InitLogDebug()
         {
-            Console.WriteLine("Init debug logger");
             _logBuilder = new StringBuilder();
         }
 
@@ -210,6 +250,11 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
             TaskQueue.Enqueue(task);
         }
 
+        /// <summary>
+        /// Process the queue when a task was pushed in
+        /// do the task and remove it from queue if it is done
+        /// or cancel if it try to do it three times
+        /// </summary>
         private static async void ProcessQueue()
         {
             await Mutex.WaitAsync();
@@ -237,6 +282,16 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
             }
         }
 
+        /// <summary>
+        /// Generate a writting log task, to handle write log async
+        /// </summary>
+        /// <param name="logLV"></param>
+        /// <param name="TAG"></param>
+        /// <param name="className"></param>
+        /// <param name="callMemberName"></param>
+        /// <param name="message"></param>
+        /// <param name="isExportLogFile"></param>
+        /// <returns></returns>
         private Task<bool> GenerateTask(string logLV, string TAG, string className, string callMemberName, string message, bool isExportLogFile = false)
         {
             var task = !isExportLogFile ?
@@ -253,6 +308,16 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
             return task;
         }
 
+        /// <summary>
+        /// Generate a writting log task, to handle write log async
+        /// </summary>
+        /// <param name="logLV"></param>
+        /// <param name="TAG"></param>
+        /// <param name="className"></param>
+        /// <param name="callMemberName"></param>
+        /// <param name="message"></param>
+        /// <param name="isExportLogFile"></param>
+        /// <returns></returns>
         private static Task<bool> GenerateTask(string logLV, string TAG, string message, bool isExportLogFile = false)
         {
             var task = !isExportLogFile ?
@@ -268,6 +333,13 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
             return task;
         }
 
+        /// <summary>
+        /// Append the message log to log builder
+        /// </summary>
+        /// <param name="logLv"></param>
+        /// <param name="tag"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         private bool WriteLog(string logLv, string tag, string className, string methodName, string message)
         {
             try
@@ -309,6 +381,13 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
             return true;
         }
 
+        /// <summary>
+        /// Append the message log to log builder
+        /// </summary>
+        /// <param name="logLv"></param>
+        /// <param name="tag"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         private static bool WriteLog(string logLv, string tag, string message)
         {
             try
@@ -345,6 +424,11 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
             return true;
         }
 
+
+        /// <summary>
+        /// Clear the builder's buffer if reach max capacity 
+        /// </summary>
+        /// <param name="builder"></param>
         private static void ClearBuffer(StringBuilder builder)
         {
             if (builder.Capacity >= builder.MaxCapacity - 100000)
@@ -354,6 +438,10 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
             }
         }
 
+        /// <summary>
+        /// Export log from string builder to file .txt
+        /// </summary>
+        /// <returns></returns>
         public static bool ExportLogFile()
         {
             try
