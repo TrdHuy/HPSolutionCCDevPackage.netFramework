@@ -1,0 +1,189 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:HPSolutionCCDevPackage.netFramework"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <Style TargetType="{x:Type local:SekerBox}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:SekerBox}">
+                    <Border x:Name="border"
+                            DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:SekerBox}, Mode=FindAncestor}}"
+                            CornerRadius="{Binding CornerRadius}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}"
+                            SnapsToDevicePixels="True">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto"
+                                                  MinWidth="50" />
+                                <ColumnDefinition Width="10" />
+                            </Grid.ColumnDefinitions>
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Focusable="False"
+                                          Margin="{TemplateBinding Padding}"
+                                          HorizontalScrollBarVisibility="Hidden"
+                                          VerticalScrollBarVisibility="Hidden" />
+                            <TextBox IsHitTestVisible="False"
+                                     Text="{TemplateBinding Tag}"
+                                     x:Name="placeholder"
+                                     FontFamily="{TemplateBinding FontFamily}"
+                                     Padding="{TemplateBinding Padding}"
+                                     HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                     VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                     IsReadOnly="True"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     Foreground="{Binding SuggestTextForegroundColor}">
+                                <TextBox.Style>
+                                    <Style TargetType="{x:Type TextBox}">
+                                        <Setter Property="Visibility"
+                                                Value="Collapsed" />
+
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}"
+                                                         Value="">
+                                                <Setter Property="Visibility"
+                                                        Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                            <ToggleButton x:Name="calendarToggle"
+                                          Grid.Column="1"
+                                          BorderThickness="0"
+                                          Background="White"
+                                          Style="{Binding CalendarButtonStyle}">
+
+                                <ToggleButton.Template>
+                                    <ControlTemplate TargetType="{x:Type ButtonBase}">
+                                        <Border x:Name="border"
+                                                DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:SekerBox}, Mode=FindAncestor}}"
+                                                BorderThickness="0"
+                                                Background="Transparent"
+                                                SnapsToDevicePixels="True">
+
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="3*" />
+                                                    <RowDefinition Height="4*" />
+                                                    <RowDefinition Height="10*" />
+                                                    <RowDefinition Height="4*" />
+                                                    <RowDefinition Height="3*" />
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="3*" />
+                                                    <ColumnDefinition Width="4*" />
+                                                    <ColumnDefinition Width="10*" />
+                                                    <ColumnDefinition Width="4*" />
+                                                    <ColumnDefinition Width="3*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Viewbox Grid.RowSpan="3"
+                                                         Grid.ColumnSpan="3"
+                                                         Grid.Row="1"
+                                                         Grid.Column="1">
+                                                    <Path Data="m 90.843434,202.00176 c -1.53891,-0.16714 -5.42518,-0.78195 -8.63613,-1.36626 -3.21096,-0.58431 -9.14795,-2.1466 -13.19331,-3.47176 -4.04536,-1.32516 -10.73513,-4.1655 -14.86614,-6.31186 -4.13101,-2.14636 -10.17217,-5.89977 -13.42481,-8.34091 -3.25264,-2.44114 -8.49991,-7.06099 -11.66062,-10.26632 -3.1607,-3.20533 -7.61747,-8.34611 -9.90392,-11.42394 -2.28646,-3.07784 -5.8714,-8.90124 -7.96653,-12.9409 C 9.0968443,143.84015 6.4109843,137.76128 5.2233843,134.3712 4.0357845,130.98112 2.3715145,125.00033 1.5250045,121.08055 0.24693448,115.16245 -0.01165552,111.75879 3.9448423e-4,101.01278 0.01229448,90.402039 0.28942448,86.788605 1.5395045,80.945006 c 0.83854,-3.919776 2.50332,-9.900566 3.6995098,-13.290656 1.1962,-3.39007 3.43175,-8.682 4.9678897,-11.75984 1.53615,-3.07783 4.47725,-8.11429 6.53579,-11.19212 2.05854,-3.07784 5.69394,-7.79952 8.07865,-10.49262 2.38472,-2.69311 6.56845,-6.87411 9.29718,-9.29112 2.72873,-2.41701 7.47955,-6.07337 10.55739,-8.12525 3.07783,-2.05189 8.2478,-5.06317 11.48881,-6.69175 3.24102,-1.6285699 9.11289,-4.0158799 13.04862,-5.3051299 C 73.149064,3.50727 79.153734,1.90064 82.557064,1.22622 87.028964,0.34004 92.139574,0 100.98631,0 c 8.84673,0 13.95733,0.34004 18.42924,1.22622 3.40332,0.67442 9.4977,2.31044 13.54307,3.6356001 4.04536,1.32516 10.70418,4.15462 14.79738,6.2876699 4.09319,2.13306 9.9604,5.74902 13.03824,8.03548 3.07783,2.28646 8.21538,6.74004 11.41677,9.89684 3.20139,3.15681 7.83268,8.43502 10.29174,11.72937 2.45907,3.29435 6.18467,9.2949 8.27912,13.33456 2.09445,4.03966 4.77976,10.11854 5.96736,13.50861 1.18759,3.39009 2.84534,9.37088 3.68387,13.290656 1.25009,5.843599 1.52723,9.457033 1.53912,20.067774 0.012,10.74601 -0.24654,14.14967 -1.52461,20.06777 -0.84652,3.91978 -2.51079,9.90057 -3.69838,13.29065 -1.1876,3.39008 -3.87347,9.46895 -5.9686,13.50861 -2.09513,4.03966 -5.68174,9.86306 -7.97026,12.9409 -2.28852,3.07783 -6.76185,8.2263 -9.94075,11.44105 -3.17889,3.21474 -8.42449,7.83458 -11.65688,10.26632 -3.23238,2.43173 -9.25698,6.17744 -13.38799,8.3238 -4.13101,2.14636 -10.80591,4.98183 -14.83312,6.30104 -4.0272,1.31921 -9.96419,2.90911 -13.1933,3.5331 -3.22912,0.62399 -10.43542,1.24368 -16.01399,1.37708 -5.578579,0.13341 -11.401986,0.10581 -12.940906,-0.0613 z"
+                                                          Fill="{TemplateBinding Background}"
+                                                          x:Name="backgroundPath"
+                                                          VerticalAlignment="Center"
+                                                          HorizontalAlignment="Center"
+                                                          StrokeThickness="0" />
+                                                </Viewbox>
+
+                                                <Viewbox Grid.Row="2"
+                                                         Grid.Column="2">
+                                                    <Path Data="m 6.9499782,126.22584 c -3.778341,-1.3639 -6.06494432,-4.31533 -6.67231932,-8.61227 -0.214197,-1.51537 -0.27735099825,-12.75221 -0.222309,-39.555212 l 0.07688,-37.43854 55.89829112,-0.0668 55.898299,-0.0668 -0.0712,39.35739 -0.0712,39.357382 -0.87583,1.76164 c -1.0562,2.12446 -2.759,3.86839 -4.77448,4.88982 l -1.49344,0.75687 -48.15418,0.0581 c -46.6224455,0.0562 -48.1982008,0.0422 -49.5385038,-0.44164 z M 27.982771,109.08076 28.052061,98.960441 H 17.99475 7.9374412 v 10.189639 10.18964 l 9.9880198,-0.0693 9.988021,-0.0693 z m 25.4,0 0.06929,-10.120319 H 43.262459 33.072857 v 10.010069 c 0,5.50554 0.08078,10.09086 0.179525,10.1896 0.09874,0.0987 4.652878,0.14834 10.120313,0.11024 l 9.940787,-0.0693 z m 25.433897,9.89079 c 0.21486,-0.25889 0.28053,-3.13778 0.23084,-10.12031 l -0.0694,-9.758509 H 68.791607 58.605149 l -0.06947,9.788539 c -0.03821,5.3837 -0.01217,9.93784 0.05784,10.12031 0.195276,0.50888 19.800059,0.47977 20.223149,-0.03 z m 25.366122,-9.89394 0.0693,-10.123459 -10.123466,0.0693 -10.123466,0.0693 -0.0694,9.758509 c -0.05,7.03178 0.0152,9.86049 0.23348,10.1235 0.24948,0.3006 2.03527,0.35276 10.123616,0.29566 l 9.820686,-0.0693 z M 27.913482,93.730868 c 0.170532,-0.12529 0.23885,-3.74481 0.192188,-10.1824 l -0.0724,-9.98802 H 17.985358 7.9374412 v 10.18646 10.18645 l 9.8557288,-0.004 c 5.420651,-0.002 9.974791,-0.0915 10.120312,-0.19844 z m 25.532292,-9.98396 V 73.560448 H 43.259316 33.072857 v 10.01007 c 0,5.50553 0.07937,10.08944 0.17639,10.18645 0.09701,0.097 4.680918,0.17639 10.186458,0.17639 h 10.010069 z m 25.532294,0 V 73.692738 H 68.791607 58.605149 l -0.06947,9.78853 c -0.03821,5.3837 -0.01164,9.93925 0.05905,10.12346 0.101227,0.2638 2.279377,0.32021 10.25593,0.26564 l 10.127409,-0.0693 z m 25.267722,-0.003 v -10.18966 l -10.120326,0.0693 -10.120316,0.0693 -0.0695,9.78854 c -0.0382,5.38369 -0.0122,9.93783 0.0578,10.12031 0.099,0.25793 2.36695,0.33178 10.189796,0.33178 h 10.062476 v -10.1896 z M 28.051923,68.202628 c 0.0034,-0.1819 5.29e-4,-4.73071 -0.0061,-10.10848 -0.0093,-7.41734 -0.09049,-9.82609 -0.336264,-9.97799 -0.178197,-0.11013 -4.67005,-0.17499 -9.981899,-0.14412 l -9.6579158,0.0561 -0.06925,10.2526 -0.06925,10.25261 H 17.98852 c 7.86615,0 10.058612,-0.072 10.063422,-0.33073 z m 25.393851,-9.85572 c 0,-7.97167 -0.07191,-10.18692 -0.330729,-10.18856 -0.914821,-0.006 -19.427124,-0.01 -19.711459,-0.004 -0.258744,0.005 -0.330729,2.22355 -0.330729,10.19289 v 10.18642 h 10.186459 10.186458 z m 25.601714,0.31309 c 0.0382,-5.35759 -0.0279,-9.91492 -0.14677,-10.12739 -0.30879,-0.55178 -20.082537,-0.69997 -20.292698,-0.15209 -0.204629,0.53347 -0.161947,19.77328 0.04433,19.97955 0.09872,0.0987 4.712391,0.14833 10.252604,0.11025 l 10.073124,-0.0692 z m 25.198302,-0.28479 c 0,-8.8248 -0.0526,-10.17831 -0.40037,-10.31179 -0.77699,-0.29815 -19.254262,-0.16974 -19.623112,0.13639 -0.27809,0.23079 -0.34945,2.30057 -0.34945,10.1354 0,5.41496 0.0794,9.92475 0.17639,10.02176 0.097,0.097 4.680923,0.17639 10.186466,0.17639 H 104.24579 Z M 0.16077588,35.042548 c -0.271483,-0.70748 -0.178169,-9.02631 0.123025,-10.96756 0.5366,-3.45847 2.71147332,-6.55506 5.46041832,-7.77456 0.551429,-0.24463 1.240722,-0.58785 1.531763,-0.7627 0.377979,-0.22708 3.2316528,-0.34266 9.9880208,-0.40454 7.000354,-0.0641 9.461653,-0.16728 9.469623,-0.39688 0.0059,-0.17063 0.0013,-2.47924 -0.01027,-5.1302404 -0.02722,-6.2400503 0.107154,-7.2134303 1.164733,-8.4368703 0.719532,-0.83237004 1.029226,-0.98349004 2.257364,-1.10150004 1.717556,-0.16503 2.778911,0.31787 3.654999,1.66297004 0.57458,0.88219 0.595313,1.13075 0.595313,7.1369903 v 6.2229604 l 21.629687,-0.0677 21.629696,-0.0677 0.13229,-6.4822904 c 0.14513,-7.1113703 0.18319,-7.2837503 1.77583,-8.04322034 1.88031,-0.89667 4.14504,-0.34619 5.11405,1.24305004 0.47377,0.777 0.51656,1.36503 0.51747,7.1104103 l 10e-4,6.2633704 9.458866,0.0899 9.458856,0.0899 1.75558,0.82626 c 1.85544,0.87326 3.50913,2.32783 4.53263,3.98684 1.23887,2.00823 1.38464,2.99098 1.38464,9.33556 v 5.95312 l -55.732409,0.0668 c -50.6500578,0.0607 -55.74706012,0.0285 -55.89322912,-0.35237 z M 32.060485,32.761508 c 2.710487,-0.61102 4.713136,-2.33043 5.793345,-4.97398 0.501336,-1.22689 0.431364,-4.10073 -0.131117,-5.38516 -0.447294,-1.0214 -2.669325,-3.61067 -3.098561,-3.61067 -0.125609,0 -0.228378,1.67279 -0.228378,3.7173 0,4.03326 -0.187479,4.76323 -1.485604,5.78433 -0.534548,0.42048 -1.080746,0.55253 -2.285373,0.55253 -1.478883,0 -1.648751,-0.0658 -2.58395,-1.001 -1.174377,-1.17438 -1.415028,-2.37307 -1.273188,-6.34179 0.103987,-2.90956 -0.202531,-3.14167 -1.754476,-1.32857 -1.337162,1.56218 -1.735587,2.4687 -1.913334,4.35332 -0.353253,3.74551 2.027632,7.15235 5.707491,8.16692 1.590056,0.43839 1.60342,0.43867 3.253145,0.0668 z m 50.886333,-0.0411 c 3.18273,-0.84811 4.871053,-2.44953 5.840793,-5.54018 0.40978,-1.306 0.43642,-1.74647 0.17964,-2.97069 -0.16582,-0.79053 -0.51219,-1.88134 -0.7697,-2.42402 -0.46639,-0.98283 -2.326423,-2.99381 -2.769093,-2.99381 -0.12798,0 -0.23268,1.61117 -0.23268,3.58037 0,3.94708 -0.24729,4.9472 -1.45883,5.90021 -0.91203,0.7174 -3.24748,0.79299 -4.35147,0.14085 -1.39476,-0.82391 -1.59804,-1.53773 -1.59804,-5.61174 0,-2.04263 -0.0987,-3.77487 -0.2193,-3.84942 -0.39356,-0.24323 -2.031167,1.34146 -2.748783,2.65996 -2.372153,4.35843 -0.06621,9.74972 4.734453,11.06916 1.65622,0.4552 1.82493,0.45716 3.39301,0.0393 z"
+                                                          Fill="{Binding CalendarColor}"
+                                                          VerticalAlignment="Center"
+                                                          HorizontalAlignment="Center"
+                                                          StrokeThickness="0" />
+                                                </Viewbox>
+                                            </Grid>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="Button.IsDefaulted"
+                                                     Value="True">
+                                                <Setter Property="BorderBrush"
+                                                        TargetName="border"
+                                                        Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                                            </Trigger>
+                                            <Trigger Property="IsMouseOver"
+                                                     Value="True">
+                                                <Setter Property="Fill"
+                                                        TargetName="backgroundPath"
+                                                        Value="#FFBEE6FD" />
+
+                                            </Trigger>
+                                            <Trigger Property="IsPressed"
+                                                     Value="True">
+                                                <Setter Property="Fill"
+                                                        TargetName="backgroundPath"
+                                                        Value="#FFC4E5F6" />
+
+                                            </Trigger>
+                                            <Trigger Property="ToggleButton.IsChecked"
+                                                     Value="True">
+                                                <Setter Property="Fill"
+                                                        TargetName="backgroundPath"
+                                                        Value="#FFBCDDEE" />
+
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled"
+                                                     Value="False">
+                                                <Setter Property="Fill"
+                                                        TargetName="backgroundPath"
+                                                        Value="#FFF4F4F4" />
+                                                <Setter Property="Foreground"
+                                                        Value="#FF838383" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+
+
+                            </ToggleButton>
+
+                            <Popup IsOpen="{Binding ElementName=calendarToggle, Path=IsChecked}"
+                                   AllowsTransparency="True"
+                                   x:Name="PART_sekerPopup"
+                                   StaysOpen="False"
+                                   Placement="MousePoint">
+                                <Popup.Child>
+                                    <local:DateTimeSeker Background="#8B99B9"
+                                                         CornerRadius="10"
+                                                         DoneButtonCommand="{Binding }"
+                                                         Style="{Binding DateTimeSekerStyle}"
+                                                         BorderBrush="#FF9B9B9B"
+                                                         BorderThickness="1" />
+                                </Popup.Child>
+                            </Popup>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Opacity"
+                                    TargetName="border"
+                                    Value="0.56" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter Property="BorderBrush"
+                                    TargetName="border"
+                                    Value="#FF7EB4EA" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused"
+                                 Value="True">
+                            <Setter Property="BorderBrush"
+                                    TargetName="border"
+                                    Value="#FF569DE5" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

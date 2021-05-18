@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>3</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -69,6 +72,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ControlTemplateResources\FinderBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ControlTemplateResources\HathorScrollView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -93,6 +100,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ControlTemplateResources\RatiateableGrid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ControlTemplateResources\Seker\DateTimeSeker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ControlTemplateResources\Seker\SekerBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ControlTemplateResources\SquareGrid.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -111,7 +130,9 @@
     <Compile Include="Items\AkerTextBox.cs" />
     <Compile Include="Items\AmunTextBox.cs" />
     <Compile Include="Items\AtumImageView.cs" />
+    <Compile Include="Items\ClippingBorder.cs" />
     <Compile Include="Items\DO\BindingProxy.cs" />
+    <Compile Include="Items\FinderBox.cs" />
     <Compile Include="Items\HathorScrollView.cs" />
     <Compile Include="Items\AlyphNameTextBox.cs" />
     <Compile Include="Items\AnubisMessageBox.cs" />
@@ -120,6 +141,9 @@
     <Compile Include="Items\MontuBox\MontuBox.cs" />
     <Compile Include="Items\MontuBox\MontuBoxItem.cs" />
     <Compile Include="Items\OsirisButton.cs" />
+    <Compile Include="Items\RatiateableGrid.cs" />
+    <Compile Include="Items\Seker\DateTimeSeker.cs" />
+    <Compile Include="Items\Seker\SekerBox.cs" />
     <Compile Include="Items\SquareGrid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

@@ -36,3 +36,32 @@ C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFram
 C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\MontuBox\MontuBox.baml
 C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\MontuBox\MontuBoxItem.baml
 C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\HPSolutionCCDevPackage.netFramework.csprojAssemblyReference.cache
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\GeneratedInternalTypeHelper.g.cs
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\HPSolutionCCDevPackage.netFramework_MarkupCompile.cache
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\HPSolutionCCDevPackage.netFramework_MarkupCompile.lref
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\AkerTextBox.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\AmunTextBox.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\AnubisMessageBox.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\AtumImageView.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\HathorScrollView.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\HehWindow.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\HorusBox.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\MontuBox\MontuBox.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\MontuBox\MontuBoxItem.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\OsirisButton.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\SquareGrid.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\Themes\Fonts.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\Themes\Generic.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\Seker\SekerBox.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\HPSolutionCCDevPackage.netFramework.dll
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\HPSolutionCCDevPackage.netFramework.pdb
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\bin\Release\HPSolutionCCDevPackage.netFramework.dll
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\bin\Release\HPSolutionCCDevPackage.netFramework.pdb
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\Seker\DateTimeSeker.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\HPSolutionCCDevPackage.netFramework.g.resources
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\HPSolutionCCDevPackage.netFramework.Properties.Resources.resources
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\HPSolutionCCDevPackage.netFramework.csproj.GenerateResource.cache
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\HPSolutionCCDevPackage.netFramework.csproj.CoreCompileInputs.cache
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\RatiateableGrid.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\HPSolutionCCDevPackage.netFramework.csprojAssemblyReference.cache
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\ControlTemplateResources\FinderBox.baml

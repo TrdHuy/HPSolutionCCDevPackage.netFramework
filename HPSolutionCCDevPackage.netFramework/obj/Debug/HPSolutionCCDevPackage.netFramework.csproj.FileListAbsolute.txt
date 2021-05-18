@@ -23,3 +23,28 @@ C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFram
 C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\ControlTemplateResources\MontuBox\MontuBox.baml
 C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\ControlTemplateResources\MontuBox\MontuBoxItem.baml
 C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\HPSolutionCCDevPackage.netFramework.csprojAssemblyReference.cache
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\bin\Debug\HPSolutionCCDevPackage.netFramework.dll
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\bin\Debug\HPSolutionCCDevPackage.netFramework.pdb
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\HPSolutionCCDevPackage.netFramework.csprojAssemblyReference.cache
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\GeneratedInternalTypeHelper.g.cs
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\HPSolutionCCDevPackage.netFramework_MarkupCompile.cache
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\HPSolutionCCDevPackage.netFramework_MarkupCompile.lref
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\ControlTemplateResources\AkerTextBox.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\ControlTemplateResources\AmunTextBox.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\ControlTemplateResources\AnubisMessageBox.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\ControlTemplateResources\AtumImageView.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\ControlTemplateResources\HathorScrollView.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\ControlTemplateResources\HehWindow.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\ControlTemplateResources\HorusBox.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\ControlTemplateResources\MontuBox\MontuBox.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\ControlTemplateResources\MontuBox\MontuBoxItem.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\ControlTemplateResources\OsirisButton.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\ControlTemplateResources\SquareGrid.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\Themes\Fonts.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\Themes\Generic.baml
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\HPSolutionCCDevPackage.netFramework.g.resources
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\HPSolutionCCDevPackage.netFramework.Properties.Resources.resources
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\HPSolutionCCDevPackage.netFramework.csproj.GenerateResource.cache
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\HPSolutionCCDevPackage.netFramework.csproj.CoreCompileInputs.cache
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\HPSolutionCCDevPackage.netFramework.dll
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Debug\HPSolutionCCDevPackage.netFramework.pdb

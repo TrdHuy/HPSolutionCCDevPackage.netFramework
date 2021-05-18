@@ -4,17 +4,17 @@
 library
 C#
 .cs
-C:\Users\HuyTran\Desktop\WPF project\HPDevPackage\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\
+D:\Workspace\C#\WPF\HPSolutionCCDevPackage.netFramework\HPSolutionCCDevPackage.netFramework\obj\Release\
 HPSolutionCCDevPackage.netFramework
 none
 false
 TRACE
 
-131140298500
+172089498395
 
-20-1180773980
+25-452205165
 17-2104730778
-ControlTemplateResources\AkerTextBox.xaml;ControlTemplateResources\AmunTextBox.xaml;ControlTemplateResources\AnubisMessageBox.xaml;ControlTemplateResources\AtumImageView.xaml;ControlTemplateResources\HathorScrollView.xaml;ControlTemplateResources\HehWindow.xaml;ControlTemplateResources\HorusBox.xaml;ControlTemplateResources\MontuBox\MontuBox.xaml;ControlTemplateResources\MontuBox\MontuBoxItem.xaml;ControlTemplateResources\OsirisButton.xaml;ControlTemplateResources\SquareGrid.xaml;Themes\Fonts.xaml;Themes\Generic.xaml;
+ControlTemplateResources\AkerTextBox.xaml;ControlTemplateResources\AmunTextBox.xaml;ControlTemplateResources\AnubisMessageBox.xaml;ControlTemplateResources\AtumImageView.xaml;ControlTemplateResources\FinderBox.xaml;ControlTemplateResources\HathorScrollView.xaml;ControlTemplateResources\HehWindow.xaml;ControlTemplateResources\HorusBox.xaml;ControlTemplateResources\MontuBox\MontuBox.xaml;ControlTemplateResources\MontuBox\MontuBoxItem.xaml;ControlTemplateResources\OsirisButton.xaml;ControlTemplateResources\RatiateableGrid.xaml;ControlTemplateResources\Seker\DateTimeSeker.xaml;ControlTemplateResources\Seker\SekerBox.xaml;ControlTemplateResources\SquareGrid.xaml;Themes\Fonts.xaml;Themes\Generic.xaml;
 
 False
 

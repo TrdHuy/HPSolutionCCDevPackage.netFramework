@@ -1,0 +1,172 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:HPSolutionCCDevPackage.netFramework">
+
+    <Style TargetType="{x:Type Button}"
+           x:Key="DefaultFinderBtnStyle">
+        <Setter Property="Background"
+                Value="White" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border x:Name="border"
+                            DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:FinderBox}, Mode=FindAncestor}}"
+                            BorderThickness="0"
+                            Background="Transparent"
+                            SnapsToDevicePixels="True">
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="3*" />
+                                <RowDefinition Height="4*" />
+                                <RowDefinition Height="10*" />
+                                <RowDefinition Height="4*" />
+                                <RowDefinition Height="3*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3*" />
+                                <ColumnDefinition Width="4*" />
+                                <ColumnDefinition Width="10*" />
+                                <ColumnDefinition Width="4*" />
+                                <ColumnDefinition Width="3*" />
+                            </Grid.ColumnDefinitions>
+                            <Viewbox Grid.RowSpan="3"
+                                     Grid.ColumnSpan="3"
+                                     Grid.Row="1"
+                                     Grid.Column="1">
+                                <Path Data="m 90.843434,202.00176 c -1.53891,-0.16714 -5.42518,-0.78195 -8.63613,-1.36626 -3.21096,-0.58431 -9.14795,-2.1466 -13.19331,-3.47176 -4.04536,-1.32516 -10.73513,-4.1655 -14.86614,-6.31186 -4.13101,-2.14636 -10.17217,-5.89977 -13.42481,-8.34091 -3.25264,-2.44114 -8.49991,-7.06099 -11.66062,-10.26632 -3.1607,-3.20533 -7.61747,-8.34611 -9.90392,-11.42394 -2.28646,-3.07784 -5.8714,-8.90124 -7.96653,-12.9409 C 9.0968443,143.84015 6.4109843,137.76128 5.2233843,134.3712 4.0357845,130.98112 2.3715145,125.00033 1.5250045,121.08055 0.24693448,115.16245 -0.01165552,111.75879 3.9448423e-4,101.01278 0.01229448,90.402039 0.28942448,86.788605 1.5395045,80.945006 c 0.83854,-3.919776 2.50332,-9.900566 3.6995098,-13.290656 1.1962,-3.39007 3.43175,-8.682 4.9678897,-11.75984 1.53615,-3.07783 4.47725,-8.11429 6.53579,-11.19212 2.05854,-3.07784 5.69394,-7.79952 8.07865,-10.49262 2.38472,-2.69311 6.56845,-6.87411 9.29718,-9.29112 2.72873,-2.41701 7.47955,-6.07337 10.55739,-8.12525 3.07783,-2.05189 8.2478,-5.06317 11.48881,-6.69175 3.24102,-1.6285699 9.11289,-4.0158799 13.04862,-5.3051299 C 73.149064,3.50727 79.153734,1.90064 82.557064,1.22622 87.028964,0.34004 92.139574,0 100.98631,0 c 8.84673,0 13.95733,0.34004 18.42924,1.22622 3.40332,0.67442 9.4977,2.31044 13.54307,3.6356001 4.04536,1.32516 10.70418,4.15462 14.79738,6.2876699 4.09319,2.13306 9.9604,5.74902 13.03824,8.03548 3.07783,2.28646 8.21538,6.74004 11.41677,9.89684 3.20139,3.15681 7.83268,8.43502 10.29174,11.72937 2.45907,3.29435 6.18467,9.2949 8.27912,13.33456 2.09445,4.03966 4.77976,10.11854 5.96736,13.50861 1.18759,3.39009 2.84534,9.37088 3.68387,13.290656 1.25009,5.843599 1.52723,9.457033 1.53912,20.067774 0.012,10.74601 -0.24654,14.14967 -1.52461,20.06777 -0.84652,3.91978 -2.51079,9.90057 -3.69838,13.29065 -1.1876,3.39008 -3.87347,9.46895 -5.9686,13.50861 -2.09513,4.03966 -5.68174,9.86306 -7.97026,12.9409 -2.28852,3.07783 -6.76185,8.2263 -9.94075,11.44105 -3.17889,3.21474 -8.42449,7.83458 -11.65688,10.26632 -3.23238,2.43173 -9.25698,6.17744 -13.38799,8.3238 -4.13101,2.14636 -10.80591,4.98183 -14.83312,6.30104 -4.0272,1.31921 -9.96419,2.90911 -13.1933,3.5331 -3.22912,0.62399 -10.43542,1.24368 -16.01399,1.37708 -5.578579,0.13341 -11.401986,0.10581 -12.940906,-0.0613 z"
+                                      Fill="{TemplateBinding Background}"
+                                      x:Name="backgroundPath"
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Center"
+                                      StrokeThickness="0" />
+                            </Viewbox>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Button.IsDefaulted"
+                                 Value="True">
+                            <Setter Property="BorderBrush"
+                                    TargetName="border"
+                                    Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter Property="Fill"
+                                    TargetName="backgroundPath"
+                                    Value="#FFBEE6FD" />
+
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter Property="Fill"
+                                    TargetName="backgroundPath"
+                                    Value="#FFC4E5F6" />
+
+                        </Trigger>
+                        <Trigger Property="ToggleButton.IsChecked"
+                                 Value="True">
+                            <Setter Property="Fill"
+                                    TargetName="backgroundPath"
+                                    Value="#FFBCDDEE" />
+
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Fill"
+                                    TargetName="backgroundPath"
+                                    Value="#FFF4F4F4" />
+                            <Setter Property="Foreground"
+                                    Value="#FF838383" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type local:FinderBox}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:FinderBox}">
+                    <Border x:Name="border"
+                            DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:FinderBox}, Mode=FindAncestor}}"
+                            CornerRadius="{Binding CornerRadius}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}"
+                            SnapsToDevicePixels="True">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto"
+                                                  MinWidth="50" />
+                                <ColumnDefinition Width="10" />
+                            </Grid.ColumnDefinitions>
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Focusable="False"
+                                          Margin="{TemplateBinding Padding}"
+                                          HorizontalScrollBarVisibility="Hidden"
+                                          VerticalScrollBarVisibility="Hidden" />
+                            <TextBox IsHitTestVisible="False"
+                                     Text="{TemplateBinding Tag}"
+                                     x:Name="placeholder"
+                                     FontFamily="{TemplateBinding FontFamily}"
+                                     Padding="{TemplateBinding Padding}"
+                                     HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                     VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                     IsReadOnly="True"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     Foreground="{Binding SuggestTextForegroundColor}">
+                                <TextBox.Style>
+                                    <Style TargetType="{x:Type TextBox}">
+                                        <Setter Property="Visibility"
+                                                Value="Collapsed" />
+
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}"
+                                                         Value="">
+                                                <Setter Property="Visibility"
+                                                        Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                            <Button x:Name="PART_btn"
+                                    Grid.Column="1"
+                                    BorderThickness="0"
+                                    Command="{Binding FinderButtonCommand}"
+                                    Style="{Binding FinderButtonStyle}">
+                            </Button>
+
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Opacity"
+                                    TargetName="border"
+                                    Value="0.56" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter Property="BorderBrush"
+                                    TargetName="border"
+                                    Value="#FF7EB4EA" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused"
+                                 Value="True">
+                            <Setter Property="BorderBrush"
+                                    TargetName="border"
+                                    Value="#FF569DE5" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+</ResourceDictionary>
