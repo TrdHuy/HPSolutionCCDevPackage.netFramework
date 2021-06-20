@@ -21,8 +21,6 @@ namespace HPSolutionCCDevPackage.netFramework
         {
             DefaultStyleKey = typeof(HorusBox);
             this.IsTabStop = true;
-            //this.MinHeight = 30;
-            //this.MinWidth = 100;
         }
 
         #region Public properties
@@ -710,10 +708,8 @@ namespace HPSolutionCCDevPackage.netFramework
         private ScrollViewer _contentPresenterElement;
         private ScrollViewer _customHorusContentPresenterElement;
 
-        private bool IsSelectionChangeEventUpdatingText { get; set; } = false;
         private bool IsFilterUpdatingSelectIndex { get; set; } = false;
         private bool IsPreviewKeyUpAndDown { get; set; } = false;
-        private bool IsHorusFilterTextBoxLostFocusEventCallTextChangedEvent { get; set; } = false;
         private Popup HorusPopupElement
         {
             get
@@ -815,6 +811,7 @@ namespace HPSolutionCCDevPackage.netFramework
             base.OnApplyTemplate();
 
             ValidateUsingListFilterPossibility();
+            this.SizeChanged -= HorusBoxSizeChangedEvent;
             this.SizeChanged += HorusBoxSizeChangedEvent;
 
             HorusPopupElement = GetTemplateChild("PART_Popup") as Popup;
@@ -831,6 +828,11 @@ namespace HPSolutionCCDevPackage.netFramework
                 HorusFilterEditTextBoxElement.Visibility = IsEditable ? Visibility.Visible : Visibility.Collapsed;
                 if (IsEditable)
                 {
+                    HorusFilterEditTextBoxElement.GotFocus -= new RoutedEventHandler(HorusFilterEditTextGotFocusEvent);
+                    HorusFilterEditTextBoxElement.LostFocus -= new RoutedEventHandler(HorusFilterEditTextLostFocusEvent);
+                    HorusFilterEditTextBoxElement.TextChanged -= new TextChangedEventHandler(HorusFilterEditTexChangedEvent);
+                    HorusFilterEditTextBoxElement.PreviewMouseDown -= new MouseButtonEventHandler(HorusFilterEditTexPreviewMouseDownEvent);
+
                     HorusFilterEditTextBoxElement.GotFocus += new RoutedEventHandler(HorusFilterEditTextGotFocusEvent);
                     HorusFilterEditTextBoxElement.LostFocus += new RoutedEventHandler(HorusFilterEditTextLostFocusEvent);
                     HorusFilterEditTextBoxElement.TextChanged += new TextChangedEventHandler(HorusFilterEditTexChangedEvent);
@@ -906,10 +908,7 @@ namespace HPSolutionCCDevPackage.netFramework
             if (!IsFilterUpdatingSelectIndex && IsUsingListFilter)
             {
                 bool selectAll = true;
-                bool usingTextChangeCallback = true;
-
-                // Change the flag when enter text change event
-                IsSelectionChangeEventUpdatingText = true;
+                bool usingTextChangeCallback = false;
 
                 // If user use navigating key to change selection
                 if (IsPreviewKeyUpAndDown)
@@ -924,7 +923,6 @@ namespace HPSolutionCCDevPackage.netFramework
                     IsDropDownOpen = false;
                 }
 
-                IsSelectionChangeEventUpdatingText = false;
             }
             UpdateHorusContentPresenter(true);
         }
@@ -974,13 +972,7 @@ namespace HPSolutionCCDevPackage.netFramework
         {
             TextBox ctrl = sender as TextBox;
 
-            // If the flag is un-executed condition, return here 
-            if (IsHorusFilterTextBoxLostFocusEventCallTextChangedEvent)
-            {
-                return;
-            }
-
-            if (!IsSelectionChangeEventUpdatingText && ctrl.IsLoaded)
+            if (ctrl.IsLoaded)
             {
                 try
                 {
@@ -1186,14 +1178,12 @@ namespace HPSolutionCCDevPackage.netFramework
                     // try to copy text of horusbox to filter edit text box if they are different
                     if (!HorusFilterEditTextBoxElement.Text.Equals(Text))
                     {
-                        // change the flag when enter text changed event
-                        IsHorusFilterTextBoxLostFocusEventCallTextChangedEvent = true;
+                        HorusFilterEditTextBoxElement.TextChanged -= new TextChangedEventHandler(HorusFilterEditTexChangedEvent);
 
                         // copy the text
                         HorusFilterEditTextBoxElement.Text = Text;
-
-                        // change the flag when outer text changed event
-                        IsHorusFilterTextBoxLostFocusEventCallTextChangedEvent = false;
+                        
+                        HorusFilterEditTextBoxElement.TextChanged += new TextChangedEventHandler(HorusFilterEditTexChangedEvent);
                     }
                 }
 

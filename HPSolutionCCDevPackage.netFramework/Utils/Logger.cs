@@ -37,7 +37,7 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
         }
 
         private const string TAG = "HPSCCDP";
-        private const int OLD_LOG_FILES_CAPICITY = 1;
+        private const int OLD_LOG_FILES_CAPICITY = 50;
 
         private static readonly SemaphoreSlim Mutex = new SemaphoreSlim(1);
         private static ObservableQueue<Task<bool>> TaskQueue { get; set; }
