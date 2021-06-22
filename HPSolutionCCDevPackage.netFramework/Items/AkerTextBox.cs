@@ -195,6 +195,16 @@ namespace HPSolutionCCDevPackage.netFramework
 
         }
 
+        protected override void OnLostFocus(RoutedEventArgs e)
+        {
+            base.OnLostFocus(e);
+            if (AkerTextBoxType == AkerTextBoxType.Numeric
+               || AkerTextBoxType == AkerTextBoxType.Decimal)
+            {
+                FormatAkerNumber();
+            }
+        }
+
         private void ValidateAkerProperty()
         {
             if (!String.IsNullOrEmpty(AkerExpenseUnit) && AkerTextBoxType != AkerTextBoxType.Expense)
@@ -237,7 +247,6 @@ namespace HPSolutionCCDevPackage.netFramework
 
         }
 
-
         /// <summary>
         /// Occurs when aker type is numberic or decimal
         /// </summary>
@@ -245,7 +254,10 @@ namespace HPSolutionCCDevPackage.netFramework
         /// <param name="e"></param>
         private void AkerNumberTextChangedEvent(object sender, TextChangedEventArgs e)
         {
-            FormatAkerNumber();
+            if (!IsFocused)
+            {
+                FormatAkerNumber();
+            }
         }
 
         /// <summary>
@@ -256,7 +268,29 @@ namespace HPSolutionCCDevPackage.netFramework
             if (AkerTextBoxType == AkerTextBoxType.Decimal
                             || AkerTextBoxType == AkerTextBoxType.Numeric)
             {
-                if (AkerNumerRange == default(Range)) return;
+                this.TextChanged -= AkerNumberTextChangedEvent;
+
+                if (AkerNumerRange == default(Range))
+                {
+                    if (String.IsNullOrEmpty(Text))
+                    {
+                        Text = "0";
+                    }
+                    // In case Text = "01234", trim the "0" number off the Text
+                    else
+                    {
+                        try
+                        {
+                            Text = Convert.ToDouble(Text).ToString();
+                        }
+                        catch
+                        {
+                            Text = "0";
+                        }
+                    }
+                    this.TextChanged += AkerNumberTextChangedEvent;
+                    return;
+                }
 
                 this.TextChanged -= AkerNumberTextChangedEvent;
 
@@ -283,6 +317,12 @@ namespace HPSolutionCCDevPackage.netFramework
                 else if (rangeChecker == 1)
                 {
                     Text = FormatAkerNumber(AkerNumerFormat, AkerNumerRange.Max.ToString());
+                }
+
+                //Update if Text is empty
+                if (String.IsNullOrEmpty(Text))
+                {
+                    Text = AkerNumerRange.Min.ToString();
                 }
 
                 //handle caret index
