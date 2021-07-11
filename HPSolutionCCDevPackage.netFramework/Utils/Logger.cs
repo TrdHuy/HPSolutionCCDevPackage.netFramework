@@ -37,9 +37,9 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
         }
 
         private const string TAG = "HPSCCDP";
-        private const int OLD_LOG_FILES_CAPICITY = 50;
-
+        private const int OLD_LOG_FILES_CAPACITY = 50;
         private static readonly SemaphoreSlim Mutex = new SemaphoreSlim(1);
+
         private static ObservableQueue<Task<bool>> TaskQueue { get; set; }
         private static StringBuilder _logBuilder { get; set; }
         private static StringBuilder _userLogBuilder { get; set; }
@@ -94,7 +94,6 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
 
                 AppDomain.CurrentDomain.ProcessExit -= CurrentDomain_ProcessExit;
                 AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
-
                 AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
                 AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
@@ -104,7 +103,6 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
                 try
                 {
                     var dateTimeNow = DateTime.Now.ToString("ddMMyyHHmmss");
-                    
                     fileName =
                     Assembly.GetCallingAssembly().GetName().Name + "_" +
                     Assembly.GetCallingAssembly().GetName().Version + "_" +
@@ -144,9 +142,9 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
                 var enumerateFile = Directory.EnumerateFiles(directory, "*.txt");
                 List<string> fileNames = new List<string>(enumerateFile);
                 var fileCount = enumerateFile.Count();
-                if (fileCount > OLD_LOG_FILES_CAPICITY)
+                if (fileCount > OLD_LOG_FILES_CAPACITY)
                 {
-                    for (int i = OLD_LOG_FILES_CAPICITY; i < fileCount; i++)
+                    for (int i = 0; i < fileCount - OLD_LOG_FILES_CAPACITY; i++)
                     {
                         var temp = fileNames[i];
                         File.Delete(temp);
@@ -181,10 +179,11 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             WriteLog("F", TAG, "[UnhandledException]:" + e.ExceptionObject.ToString());
-            var task1 = GenerateTask("F", TAG, "[UnhandledException]:" + e.ExceptionObject.ToString());
-            TaskQueue.Enqueue(task1);
-            var task2 = GenerateTask("", "", "", true);
-            TaskQueue.Enqueue(task2);
+            ExportLogFile();
+            //var task1 = GenerateTask("F", TAG, "[UnhandledException]:" + e.ExceptionObject.ToString());
+            //TaskQueue.Enqueue(task1);
+            //var task2 = GenerateTask("", "", "", true);
+            //TaskQueue.Enqueue(task2);
         }
 
         /// <summary>
@@ -392,10 +391,11 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
         {
             try
             {
+
                 var dateTimeNow = DateTime.Now.ToString("dd-MM HH:mm:ss:ffffff");
                 var newLogLine = dateTimeNow + " " +
-                    logLv + " " +
-                    tag + " " +
+                logLv + " " +
+                tag + " " +
                     message;
 
                 if (_logBuilder != null)
