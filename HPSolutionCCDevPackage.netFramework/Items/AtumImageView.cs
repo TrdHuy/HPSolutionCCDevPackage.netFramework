@@ -147,6 +147,24 @@ namespace HPSolutionCCDevPackage.netFramework
         }
         #endregion
 
+        #region TempUserDataChangedEvent
+        public static readonly RoutedEvent TempUserDataChangedEvent =
+            EventManager.RegisterRoutedEvent("TempUserDataChanged", RoutingStrategy.Direct,
+                         typeof(TempUserDataChangedHandler), typeof(AtumImageView));
+
+        public event TempUserDataChangedHandler TempUserDataChanged
+        {
+            add
+            {
+                AddHandler(TempUserDataChangedEvent, value);
+            }
+            remove
+            {
+                RemoveHandler(TempUserDataChangedEvent, value);
+            }
+        }
+        #endregion
+
         #region ImageSourceChangedEvent
         public static readonly RoutedEvent ImageSourceChangedEvent =
             EventManager.RegisterRoutedEvent("ImageSourceChanged", RoutingStrategy.Direct,
@@ -1524,6 +1542,10 @@ namespace HPSolutionCCDevPackage.netFramework
                 data.ImageSize = new Size(imageSize.Width, imageSize.Height);
                 data.ImageMinSize = new Size(minSize.Width, minSize.Height);
 
+                //Raise user data proerty changed event 
+                TempUserDataChangedEventArgs eventArgs = new TempUserDataChangedEventArgs(AtumImageView.TempUserDataChangedEvent, data);
+                border.RaiseEvent(eventArgs);
+
                 logger.D(":margin = " + data.AtumImageMargin.ToString());
                 logger.D(":frame size = " + data.FrameSize.ToString());
                 logger.D(":image size:" + data.ImageSize.ToString());
@@ -1744,6 +1766,11 @@ namespace HPSolutionCCDevPackage.netFramework
                 }
                 var data = border.tempUserData;
                 data.Zoom = currentZoom;
+
+                //Raise user data proerty changed event 
+                TempUserDataChangedEventArgs eventArgs = new TempUserDataChangedEventArgs(AtumImageView.TempUserDataChangedEvent, data);
+                border.RaiseEvent(eventArgs);
+
                 logger.D("currentZoom=" + currentZoom + " imageSize=" + imageSize);
             }
 
@@ -1982,6 +2009,7 @@ namespace HPSolutionCCDevPackage.netFramework
     public delegate void AtumImageSourceRenderedHandler(object sender, AtumImageSourceRenderedEventArgs e);
     public delegate void ImageSourceChangedHandler(object sender, ImageSourceChangedEventArgs e);
     public delegate void PreviewAsyncSourceUpdatedHandler(object sender, PreviewAsyncSourceUpdatedEventArgs e);
+    public delegate void TempUserDataChangedHandler(object sender, TempUserDataChangedEventArgs e);
 
     public class AtumImageSourceRenderedEventArgs : RoutedEventArgs
     {
@@ -2047,4 +2075,20 @@ namespace HPSolutionCCDevPackage.netFramework
             get { return newValue; }
         }
     }
+    public class TempUserDataChangedEventArgs : RoutedEventArgs
+    {
+        private AtumImageView.AtumUserData _userData;
+        public TempUserDataChangedEventArgs(RoutedEvent id, AtumImageView.AtumUserData userData)
+        {
+            RoutedEvent = id;
+            _userData = userData;
+        }
+
+        public AtumImageView.AtumUserData UserData
+        {
+            get { return _userData; }
+        }
+
+    }
+
 }
