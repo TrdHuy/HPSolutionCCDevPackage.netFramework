@@ -507,6 +507,10 @@ namespace HPSolutionCCDevPackage.netFramework
             {
                 e.Handled = false;
             }
+            else if (e.Text == "-" && !Text.Contains(e.Text) && CaretIndex == 0)
+            {
+                e.Handled = false;
+            }
             else
             {
                 e.Handled = true;
