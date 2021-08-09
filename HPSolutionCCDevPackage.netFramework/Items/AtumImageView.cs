@@ -916,8 +916,8 @@ namespace HPSolutionCCDevPackage.netFramework
             // Delay for const of time to avoid blocking UI
             await Task.Delay(300);
 
-            var x = AIVUtil.ToImageSource(AIVUtil.GetBitmapFromName(imagePath));
-
+            //var x = AIVUtil.ToImageSource(AIVUtil.GetBitmapFromName(imagePath));
+            var x = BitmapFrame.Create(new Uri(imagePath));
             return x;
         }
 
