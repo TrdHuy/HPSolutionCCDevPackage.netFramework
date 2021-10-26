@@ -1,4 +1,5 @@
 ﻿using HPSolutionCCDevPackage.netFramework;
+using HPSolutionCCDevPackage.netFramework.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
 namespace HPSolutionCCDevPackage.netFramework
@@ -15,6 +17,7 @@ namespace HPSolutionCCDevPackage.netFramework
         YesNo = 1,
         YesNoCancle = 2,
         Default = 3,
+        MultiOptions = 4
     }
 
     public enum AnubisMessgaeResult
@@ -266,7 +269,53 @@ namespace HPSolutionCCDevPackage.netFramework
         }
         #endregion
 
+        #region AnubisMesOptionsSource
+        public static readonly DependencyProperty AnubisMesOptionsSourceProperty
+            = DependencyProperty.Register("AnubisMesOptionsSource", typeof(IEnumerable<OsirisButton>)
+                , typeof(AnubisMessageBox)
+                , new PropertyMetadata(default(IEnumerable<OsirisButton>)
+                , new PropertyChangedCallback(AnubisMesOptionsSourceChangedCallback))
+                , new ValidateValueCallback(AnubisMesOptionsSourceValidateValueCallBack));
+
+        private static bool AnubisMesOptionsSourceValidateValueCallBack(object value)
+        {
+            if (value == null)
+            {
+                return true;
+            }
+            IEnumerable<OsirisButton> newValue = (IEnumerable<OsirisButton>)value;
+            var asEnumerable = newValue as IEnumerable<OsirisButton>;
+            return asEnumerable != null;
+        }
+
+        private static void AnubisMesOptionsSourceChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            AnubisMessageBox sender = (AnubisMessageBox)d;
+            IEnumerable<OsirisButton> newValue = (IEnumerable<OsirisButton>)e.NewValue;
+            IEnumerable<OsirisButton> oldValue = (IEnumerable<OsirisButton>)e.OldValue;
+            sender.OnAnubisMesOptionsSourceChange(newValue, oldValue);
+        }
+
+
+        public IEnumerable<OsirisButton> AnubisMesOptionsSource
+        {
+            get { return (IEnumerable<OsirisButton>)GetValue(AnubisMesOptionsSourceProperty); }
+            set
+            {
+                if (value == null)
+                {
+                    ClearValue(AnubisMesOptionsSourceProperty);
+                }
+                else
+                {
+                    SetValue(AnubisMesOptionsSourceProperty, value);
+                }
+            }
+        }
         #endregion
+
+        #endregion
+        public int SelectedOption { get; private set; } = -1;
 
         private double _minWindowHeight = 150;
         private double _minWindowWidth = 300;
@@ -278,6 +327,8 @@ namespace HPSolutionCCDevPackage.netFramework
         private Button _cancleButtonElement;
         private Button _noButtonElement;
         private ContentControl _customContentElement;
+        private UniformGrid _multiOptionsGridElement;
+        private Grid _mainContentGridElement;
 
         #region Window Button area
         private Button CloseButtonElement
@@ -426,10 +477,9 @@ namespace HPSolutionCCDevPackage.netFramework
             set
             {
                 _defaultContentTextBoxElement = value;
-                MeasureDefaultContentBox();
+                MeasureDefaultContentBox(50d);
             }
         }
-
         private ContentControl CustomContentElement
         {
             get
@@ -439,8 +489,29 @@ namespace HPSolutionCCDevPackage.netFramework
             set
             {
                 _customContentElement = value;
-                MeasureCustomContentContainer();
-
+                MeasureCustomContentContainer(50d);
+            }
+        }
+        private UniformGrid MultiOptionsGridElement
+        {
+            get
+            {
+                return _multiOptionsGridElement;
+            }
+            set
+            {
+                _multiOptionsGridElement = value;
+            }
+        }
+        private Grid MainContentGridElement
+        {
+            get
+            {
+                return _mainContentGridElement;
+            }
+            set
+            {
+                _mainContentGridElement = value;
             }
         }
 
@@ -477,6 +548,7 @@ namespace HPSolutionCCDevPackage.netFramework
 
         private static Brush defaultTitleBarBackground = new SolidColorBrush(Color.FromArgb(40, 26, 195, 237));
         private static double defaultTitleBarHeight = 42d;
+        private static double defaultMultiOptionsButtonAreaHeight = 45d;
         private static object defaulCustomMessageContent = null;
         private static Style defaultYesButtonStyle
         {
@@ -711,8 +783,12 @@ namespace HPSolutionCCDevPackage.netFramework
         #endregion
 
         //Measure size for content container
-        private void MeasureCustomContentContainer()
+        private void MeasureCustomContentContainer(double buttonAreaHeight)
         {
+            if (_customContentElement == null)
+            {
+                return;
+            }
             _customContentElement.Content = CustomMessageContent;
             _customContentElement.Measure(new Size(this.MaxWidth, this.MaxHeight));
 
@@ -728,11 +804,11 @@ namespace HPSolutionCCDevPackage.netFramework
             _customContentElement.Width = contentContainerWidth;
             _customContentElement.Height = contentContainerHeight;
 
-            MeasureWindowSize(contentContainerWidth, contentContainerHeight, 1d);
+            MeasureWindowSize(contentContainerWidth, contentContainerHeight, buttonAreaHeight, 1d);
         }
 
         //Measure size for content text box
-        private void MeasureDefaultContentBox()
+        private void MeasureDefaultContentBox(double buttonAreaHeight)
         {
             _defaultContentTextBoxElement.Text = AnubisMessage;
             _defaultContentTextBoxElement.Measure(new Size(this.MaxWidth, this.MaxHeight));
@@ -751,13 +827,12 @@ namespace HPSolutionCCDevPackage.netFramework
             _defaultContentTextBoxElement.Width = newtexboxwidth;
             _defaultContentTextBoxElement.Height = newtexboxheight;
 
-            MeasureWindowSize(newtexboxwidth, newtexboxheight, 1.3d);
+            MeasureWindowSize(newtexboxwidth, newtexboxheight, buttonAreaHeight, 1.3d);
         }
 
         //Measure size for window
-        private void MeasureWindowSize(double contentContainerwidth, double contentContainerHeight, double ratio)
+        private void MeasureWindowSize(double contentContainerwidth, double contentContainerHeight, double buttonAreaHeight, double ratio)
         {
-            double buttonAreaHeight = 50d;
             double oldWidth = this.Width;
             double oldHeight = this.Height;
 
@@ -774,6 +849,9 @@ namespace HPSolutionCCDevPackage.netFramework
         {
             MinimizeButtonElement = GetTemplateChild("MinimizeButton") as Button;
             CloseButtonElement = GetTemplateChild("CloseButton") as Button;
+            MultiOptionsGridElement = GetTemplateChild("MultiOptionsButtonField") as UniformGrid;
+            MainContentGridElement = GetTemplateChild("MainContentGrid") as Grid;
+
             if (CustomMessageContent != null)
             {
                 CustomContentElement = GetTemplateChild("CustomControlContainer") as ContentControl;
@@ -798,6 +876,8 @@ namespace HPSolutionCCDevPackage.netFramework
                 YesButtonElement = GetTemplateChild("YesButton") as Button;
                 NoButtonElement = GetTemplateChild("NoButton") as Button;
             }
+
+            OnAnubisMesOptionsSourceChange(AnubisMesOptionsSource, null);
         }
 
         protected override void OnChildDesiredSizeChanged(UIElement child)
@@ -808,6 +888,44 @@ namespace HPSolutionCCDevPackage.netFramework
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
         {
             base.OnRenderSizeChanged(sizeInfo);
+        }
+
+        protected virtual void OnAnubisMesOptionsSourceChange(IEnumerable<OsirisButton> newValue, IEnumerable<OsirisButton> oldValue)
+        {
+            if (MultiOptionsGridElement == null
+                || MainContentGridElement == null
+                || AnubisMesType != AnubisMessageBoxType.MultiOptions)
+            {
+                return;
+            }
+            if (newValue == null)
+            {
+                MultiOptionsGridElement.Children.Clear();
+                return;
+            }
+            var multiOptionGridHeight = newValue.Count() * defaultMultiOptionsButtonAreaHeight;
+            MainContentGridElement.RowDefinitions[1].Height = new GridLength(multiOptionGridHeight);
+            MultiOptionsGridElement.Columns = 1;
+            MultiOptionsGridElement.Rows = newValue.Count();
+            MultiOptionsGridElement.Children.Clear();
+            foreach (var btn in newValue)
+            {
+                MultiOptionsGridElement.Children.Add(btn);
+                btn.Click += new RoutedEventHandler((s, e) =>
+                {
+                    SelectedOption = newValue.IndexOf(s);
+                    this.Close();
+                });
+            }
+
+            if (CustomMessageContent != null)
+            {
+                MeasureCustomContentContainer(multiOptionGridHeight);
+            }
+            else
+            {
+                MeasureDefaultContentBox(multiOptionGridHeight);
+            }
         }
 
         public new AnubisMessgaeResult Show()

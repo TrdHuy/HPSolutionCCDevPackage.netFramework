@@ -275,6 +275,10 @@ namespace HPSolutionCCDevPackage.netFramework.Utils
                     }
                 }
             }
+            catch
+            {
+
+            }
             finally
             {
                 Mutex.Release();
